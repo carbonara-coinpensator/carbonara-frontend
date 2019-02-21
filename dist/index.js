@@ -83,7 +83,7 @@ var CarbonaraWidget = function (_Component) {
                 name: this.state.name
             };
 
-            _api2.default.post('https://jsonplaceholder.typicode.com/users', { user: user }).then(function (res) {
+            _api2.default.post('users', { user: user }).then(function (res) {
                 console.log(res);
                 console.log(res.data);
             });
@@ -96,7 +96,7 @@ var CarbonaraWidget = function (_Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            _api2.default.get('https://jsonplaceholder.typicode.com/users').then(function (res) {
+            _api2.default.get('users').then(function (res) {
                 var persons = res.data;
                 _this2.setState({ persons: persons });
                 console.log(persons);

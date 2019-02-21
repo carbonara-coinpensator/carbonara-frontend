@@ -47,7 +47,7 @@ class CarbonaraWidget extends Component {
             name: this.state.name
         };
 
-        API.post(`https://jsonplaceholder.typicode.com/users`, { user })
+        API.post(`users`, { user })
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -56,7 +56,7 @@ class CarbonaraWidget extends Component {
 
     //https://alligator.io/react/axios-react/
     componentDidMount() {
-        API.get(`https://jsonplaceholder.typicode.com/users`)
+        API.get(`users`)
         .then(res => {
             const persons = res.data;
             this.setState({ persons });
