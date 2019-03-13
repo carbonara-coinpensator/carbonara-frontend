@@ -1,128 +1,197 @@
 import React, { Component } from 'react';
 import API from './api';
 import './styles.css';
+import FormErrors from './FormErrors.js';
 
-export const doIncrement = (prevState) => ({
-  counter: prevState.counter + 1,
-});
+import UIkit from 'uikit';
+import Icons from 'uikit/dist/js/uikit-icons';
+import '../node_modules/uikit/dist/css/uikit.min.css';
 
-export const doDecrement = (prevState) => ({
-  counter: prevState.counter - 1,
-});
+// loads the Icon plugin
+UIkit.use(Icons);
 
-class CarbonaraWidget extends Component {
+// components can be called from the imported UIkit reference
+// UIkit.notification('Hello there');
 
-    constructor() {
-        super();
+
+
+
+
+
+
+class CarbonaraWidget extends React.Component {
+
+    constructor(...props) {
+        super(...props);
 
         this.state = {
-            counter: 0,
-            persons: [],
-            name: '',
+            walletaddress: '',
+            datefrom: new Date('2019-03-10').toLocaleDateString(),
+            dateto: new Date().toLocaleDateString(),
+            transactions: [],
+            formErrors: {
+                walletaddress: '',
+                datefrom: '',
+                dateto: '',
+            },
+            walletaddressValid: false,
+            datefromValid: true,
+            datetoValid: true,
+            formValid: false
         };
-
-        this.onIncrement = this.onIncrement.bind(this);
-        this.onDecrement = this.onDecrement.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    onIncrement() {
-        this.setState(doIncrement);
+    getTransactions() {
+        API.get(`users`)
+        .then(res => {
+            const transactions = res.data
+            this.setState({ transactions })
+        })
     }
 
-    onDecrement() {
-        this.setState(doDecrement);
+    validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let walletaddressValid = this.state.walletaddressValid;
+      
+        switch(fieldName) {
+            case 'walletaddress':
+                // TODO: implement wallet address validator
+                walletaddressValid = value.length >= 3;
+                fieldValidationErrors.walletaddress = walletaddressValid ? '' : ' is too short';
+            break;
+            default:
+            break;
+        }
+        this.setState({
+            formErrors: fieldValidationErrors,
+            walletaddressValid: walletaddressValid,
+        }, this.validateForm);
+      }
+      
+    validateForm() {
+        this.setState((state) => ({formValid: state.walletaddressValid && state.datefromValid && state.datetoValid}));
     }
 
     handleChange(event) {
-        this.setState({ name: event.target.value });
+        
+        // this.setState({ 
+        //     walletaddress: event.target.value
+        // });
+
+        const name = event.target.name;
+        const value = event.target.value;
+        this.setState(
+            {[name]: value}, 
+            () => {this.validateField(name, value)}
+        );
+
+        this.getTransactions()
+
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
-        const user = {
-            name: this.state.name
+        const postdata = {
+            walletaddress: this.state.walletaddress
         };
 
-        API.post(`users`, { user })
+        API.post(`users`, { postdata })
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                this.state.transactions.push({
+                    id: res.data.id, 
+                    name: postdata.walletaddress 
+                })
+                this.setState({ res })
+                UIkit.notification('success');
             })
     }
 
-    //https://alligator.io/react/axios-react/
     componentDidMount() {
-        API.get(`users`)
-        .then(res => {
-            const persons = res.data;
-            this.setState({ persons });
-            console.log(persons)
-        })
+        
+    }
+
+    componentWillUnmount() {
+
     }
 
     render() {
 
-        const { counter } = this.state;
-
         return (
-            <div>
-            <h1>Carbonara Widget test</h1>
+            <div className="uk-section uk-section-primary uk-height-1-1">
+            
+                <div className="uk-container uk-container-small">
 
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    New Person Name:&nbsp;
-                    <input type="text" name="name" onChange={this.handleChange} />
-                </label>&nbsp;
-                <button type="submit">Add</button>
-            </form>
+                    <h1>Carbonara Widget</h1>
+                    <p>
+                        <strong>Wallet Address:</strong> {this.state.walletaddress}<br />
+                        <strong>Number of Transactions:</strong> {this.state.transactions.length}
+                    </p>
 
-            <p>
-                <label>Dummy Field</label><br />
-                <input type="text"
-                name="walletaddress"
-                placeholder="Wallet Address" />
-            </p>
-            <p>
-                <label>Dummy Field</label><br />
-                <input type="date"
-                name="startdatetime" />
-            </p>
-            <p>
-                <label>Dummy Field</label><br />
-                <input type="date"
-                name="enddatetime" />
-            </p>
+                    <FormErrors formErrors={this.state.formErrors} />
+                    
+                    <form onSubmit={this.handleSubmit}>
 
-            <ul>
-                { this.state.persons.map(person => <li key={person.id}>{person.name}</li>)}
-            </ul>
+                        <div className="uk-margin">
+                            <label className="uk-form-label" htmlFor="walletaddress">Wallet Address</label>
+                            <div className="uk-form-controls">
+                                <input className="uk-input" 
+                                    id="walletaddress" 
+                                    type="text" 
+                                    name="walletaddress" 
+                                    placeholder="BTC/ETH Wallet Address" 
+                                    value={this.state.walletaddress}
+                                    onChange={(event) => this.handleChange(event)}
+                                />
+                            </div>
+                        </div>
 
-            <Counter counter={counter} />
+                        <div uk-grid="">
 
-            <button
-                type="button"
-                onClick={this.onIncrement}
-            >
-                Increment
-            </button>
+                            <div className="uk-width-1-2">
+                                <label className="uk-form-label" htmlFor="datefrom">Date From</label>
+                                <div className="uk-form-controls">
+                                    <input className="uk-input" 
+                                        id="datefrom" 
+                                        type="text" 
+                                        name="datefrom" 
+                                        value={this.state.datefrom}
+                                        onChange={(event) => this.handleChange(event)}
+                                    />
+                                </div>
+                            </div>
 
-            <button
-                type="button"
-                onClick={this.onDecrement}
-            >
-                Decrement
-            </button>
+                            <div className="uk-width-1-2">
+                                <label className="uk-form-label" htmlFor="dateto">Date To</label>
+                                <div className="uk-form-controls">
+                                    <input className="uk-input" 
+                                        id="dateto" 
+                                        type="text" 
+                                        name="dateto" 
+                                        value={this.state.dateto}
+                                        onChange={(event) => this.handleChange(event)}
+                                    />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <ul>
+                            { this.state.transactions.map(transaction => <li key={transaction.id}>{transaction.id}: {transaction.name}</li>)}
+                        </ul>
+
+                        <button className={'uk-button uk-button-large uk-align-right' + (!this.state.formValid ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.formValid}>Calculate</button>
+
+                    </form>
+
+                </div>
 
             </div>
         );
     }
 }
-
-export const Counter = ({ counter }) =>
-  <p>{counter}</p>
 
 export default CarbonaraWidget;
