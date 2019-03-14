@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import API from './api';
-import './styles.css';
+
 import FormErrors from './FormErrors.js';
 
 import UIkit from 'uikit';
@@ -13,67 +13,75 @@ UIkit.use(Icons);
 // components can be called from the imported UIkit reference
 // UIkit.notification('Hello there');
 
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import { DateRangePicker } from 'react-dates';
 
+import './styles.css';
 
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
-
-import { DateRangePicker } from 'react-date-range';
-
-
-
-
-
-class CarbonaraWidget extends React.Component {
+class CarbonaraWidget extends Component {
 
     constructor(...props) {
         super(...props);
 
         this.state = {
-            walletaddress: '',
-            datefrom: new Date('2019-03-10').toLocaleDateString(),
-            dateto: new Date().toLocaleDateString(),
+
+            address: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC',
+            startDate: null,
+            endDate: null,
+
+            walletAddressValid: false,
+            transactionIdValid: false,
+            dateRangeValid: false,
+
+            walletFormValid: false,
+            transactionFormValid: false,
+
             transactions: [],
-            fieldValidationErrors: {
-                walletaddress: '',
-                datefrom: '',
-                dateto: '',
-            },
-            walletaddressValid: false,
-            datefromValid: true,
-            datetoValid: true,
-            formValid: false
+
+            focusedInput: null,
+            emissionsResult: 0,
         };
 
+        this.onChangeDateRange = this.onChangeDateRange.bind(this);
+        this.getTransactions = this.getTransactions.bind(this);
+        this.validateField = this.validateField.bind(this);
+        this.validateForms = this.validateForms.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.test = this.test.bind(this);
+
+    }
+
+    onChangeDateRange(startDate, endDate) {
+        this.setState({
+            startDate: startDate,
+            endDate: endDate,
+            dateRangeValid: true
+        });
+        if (startDate && endDate) {
+            this.validateWalletForm();
+        }
     }
 
     getTransactions() {
 
-        API.get(`users`)
-            .then(res => {
-                const transactions = res.data
-                this.setState({ transactions })
-            })
+        // API.get(`users`)
+        //     .then(res => {
+        //         const transactions = res.data
+        //         this.setState({ transactions })
+        //     })
 
-        // API.get('api/Carbonara/Calculation',{
-        //     'TxHash': '870edc76da4381d6d2ec0938dbbb2eeffd7a8c04bbf6d0c510b3b4fd183391a7',
-        //     // 'MinningGearYear': 2018,
-        //     // 'HashingAlgorithm': '',
-        //     // 'CO2EmissionCountry': '',
-        //     // BitcoinAddress: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
-        // }).then(res => {
-        //     const transactions = res.data;
-        //     this.setState({transactions});
+        // API.get('api/Carbonara/Calculation?TxHash=d99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce').then(res => {
+        //     console.log(res.data);
+        //     this.setState({ emissionsResult: res.data });
         // });
 
-        // API.get('api/Carbonara/TransactionList',{
-        //     BitcoinAddress: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
-        // }).then(res => {
-        //     const transactions = res.data;
-        //     this.setState({transactions});
-        // });
+        API.get('api/Carbonara/TransactionList',{
+            BitcoinAddress: this.state.address
+        }).then(res => {
+            this.setState({ transactions: res.data });
+        });
 
     }
 
@@ -85,53 +93,50 @@ class CarbonaraWidget extends React.Component {
      */
     validateField(fieldName, value) {
 
-        let fieldValidationErrors = this.state.fieldValidationErrors;
-        let walletaddressValid = this.state.walletaddressValid;
+        let walletAddressValid = this.state.walletAddressValid;
+        let transactionIdValid = this.state.transactionIdValid;
 
         switch(fieldName) {
-            case 'walletaddress':
-                // TODO: implement wallet address validator
-                walletaddressValid = value.length >= 3;
-                fieldValidationErrors.walletaddress = walletaddressValid ? '' : ' is too short';
-            break;
+            case 'address':
+                walletAddressValid = value.length == 34;
+                transactionIdValid = value.length == 64;
+                break;
             default:
-            break;
+                break;
         }
 
         this.setState({
-            fieldValidationErrors: fieldValidationErrors,
-            walletaddressValid: walletaddressValid,
-        }, () => this.validateForm());
+            walletAddressValid: walletAddressValid,
+            transactionIdValid: transactionIdValid,
+        }, () => this.validateForms());
 
     }
     
-    /**
-     * Set formValid in state and trigger getTransactions if valid
-     */
-    validateForm() {
-        
-        let formValid = this.state.walletaddressValid && this.state.datefromValid && this.state.datetoValid;
-        
-        this.setState({
-            formValid: formValid
-        });
 
-        // TODO: handle as callback
-        if (formValid) {
-            this.getTransactions();
+
+    validateForms() {
+        if (this.state.walletAddressValid) {
+            this.validateWalletForm();
         }
-
+        if (this.state.transactionIdValid) {
+            this.transactionFormValid();
+        }
     }
 
-    handleSelect(ranges){
-        console.log(ranges);
-        // {
-		// 	selection: {
-		// 		startDate: [native Date Object],
-		// 		endDate: [native Date Object],
-		// 	}
-		// }
-	}
+    validateWalletForm() {
+        let walletFormValid = this.state.walletAddressValid && this.state.dateRangeValid;
+        this.setState({ walletFormValid });
+        if (walletFormValid) {
+            this.getTransactions();
+        }
+    }
+
+    transactionFormValid() {
+        let transactionFormValid = this.state.transactionIdValid;
+        this.setState({ transactionFormValid });
+    }
+
+
 
     /**
      * Gets fired after each change in a form field
@@ -157,19 +162,32 @@ class CarbonaraWidget extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        const postdata = {
-            walletaddress: this.state.walletaddress
+        /*const postdata = {
+            address: this.state.address
         };
 
         API.post(`users`, { postdata })
             .then(res => {
                 this.state.transactions.push({
                     id: res.data.id, 
-                    name: postdata.walletaddress 
+                    name: postdata.address 
                 })
                 this.setState({ res })
                 UIkit.notification('success');
-            })
+            })*/
+        
+        API.get('api/Carbonara/Calculation?TxHash=d99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce').then(res => {
+            console.log(res.data);
+            this.setState({ emissionsResult: res.data });
+        });
+    }
+
+    test(event) {
+        console.log('test');
+        this.handleChange(event);
+        this.setState({ 
+            address: 'd99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce'
+         });
     }
 
     componentDidMount() {
@@ -182,86 +200,126 @@ class CarbonaraWidget extends React.Component {
 
     render() {
 
-        const selectionRange = {
-			startDate: new Date(),
-			endDate: new Date(),
-			key: 'selection',
-		}
+        const walletAddressValid = this.state.walletAddressValid;
+        let renderDateRangePicker;
+
+        if (walletAddressValid) {
+            renderDateRangePicker = <DateRangePicker
+                startDateId="startDate"
+                endDateId="endDate"
+                startDate={this.state.startDate}
+                endDate={this.state.endDate}
+                // onDatesChange={({ startDate, endDate }) => { this.setState({ startDate, endDate })}}
+                onDatesChange={({ startDate, endDate }) => { this.onChangeDateRange( startDate, endDate )}}
+                focusedInput={this.state.focusedInput}
+                onFocusChange={(focusedInput) => { this.setState({ focusedInput })}}
+                // startDatePlaceholderText=""
+                // endDatePlaceholderText=""
+                // disabled="true"
+                // required="true"
+                // readOnly="true"
+                // screenReaderInputMessage=""
+                showClearDates={true}
+                showDefaultInputIcon={true}
+                // customInputIcon={<span uk-icon="icon: calendar"></span>}
+                // customArrowIcon=""
+                // customCloseIcon=""
+                // inputIconPosition="after"
+                // noBorder="true"
+                // block="true"
+                // small=""
+                // regular=""
+                verticalSpacing={0}
+                // renderMonthText=""
+                // orientation="vertical"
+                // anchorDirection="ANCHOR_RIGHT"
+                // openDirection=""
+                // horizontalMargin=""
+                // withPortal="true"
+                // withFullScreenPortal=""
+                // appendToBody=""
+                // disableScroll={true}
+                // daySize=""
+                // isRTL=""
+                // initialVisibleMonth=""
+                firstDayOfWeek={1}
+                // numberOfMonths=""
+                // keepOpenOnDateSelect={true}
+                // reopenPickerOnClearDates=""
+                // renderCalendarInfo=""
+                // renderMonthElement=""
+                hideKeyboardShortcutsPanel={true}
+                // navPrev=PropTypes.node,
+                // navNext=PropTypes.node,
+                // onPrevMonthClick=PropTypes.func,
+                // onNextMonthClick=PropTypes.func,
+                // onClose=PropTypes.func,
+                transitionDuration={100}
+                // renderCalendarDay=PropTypes.func,
+                // renderDayContents=PropTypes.func,
+                // minimumNights=PropTypes.number,
+                // enableOutsideDays=PropTypes.bool,
+                // isDayBlocked=PropTypes.func,
+                // isOutsideRange={isOutsideRange}
+                // isDayHighlighted=PropTypes.func,
+                displayFormat="YYYY-MM-DD"
+                // monthFormat=PropTypes.string,
+                // weekDayFormat=PropTypes.string,
+                // phrases=PropTypes.shape(getPhrasePropTypes(DateRangePickerPhrases)),
+                // dayAriaLabelFormat=PropTypes.string,
+            />;
+        }
 
         return (
-            <div className="uk-section uk-section-primary uk-height-1-1">
+            <div>
             
-                <div className="uk-container uk-container-small">
+                <section className="uk-section uk-section-primary">
+                
+                    <div className="uk-container uk-container-small">
 
-                    <h1>Carbonara Widget</h1>
-                    <p>
-                        <strong>Wallet Address:</strong> {this.state.walletaddress}<br />
-                        <strong>Number of Transactions:</strong> {this.state.transactions.length}
-                    </p>
+                        <h1>Carbonara Widget</h1>
 
-                    <FormErrors formErrors={this.state.formErrors} />
+                        <FormErrors formErrors={this.state.formErrors} />
+                        
+                        <form onSubmit={this.handleSubmit}>
 
-                    <DateRangePicker
-                        ranges={[selectionRange]}
-                        onChange={this.handleSelect}
-                    />
-                    
-                    <form onSubmit={this.handleSubmit}>
-
-                        <div className="uk-margin">
-                            <label className="uk-form-label" htmlFor="walletaddress">Wallet Address</label>
-                            <div className="uk-form-controls">
-                                <input className="uk-input" 
-                                    id="walletaddress" 
-                                    type="text" 
-                                    name="walletaddress" 
-                                    placeholder="BTC/ETH Wallet Address" 
-                                    value={this.state.walletaddress}
-                                    onChange={(event) => this.handleChange(event)}
-                                    autoFocus
-                                />
-                            </div>
-                        </div>
-
-                        <div uk-grid="">
-
-                            <div className="uk-width-1-2">
-                                <label className="uk-form-label" htmlFor="datefrom">Date From</label>
+                            <div className="uk-margin">
+                                <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                 <div className="uk-form-controls">
-                                    <input className="uk-input" 
-                                        id="datefrom" 
+                                    <input className="uk-input uk-form-large" 
+                                        id="address" 
                                         type="text" 
-                                        name="datefrom" 
-                                        value={this.state.datefrom}
+                                        name="address" 
+                                        placeholder="Wallet Address or Transaction ID" 
+                                        value={this.state.address}
                                         onChange={(event) => this.handleChange(event)}
+                                        autoFocus
                                     />
                                 </div>
                             </div>
 
-                            <div className="uk-width-1-2">
-                                <label className="uk-form-label" htmlFor="dateto">Date To</label>
-                                <div className="uk-form-controls">
-                                    <input className="uk-input" 
-                                        id="dateto" 
-                                        type="text" 
-                                        name="dateto" 
-                                        value={this.state.dateto}
-                                        onChange={(event) => this.handleChange(event)}
-                                    />
-                                </div>
-                            </div>
+                            { renderDateRangePicker }
+                            
 
-                        </div>
+                            <ul>
+                                { this.state.transactions.map(transaction => <li onClick={(event) => this.test(event)}>{transaction}</li>)}
+                            </ul>
 
-                        <ul>
-                            { this.state.transactions.map(transaction => <li key={transaction.id}>{transaction.id}: {transaction.name}</li>)}
-                        </ul>
+                            <button className={'uk-button uk-button-large uk-align-right' + (!this.state.transactionIdValid ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.transactionIdValid}>Calculate</button>
 
-                        <button className={'uk-button uk-button-large uk-align-right' + (!this.state.formValid ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.formValid}>Calculate</button>
+                        </form>
 
-                    </form>
+                    </div>
 
-                </div>
+                </section>
+
+                <section className="uk-section uk-section-secondary">
+                    <div className="uk-container uk-container-small">
+                        <p className="uk-text-right uk-h1">
+                            { this.state.emissionsResult }
+                        </p>
+                    </div>
+                </section>
 
             </div>
         );
