@@ -5,7 +5,7 @@ import FormErrors from './FormErrors.js';
 
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
-import '../node_modules/uikit/dist/css/uikit.min.css';
+import 'uikit/dist/css/uikit.min.css';
 
 // loads the Icon plugin
 UIkit.use(Icons);
@@ -14,6 +14,11 @@ UIkit.use(Icons);
 // UIkit.notification('Hello there');
 
 
+
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
+import { DateRangePicker } from 'react-date-range';
 
 
 
@@ -29,7 +34,7 @@ class CarbonaraWidget extends React.Component {
             datefrom: new Date('2019-03-10').toLocaleDateString(),
             dateto: new Date().toLocaleDateString(),
             transactions: [],
-            formErrors: {
+            fieldValidationErrors: {
                 walletaddress: '',
                 datefrom: '',
                 dateto: '',
@@ -45,17 +50,44 @@ class CarbonaraWidget extends React.Component {
     }
 
     getTransactions() {
+
         API.get(`users`)
-        .then(res => {
-            const transactions = res.data
-            this.setState({ transactions })
-        })
+            .then(res => {
+                const transactions = res.data
+                this.setState({ transactions })
+            })
+
+        // API.get('api/Carbonara/Calculation',{
+        //     'TxHash': '870edc76da4381d6d2ec0938dbbb2eeffd7a8c04bbf6d0c510b3b4fd183391a7',
+        //     // 'MinningGearYear': 2018,
+        //     // 'HashingAlgorithm': '',
+        //     // 'CO2EmissionCountry': '',
+        //     // BitcoinAddress: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
+        // }).then(res => {
+        //     const transactions = res.data;
+        //     this.setState({transactions});
+        // });
+
+        // API.get('api/Carbonara/TransactionList',{
+        //     BitcoinAddress: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
+        // }).then(res => {
+        //     const transactions = res.data;
+        //     this.setState({transactions});
+        // });
+
     }
 
+    /**
+     * Validate a form field, set validation errors state,
+     * trigger form validateion
+     * @param {*} fieldName 
+     * @param {*} value 
+     */
     validateField(fieldName, value) {
-        let fieldValidationErrors = this.state.formErrors;
+
+        let fieldValidationErrors = this.state.fieldValidationErrors;
         let walletaddressValid = this.state.walletaddressValid;
-      
+
         switch(fieldName) {
             case 'walletaddress':
                 // TODO: implement wallet address validator
@@ -65,33 +97,63 @@ class CarbonaraWidget extends React.Component {
             default:
             break;
         }
+
         this.setState({
-            formErrors: fieldValidationErrors,
+            fieldValidationErrors: fieldValidationErrors,
             walletaddressValid: walletaddressValid,
-        }, this.validateForm);
-      }
-      
+        }, () => this.validateForm());
+
+    }
+    
+    /**
+     * Set formValid in state and trigger getTransactions if valid
+     */
     validateForm() {
-        this.setState((state) => ({formValid: state.walletaddressValid && state.datefromValid && state.datetoValid}));
+        
+        let formValid = this.state.walletaddressValid && this.state.datefromValid && this.state.datetoValid;
+        
+        this.setState({
+            formValid: formValid
+        });
+
+        // TODO: handle as callback
+        if (formValid) {
+            this.getTransactions();
+        }
+
     }
 
+    handleSelect(ranges){
+        console.log(ranges);
+        // {
+		// 	selection: {
+		// 		startDate: [native Date Object],
+		// 		endDate: [native Date Object],
+		// 	}
+		// }
+	}
+
+    /**
+     * Gets fired after each change in a form field
+     * and triggers field validation
+     * @param {*} event 
+     */
     handleChange(event) {
-        
-        // this.setState({ 
-        //     walletaddress: event.target.value
-        // });
 
         const name = event.target.name;
         const value = event.target.value;
+
         this.setState(
             {[name]: value}, 
             () => {this.validateField(name, value)}
         );
 
-        this.getTransactions()
-
     }
 
+    /**
+     * Submit the form
+     * @param {*} event 
+     */
     handleSubmit(event) {
         event.preventDefault();
 
@@ -120,6 +182,12 @@ class CarbonaraWidget extends React.Component {
 
     render() {
 
+        const selectionRange = {
+			startDate: new Date(),
+			endDate: new Date(),
+			key: 'selection',
+		}
+
         return (
             <div className="uk-section uk-section-primary uk-height-1-1">
             
@@ -132,6 +200,11 @@ class CarbonaraWidget extends React.Component {
                     </p>
 
                     <FormErrors formErrors={this.state.formErrors} />
+
+                    <DateRangePicker
+                        ranges={[selectionRange]}
+                        onChange={this.handleSelect}
+                    />
                     
                     <form onSubmit={this.handleSubmit}>
 
@@ -145,6 +218,7 @@ class CarbonaraWidget extends React.Component {
                                     placeholder="BTC/ETH Wallet Address" 
                                     value={this.state.walletaddress}
                                     onChange={(event) => this.handleChange(event)}
+                                    autoFocus
                                 />
                             </div>
                         </div>
