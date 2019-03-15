@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import API from './api';
 
-import FormErrors from './FormErrors.js';
+import gamificationmap from './images/carbonara_gamificationmap.png';
+import logo from './images/carbonara-logo.png';
 
-import UIkit from 'uikit';
-import Icons from 'uikit/dist/js/uikit-icons';
-import 'uikit/dist/css/uikit.min.css';
+import ResultSection from './ResultSection';
+
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 // loads the Icon plugin
 UIkit.use(Icons);
@@ -17,7 +19,31 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 
-import './styles.css';
+import Chart from 'react-apexcharts'
+
+
+
+
+
+
+
+import ReactDOM from "react-dom"
+import {
+  ComposableMap,
+  ZoomableGroup,
+  Geographies,
+  Geography,
+} from "react-simple-maps"
+
+
+
+
+
+
+import UIkit from 'uikit';
+import Icons from 'uikit/dist/js/uikit-icons';
+// import 'uikit/dist/css/uikit.min.css';
+import './scss/css.scss';
 
 class CarbonaraWidget extends Component {
 
@@ -26,7 +52,9 @@ class CarbonaraWidget extends Component {
 
         this.state = {
 
-            address: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC',
+            address: '',
+            // address: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC',
+            // address: 'd99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce',
             startDate: null,
             endDate: null,
 
@@ -41,6 +69,28 @@ class CarbonaraWidget extends Component {
 
             focusedInput: null,
             emissionsResult: 0,
+
+            chart: {
+                options: {
+                    chart: {
+                        id: 'apexchart-example'
+                    },
+                    xaxis: {
+                        categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
+                    }
+                },
+                series: [
+                    {
+                        name: 'BTC price',
+                        data: [30, 40, 45, 50, 49, 60, 50, 20, 90, 70]
+                    },
+                    {
+                        name: 'Energy comsumption',
+                        data: [50, 70, 55, 60, 50, 50, 50, 40, 60, 50]
+                    }
+                ]
+            }
+
         };
 
         this.onChangeDateRange = this.onChangeDateRange.bind(this);
@@ -49,7 +99,8 @@ class CarbonaraWidget extends Component {
         this.validateForms = this.validateForms.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.test = this.test.bind(this);
+        this.fillInTransactionId = this.fillInTransactionId.bind(this);
+        this.onSliderChange = this.onSliderChange.bind(this);
 
     }
 
@@ -66,20 +117,7 @@ class CarbonaraWidget extends Component {
 
     getTransactions() {
 
-        // API.get(`users`)
-        //     .then(res => {
-        //         const transactions = res.data
-        //         this.setState({ transactions })
-        //     })
-
-        // API.get('api/Carbonara/Calculation?TxHash=d99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce').then(res => {
-        //     console.log(res.data);
-        //     this.setState({ emissionsResult: res.data });
-        // });
-
-        API.get('api/Carbonara/TransactionList',{
-            BitcoinAddress: this.state.address
-        }).then(res => {
+        API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
             this.setState({ transactions: res.data });
         });
 
@@ -136,6 +174,10 @@ class CarbonaraWidget extends Component {
         this.setState({ transactionFormValid });
     }
 
+    onSliderChange(value) {
+        console.log(value);
+    }
+
 
 
     /**
@@ -161,37 +203,31 @@ class CarbonaraWidget extends Component {
      */
     handleSubmit(event) {
         event.preventDefault();
-
-        /*const postdata = {
-            address: this.state.address
-        };
-
-        API.post(`users`, { postdata })
-            .then(res => {
-                this.state.transactions.push({
-                    id: res.data.id, 
-                    name: postdata.address 
-                })
-                this.setState({ res })
-                UIkit.notification('success');
-            })*/
         
-        API.get('api/Carbonara/Calculation?TxHash=d99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce').then(res => {
+        API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
             console.log(res.data);
-            this.setState({ emissionsResult: res.data });
+            this.setState({ emissionsResult: Math.round(res.data.fullCo2Emission) });
         });
     }
 
-    test(event) {
-        console.log('test');
+    fillInTransactionId(event, transaction) {
+        event.preventDefault();
+        
         this.handleChange(event);
         this.setState({ 
-            address: 'd99439e228bc0cb2199eaaaa2303ef4c7fd85fbd529070ba175f86252c8577ce'
+            walletAddressValid: false,
+            dateRangeValid: false,
+            walletFormValid: false,
+            transactionIdValid: true,
+            address: transaction
          });
     }
 
     componentDidMount() {
-        
+        /*this.setState({
+            address: '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC',
+            walletAddressValid: true
+        });*/
     }
 
     componentWillUnmount() {
@@ -201,10 +237,15 @@ class CarbonaraWidget extends Component {
     render() {
 
         const walletAddressValid = this.state.walletAddressValid;
+        const walletFormValid = this.state.walletFormValid;
+
         let renderDateRangePicker;
+        let renderTransactionsList;
+        let renderTransactionResult;
+        let renderPlayResult;
 
         if (walletAddressValid) {
-            renderDateRangePicker = <DateRangePicker
+            renderDateRangePicker = <div><label className="uk-form-label">Please pick a date range</label><br /><DateRangePicker
                 startDateId="startDate"
                 endDateId="endDate"
                 startDate={this.state.startDate}
@@ -267,59 +308,123 @@ class CarbonaraWidget extends Component {
                 // weekDayFormat=PropTypes.string,
                 // phrases=PropTypes.shape(getPhrasePropTypes(DateRangePickerPhrases)),
                 // dayAriaLabelFormat=PropTypes.string,
-            />;
+            /></div>;
+        }
+
+        if (walletFormValid) {
+            renderTransactionsList = <div><label className="uk-form-label">Please select a transaction</label><br /><ul className="uk-list uk-list-striped">{ this.state.transactions.map(transaction => <li key={transaction}><a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionId(event, transaction)}></a> {transaction}</li>)}</ul></div>
+        }
+
+        if (this.state.emissionsResult > 0) {
+            renderTransactionResult = <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
+        }
+
+        if (this.state.emissionsResult > 0) {
+            renderPlayResult = <ResultSection label="Better result" color="primary" result={this.state.emissionsResult} />
         }
 
         return (
             <div>
+
+                <nav className="uk-navbar-container uk-margin" uk-navbar="">
+                    <div className="uk-navbar-center">
+
+                        <div className="uk-navbar-center-left"><div>
+                            <ul className="uk-navbar-nav">
+                                <li className="uk-active"><a href="#">Calculator</a></li>
+                            </ul>
+                        </div></div>
+                        <a className="uk-navbar-item uk-logo" href="#">
+                            <img width="200" src={logo} />
+                        </a>
+                        <div className="uk-navbar-center-right"><div>
+                            <ul className="uk-navbar-nav">
+                                <li><a href="#">Greenpaper</a></li>
+                            </ul>
+                        </div></div>
+
+                    </div>
+                </nav>
+
+                <section className="uk-section uk-section-large uk-section-default">
+                    <div className="uk-container uk-position-relative">
+
+                        <h2><span uk-icon="icon: list; ratio: 2" className="uk-margin-right"></span> BTC Price and Energy Consumption</h2>
+                        <span className="uk-label uk-position-top-right">Overview</span>
+
+                        <Chart className="uk-margin-top" options={this.state.chart.options} series={this.state.chart.series} type="line" width="100%" height={300} />
+                    </div>
+                </section>
             
-                <section className="uk-section uk-section-primary">
-                
-                    <div className="uk-container uk-container-small">
-
-                        <h1>Carbonara Widget</h1>
-
-                        <FormErrors formErrors={this.state.formErrors} />
+                <section className="uk-section uk-section-large uk-section-primary">
+                    <div className="uk-container uk-position-relative">
                         
-                        <form onSubmit={this.handleSubmit}>
+                        <h2><span uk-icon="icon: cog; ratio: 2" className="uk-margin-right"></span> How <span className="uk-text-success">green</span> is my BTC Wallet?<code>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></h2>
+                        <span className="uk-label uk-position-top-right">Calculation</span>
 
+                        <form onSubmit={this.handleSubmit} className="uk-margin-large-top">
                             <div className="uk-margin">
                                 <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                 <div className="uk-form-controls">
-                                    <input className="uk-input uk-form-large" 
-                                        id="address" 
-                                        type="text" 
-                                        name="address" 
-                                        placeholder="Wallet Address or Transaction ID" 
-                                        value={this.state.address}
-                                        onChange={(event) => this.handleChange(event)}
-                                        autoFocus
-                                    />
+                                    <div uk-grid="" className="uk-grid-collapse">
+                                        <div className="uk-width-3-4">
+                                            <input className="uk-input uk-form-large" 
+                                                id="address" 
+                                                type="text" 
+                                                name="address" 
+                                                placeholder="Wallet Address or Transaction ID" 
+                                                value={this.state.address}
+                                                onChange={(event) => this.handleChange(event)}
+                                                autoFocus
+                                            />
+                                        </div>
+                                        <div className="uk-width-1-4">
+                                            <button className={'uk-button uk-button-large' + (!this.state.transactionIdValid ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.transactionIdValid}>Calculate</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            { renderDateRangePicker }
-                            
-
-                            <ul>
-                                { this.state.transactions.map(transaction => <li onClick={(event) => this.test(event)}>{transaction}</li>)}
-                            </ul>
-
-                            <button className={'uk-button uk-button-large uk-align-right' + (!this.state.transactionIdValid ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.transactionIdValid}>Calculate</button>
-
+                            <div uk-grid="">
+                                <div className="uk-width-1-3">
+                                    { renderDateRangePicker }
+                                </div>
+                                <div className="uk-width-2-3">
+                                    { renderTransactionsList }
+                                </div>
+                            </div>
                         </form>
-
-                    </div>
-
-                </section>
-
-                <section className="uk-section uk-section-secondary">
-                    <div className="uk-container uk-container-small">
-                        <p className="uk-text-right uk-h1">
-                            { this.state.emissionsResult }
-                        </p>
                     </div>
                 </section>
+
+                { renderTransactionResult }
+
+                <section className="uk-section uk-section-default">
+                    <div className="uk-container uk-position-relative">
+                        
+                        <h2><span uk-icon="icon: world; ratio: 2" className="uk-margin-right"></span> What if &hellip;</h2>
+                        <span className="uk-label uk-position-top-right">Play</span>
+
+                        <ComposableMap>
+                            <ZoomableGroup>
+                            <Geographies geography={ "world.json" }>
+                                {(geographies, projection) => geographies.map(geography => (
+                                <Geography
+                                    key={ geography.id }
+                                    geography={ geography }
+                                    projection={ projection }
+                                    />
+                                ))}
+                            </Geographies>
+                            </ZoomableGroup>
+                        </ComposableMap>
+
+                        <img src={gamificationmap} />
+                        <Range allowCross={false} className="uk-width-3-4 uk-margin-left" defaultValue={[0, 20, 40, 50, 60, 80, 100]} min={this.state.min} max={this.state.max} onChange={this.onSliderChange} />
+                        
+                    </div>
+                </section>
+
+                { renderPlayResult }
 
             </div>
         );
