@@ -19,6 +19,8 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 
+
+
 import Chart from 'react-apexcharts'
 
 
@@ -27,13 +29,13 @@ import Chart from 'react-apexcharts'
 
 
 
-import ReactDOM from "react-dom"
+/*import ReactDOM from "react-dom"
 import {
   ComposableMap,
   ZoomableGroup,
   Geographies,
   Geography,
-} from "react-simple-maps"
+} from "react-simple-maps"*/
 
 
 
@@ -126,8 +128,8 @@ class CarbonaraWidget extends Component {
     /**
      * Validate a form field, set validation errors state,
      * trigger form validateion
-     * @param {*} fieldName 
-     * @param {*} value 
+     * @param {*} fieldName
+     * @param {*} value
      */
     validateField(fieldName, value) {
 
@@ -149,7 +151,7 @@ class CarbonaraWidget extends Component {
         }, () => this.validateForms());
 
     }
-    
+
 
 
     validateForms() {
@@ -183,7 +185,7 @@ class CarbonaraWidget extends Component {
     /**
      * Gets fired after each change in a form field
      * and triggers field validation
-     * @param {*} event 
+     * @param {*} event
      */
     handleChange(event) {
 
@@ -191,7 +193,7 @@ class CarbonaraWidget extends Component {
         const value = event.target.value;
 
         this.setState(
-            {[name]: value}, 
+            {[name]: value},
             () => {this.validateField(name, value)}
         );
 
@@ -199,27 +201,27 @@ class CarbonaraWidget extends Component {
 
     /**
      * Submit the form
-     * @param {*} event 
+     * @param {*} event
      */
     handleSubmit(event) {
         event.preventDefault();
-        
+
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
             console.log(res.data);
-            this.setState({ emissionsResult: Math.round(res.data.fullCo2Emission) });
+            this.setState({ emissionsResult: Math.round(res.data.calculationPerYear[2013].fullCo2Emission) });
         });
     }
 
     fillInTransactionId(event, transaction) {
         event.preventDefault();
-        
+
         this.handleChange(event);
-        this.setState({ 
+        this.setState({
             walletAddressValid: false,
             dateRangeValid: false,
             walletFormValid: false,
             transactionIdValid: true,
-            address: transaction
+            address: transaction.txid
          });
     }
 
@@ -238,6 +240,7 @@ class CarbonaraWidget extends Component {
 
         const walletAddressValid = this.state.walletAddressValid;
         const walletFormValid = this.state.walletFormValid;
+        const emissionsResult = this.state.emissionsResult;
 
         let renderDateRangePicker;
         let renderTransactionsList;
@@ -312,15 +315,12 @@ class CarbonaraWidget extends Component {
         }
 
         if (walletFormValid) {
-            renderTransactionsList = <div><label className="uk-form-label">Please select a transaction</label><br /><ul className="uk-list uk-list-striped">{ this.state.transactions.map(transaction => <li key={transaction}><a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionId(event, transaction)}></a> {transaction}</li>)}</ul></div>
+            renderTransactionsList = <div><label className="uk-form-label">Please select a transaction</label><br /><ul className="uk-list uk-list-striped">{ this.state.transactions.map((transaction,index) => <li key={index}><a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionId(event, transaction)}></a> time: {transaction.time}<br />txid: {transaction.txid}<br />value: {transaction.value}</li>)}</ul></div>
         }
 
-        if (this.state.emissionsResult > 0) {
-            renderTransactionResult = <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
-        }
-
-        if (this.state.emissionsResult > 0) {
-            renderPlayResult = <ResultSection label="Better result" color="primary" result={this.state.emissionsResult} />
+        if (emissionsResult > 0) {
+            renderTransactionResult = <ResultSection label="Result" color="secondary" result={emissionsResult} />
+            renderPlayResult = <ResultSection label="Better result" color="primary" result={emissionsResult} />
         }
 
         return (
@@ -355,10 +355,10 @@ class CarbonaraWidget extends Component {
                         <Chart className="uk-margin-top" options={this.state.chart.options} series={this.state.chart.series} type="line" width="100%" height={300} />
                     </div>
                 </section>
-            
+
                 <section className="uk-section uk-section-large uk-section-primary">
                     <div className="uk-container uk-position-relative">
-                        
+
                         <h2><span uk-icon="icon: cog; ratio: 2" className="uk-margin-right"></span> How <span className="uk-text-success">green</span> is my BTC Wallet?<code>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></h2>
                         <span className="uk-label uk-position-top-right">Calculation</span>
 
@@ -368,11 +368,11 @@ class CarbonaraWidget extends Component {
                                 <div className="uk-form-controls">
                                     <div uk-grid="" className="uk-grid-collapse">
                                         <div className="uk-width-3-4">
-                                            <input className="uk-input uk-form-large" 
-                                                id="address" 
-                                                type="text" 
-                                                name="address" 
-                                                placeholder="Wallet Address or Transaction ID" 
+                                            <input className="uk-input uk-form-large"
+                                                id="address"
+                                                type="text"
+                                                name="address"
+                                                placeholder="Wallet Address or Transaction ID"
                                                 value={this.state.address}
                                                 onChange={(event) => this.handleChange(event)}
                                                 autoFocus
@@ -400,27 +400,13 @@ class CarbonaraWidget extends Component {
 
                 <section className="uk-section uk-section-default">
                     <div className="uk-container uk-position-relative">
-                        
+
                         <h2><span uk-icon="icon: world; ratio: 2" className="uk-margin-right"></span> What if &hellip;</h2>
                         <span className="uk-label uk-position-top-right">Play</span>
 
-                        <ComposableMap>
-                            <ZoomableGroup>
-                            <Geographies geography={ "world.json" }>
-                                {(geographies, projection) => geographies.map(geography => (
-                                <Geography
-                                    key={ geography.id }
-                                    geography={ geography }
-                                    projection={ projection }
-                                    />
-                                ))}
-                            </Geographies>
-                            </ZoomableGroup>
-                        </ComposableMap>
-
                         <img src={gamificationmap} />
                         <Range allowCross={false} className="uk-width-3-4 uk-margin-left" defaultValue={[0, 20, 40, 50, 60, 80, 100]} min={this.state.min} max={this.state.max} onChange={this.onSliderChange} />
-                        
+
                     </div>
                 </section>
 
