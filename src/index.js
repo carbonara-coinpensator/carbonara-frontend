@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import API from './api';
 
-import gamificationmap from './images/carbonara_gamificationmap.png';
+
 import logo from './images/carbonara-logo.png';
 
 import ResultSection from './ResultSection';
+import WhatIf from './WhatIf';
 
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+
 
 // loads the Icon plugin
 UIkit.use(Icons);
@@ -102,7 +102,6 @@ class CarbonaraWidget extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.fillInTransactionId = this.fillInTransactionId.bind(this);
-        this.onSliderChange = this.onSliderChange.bind(this);
 
     }
 
@@ -174,10 +173,6 @@ class CarbonaraWidget extends Component {
     transactionFormValid() {
         let transactionFormValid = this.state.transactionIdValid;
         this.setState({ transactionFormValid });
-    }
-
-    onSliderChange(value) {
-        console.log(value);
     }
 
 
@@ -398,17 +393,7 @@ class CarbonaraWidget extends Component {
 
                 { renderTransactionResult }
 
-                <section className="uk-section uk-section-default">
-                    <div className="uk-container uk-position-relative">
-
-                        <h2><span uk-icon="icon: world; ratio: 2" className="uk-margin-right"></span> What if &hellip;</h2>
-                        <span className="uk-label uk-position-top-right">Play</span>
-
-                        <img src={gamificationmap} />
-                        <Range allowCross={false} className="uk-width-3-4 uk-margin-left" defaultValue={[0, 20, 40, 50, 60, 80, 100]} min={this.state.min} max={this.state.max} onChange={this.onSliderChange} />
-
-                    </div>
-                </section>
+                <WhatIf />
 
                 { renderPlayResult }
 

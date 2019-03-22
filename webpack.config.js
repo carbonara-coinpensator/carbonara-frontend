@@ -26,7 +26,7 @@ module.exports = {
             //     loader: 'svg-inline-loader'
             // },
             {
-                test: /\.(gif|png|jpe?g|svg)$/i,
+                test: /\.(gif|png|jpe?g|svg|json)$/i,
                 use: [
                     'file-loader',
                     {
