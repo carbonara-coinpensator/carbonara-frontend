@@ -1,21 +1,16 @@
 import React, {Component} from 'react';
 import { Range, getTrackBackground, Direction } from 'react-range';
-
-const STEP = 1;
-const MIN = 2013;
-const MAX = 2018;
+import API from '../api';
 
 class RangeYears extends Component {
 
     constructor(...props) {
 
-        super(...props);
-
+        super(...props)
+        this.onChange = this.onChange.bind(this)
         this.state = {
-            values: [2018]
+            values: [],
         }
-
-        this.onChange = this.onChange.bind(this);
 
     }
 
@@ -24,17 +19,26 @@ class RangeYears extends Component {
     }
 
     componentDidMount() {
-
+        this.setState({ values: this.props.values });
     }
 
     render() {
+
+        let years = this.props.years;
+        let values = this.state.values;
+
+        const MIN = years[0];
+        const MAX = years[years.length - 1];
+        const STEP = 1;
+
+        console.log(MIN,MAX)
 
         return (
 
             <div>
 
                 <div className="uk-margin-medium-bottom uk-text-center">
-                    <span className="uk-label uk-label-primary">Year: {this.state.values[0].toFixed(0)}</span>
+                    <span className="uk-label uk-label-primary">Year: { values[0] }</span>
                 </div>
 
                 <div
@@ -47,7 +51,7 @@ class RangeYears extends Component {
                 >
                     <Range
                         direction={Direction.Up}
-                        values={this.state.values}
+                        values={values}
                         step={STEP}
                         min={MIN}
                         max={MAX}
@@ -72,7 +76,7 @@ class RangeYears extends Component {
                                     height: '300px',
                                     borderRadius: '4px',
                                     background: getTrackBackground({
-                                        values: this.state.values,
+                                        values: values,
                                         colors: ['rgb(51,102,0)', '#ccc'],
                                         min: MIN,
                                         max: MAX,
