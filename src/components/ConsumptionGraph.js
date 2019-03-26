@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-import moment from 'moment'
+import Moment from 'react-moment'
 
 class ConsumptionGraph extends Component {
 
@@ -10,11 +10,20 @@ class ConsumptionGraph extends Component {
         this.state = {
             chart: {
                 options: {
+                    colors: ['#14121D', '#336600'],
                     chart: {
                         id: 'priceandconsumption'
                     },
                     xaxis: {
                         categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
+                    },
+                    stroke: {
+                        show: true,
+                        curve: 'straight',
+                        lineCap: 'butt',
+                        colors: undefined,
+                        width: 3,
+                        dashArray: 0,
                     }
                 },
                 series: [
@@ -39,12 +48,9 @@ class ConsumptionGraph extends Component {
     render() {
 
         return (
-            <section className="uk-section uk-section-large uk-section-default">
-                <div className="uk-container">
-                    <h2><span uk-icon="icon: list; ratio: 2" className="uk-margin-right"></span> BTC Price and Energy Consumption</h2>
-                    <Chart className="uk-margin-top" options={this.state.chart.options} series={this.state.chart.series} type="line" width="100%" height={300} />
-                </div>
-            </section>
+            <div>
+                <Chart options={this.state.chart.options} series={this.state.chart.series} type="line" width="100%" height={350} />
+            </div>
         )
     }
 

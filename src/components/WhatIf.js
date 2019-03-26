@@ -1,119 +1,141 @@
-import React, {Component} from 'react';
-// import gamificationmap from './images/carbonara_gamificationmap.png';
-
-import WorldMap from './WorldMap';
-import RangeYears from './RangeYears';
-import RangeRegions from './RangeRegions';
-import RegionRatio from './RegionRatio';
+import React, {Component} from 'react'
+import WorldMap from './WorldMap'
+import RangeYears from './RangeYears'
+import RangeRegions from './RangeRegions'
 
 class WhatIf extends Component {
 
     constructor(...props) {
 
         super(...props)
+
+        this.calculateEmissionsSum = this.calculateEmissionsSum.bind(this)
+        this.calculateEmissionsPercentFromProps = this.calculateEmissionsPercentFromProps.bind(this)
+        this.calculateEmissionsPercentFromRegionButtons = this.calculateEmissionsPercentFromRegionButtons.bind(this)
+        this.calculateRegionButtons = this.calculateRegionButtons.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
-        this.setEmissionsPercent = this.setEmissionsPercent.bind(this)
-        this.setRegionCodes = this.setRegionCodes.bind(this)
-        this.setRegionButtons = this.setRegionButtons.bind(this)
-        this.setRatioToRegions = this.setRatioToRegions.bind(this)
-        this.calculateValuesRatio = this.calculateValuesRatio.bind(this)
-        this.getRatio = this.getRatio.bind(this)
-        this.getRegions = this.getRegions.bind(this)
+        this.handleYearsChange = this.handleYearsChange.bind(this)
+
         this.state = {
-            emissionsPercent: [],
-            regionButtons: [],
-            regionCodes: RegionRatio
+            emissions: this.props.emissions,
+            emissionsSum: this.calculateEmissionsSum(),
+            emissionsPercent: this.calculateEmissionsPercentFromProps(),
+            regionButtons: this.calculateRegionButtons(),
+            regionCodes: this.props.regions,
+            selectedYearValues: [this.props.years.sort()[this.props.years.length - 1]]
         }
 
     }
 
-    calculateValuesRatio() {
-        return this.state.emissionsPercent
-    }
+    // calculate the sum of all emissions given in props
+    calculateEmissionsSum() {
 
-    setRatioToRegions() {
-        let regionCodes = this.state.regionCodes;
-        let self = this;
-        regionCodes.forEach(function(v, k){
-            v.amount = self.calculateValuesRatio()[k];
-        });
-        this.setState({ regregionCodesions });
-    }
-
-    getRatio() {
-        let regionButtons = this.state.regionButtons;
-        let emissionsPercent = this.state.emissionsPercent;
-        this.setState({ emissionsPercent, regionButtons });
-        this.setRatioToRegions()
-        return this.calculateValuesRatio();
-    }
-
-    getRegions() {
-        this.setRatioToRegions();
-        return this.state.regionCodes;
-    }
-
-    handleRegionsChange(regionButtons) {
-        this.setState({ regionButtons });
-    }
-
-    setEmissionsPercent() {
         let emissionsSum = 0
+
         this.props.emissions.forEach(function(v,k){
             emissionsSum += Number(v)
         })
 
+        return emissionsSum
+
+    }
+
+    // calculate percentage values of emissions
+    // based on emissions props
+    calculateEmissionsPercentFromProps(regionButtons) {
+
         let emissionsPercent = []
+        let emissionsSum = this.calculateEmissionsSum()
+
         this.props.emissions.forEach(function(v,k){
             emissionsPercent.push(Number(v) / emissionsSum * 100)
         })
-        this.setState({ emissionsPercent })
+
+        return emissionsPercent
+
     }
 
-    setRegionCodes() {
-        this.setState({ regionCodes: this.props.regions })
-    }
+    // calculate percentage values of emissions
+    // based on regionButtons (set via handleRegionsChange from child component)
+    calculateEmissionsPercentFromRegionButtons(regionButtons) {
 
-    setRegionButtons() {
-        let regionButtons = []
-        let emissionsSum = 0
-        this.props.emissions.forEach(function(v,k){
-            emissionsSum += Number(v)
-            regionButtons.push(emissionsSum)
+        let emissionsSum = this.state.emissionsSum
+        let emissionsPercent = []
+        let thisNumber = 0;
+
+        // calculate percentage of track area controlled by button
+        regionButtons.forEach(function(v,k){
+            let lastNumber = thisNumber
+            thisNumber = Number(v) / emissionsSum * 100
+            emissionsPercent.push(thisNumber - lastNumber)
         })
-        regionButtons.pop()
+
+        // add a last value to complete 100% of track area
+        emissionsPercent.push(100 - thisNumber)
+
+        // update state
+        this.setState({ emissionsPercent })
+
+        return emissionsPercent
+
+    }
+
+    // child component sends regionButtons array here
+    handleRegionsChange(regionButtons) {
+        // set state
         this.setState({ regionButtons })
+        // set emission percentages based on button values
+        this.calculateEmissionsPercentFromRegionButtons(regionButtons)
+        this.props.onWhatifChange()
+    }
+
+    handleYearsChange(selectedYearValues) {
+        this.setState({ selectedYearValues })
+        this.props.onWhatifChange()
+    }
+
+    // set regionButtons positions based on emissions prop values
+    calculateRegionButtons() {
+
+        // array for region buttons
+        let regionButtons = []
+
+        // every buttons adds up the value of previous button
+        let emissionsAdd = 0
+        this.props.emissions.forEach(function(v,k){
+            emissionsAdd += Number(v)
+            regionButtons.push(emissionsAdd)
+        })
+
+        // last button does not exist (since we have 1 button less than percent values which are controlled by them)
+        regionButtons.pop()
+
+        // set buttons
+        return regionButtons
 
     }
 
     componentDidMount() {
-        // this.setRatioToRegions()
-        this.setEmissionsPercent()
-        this.setRegionCodes()
-        this.setRegionButtons()
+
     }
 
     render() {
 
         const years = this.props.years.sort()
-        const lastyear = years[years.length - 1]
+        const selectedYearValues = this.state.selectedYearValues
 
         return (
-            <section className="uk-section uk-section-default">
-                <div className="uk-container">
-                    <h2><span uk-icon="icon: world; ratio: 2" className="uk-margin-right"></span> What if &hellip;</h2>
-                    <div uk-grid="" className="">
-                        <div className="uk-width-5-6">
-                            <WorldMap emissionsPercent={this.state.emissionsPercent} />
-                            {this.state.regionButtons}
-                            <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} emissionsPercent={this.state.emissionsPercent} />
-                        </div>
-                        <div className="uk-width-1-6">
-                            <RangeYears years={years} values={[lastyear]} />
-                        </div>
+            <div>
+                <div uk-grid="" className="">
+                    <div className="uk-width-5-6">
+                        <WorldMap emissionsPercent={this.state.emissionsPercent} />
+                        <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} emissionsPercent={this.state.emissionsPercent} />
+                    </div>
+                    <div className="uk-width-1-6">
+                        <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={selectedYearValues} />
                     </div>
                 </div>
-            </section>
+            </div>
         )
     }
 }

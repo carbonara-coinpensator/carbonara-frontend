@@ -1,8 +1,8 @@
 import React from 'react'
-import logo from '../images/carbonara-logo.png'
+import logo from '../assets/carbonara-logo.png'
 
 const Navigation = () => (
-  <nav className="uk-navbar-container uk-margin" uk-navbar="">
+  <nav className="uk-navbar-container" uk-navbar="">
     <div className="uk-navbar-center">
 
         <div className="uk-navbar-center-left"><div>

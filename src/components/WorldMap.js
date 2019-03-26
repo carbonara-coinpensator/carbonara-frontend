@@ -7,7 +7,7 @@ import {
   Markers,
   Marker,
 } from "react-simple-maps"
-import RegionRatio from './RegionRatio';
+import RegionInfos from './RegionInfos'
 
 const wrapperStyles = {
   width: "100%",
@@ -22,7 +22,7 @@ class WorldMap extends Component {
         super(...props);
 
         this.state = {
-            regions: RegionRatio
+            regions: RegionInfos
         }
 
     }
@@ -47,7 +47,7 @@ class WorldMap extends Component {
                     }}
                     >
                     <ZoomableGroup center={[0,20]} disablePanning>
-                        <Geographies geography="/src/world-50m.json">
+                        <Geographies geography="/src/assets/ne_110m_land.topojson">
                         {(geographies, projection) =>
                             geographies.map((geography, i) =>
                             geography.id !== "ATA" && (

@@ -1,10 +1,12 @@
-import React from 'react'
-import CarbonaraCalculator from './CarbonaraCalculator'
+import React, { Component } from 'react'
+import CarbonaraContainer from '../containers/CarbonaraContainer'
 
-const App = () => (
-  <div>
-    <CarbonaraCalculator />
-  </div>
-)
+class App extends Component {
+  render() {
+    return (
+      <CarbonaraContainer />
+    )
+  }
+}
 
-export default App
+export default App;

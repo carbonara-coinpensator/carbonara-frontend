@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
-import { Range, getTrackBackground, Direction } from 'react-range';
-import API from '../api';
+import React, {Component} from 'react'
+import { Range, getTrackBackground, Direction } from 'react-range'
 
 class RangeYears extends Component {
 
@@ -9,36 +8,35 @@ class RangeYears extends Component {
         super(...props)
         this.onChange = this.onChange.bind(this)
         this.state = {
-            values: [],
+            selectedYearValues: this.props.selectedYearValues,
         }
 
     }
 
-    onChange(values) {
-        this.setState({ values });
+    onChange(selectedYearValues) {
+        this.setState({ selectedYearValues });
+        this.props.onYearsChange(selectedYearValues);
     }
 
     componentDidMount() {
-        this.setState({ values: this.props.values });
+
     }
 
     render() {
 
-        let years = this.props.years;
-        let values = this.state.values;
+        let years = this.props.years
+        let selectedYearValues = this.props.selectedYearValues
 
-        const MIN = years[0];
-        const MAX = years[years.length - 1];
-        const STEP = 1;
-
-        console.log(MIN,MAX)
+        const MIN = Number(years[0])
+        const MAX = Number(years[years.length - 1])
+        const STEP = 1
 
         return (
 
             <div>
 
                 <div className="uk-margin-medium-bottom uk-text-center">
-                    <span className="uk-label uk-label-primary">Year: { values[0] }</span>
+                    <span className="uk-label uk-label-primary">Year: { selectedYearValues[0] }</span>
                 </div>
 
                 <div
@@ -51,11 +49,11 @@ class RangeYears extends Component {
                 >
                     <Range
                         direction={Direction.Up}
-                        values={values}
+                        values={selectedYearValues}
                         step={STEP}
                         min={MIN}
                         max={MAX}
-                        onChange={values => this.setState({ values })}
+                        onChange={selectedYearValues => this.onChange( selectedYearValues )}
                         renderTrack={({ props, children }) => (
                             <div
                                 onMouseDown={props.onMouseDown}
@@ -76,7 +74,7 @@ class RangeYears extends Component {
                                     height: '300px',
                                     borderRadius: '4px',
                                     background: getTrackBackground({
-                                        values: values,
+                                        values: selectedYearValues,
                                         colors: ['rgb(51,102,0)', '#ccc'],
                                         min: MIN,
                                         max: MAX,
@@ -96,12 +94,12 @@ class RangeYears extends Component {
                                 ...props.style,
                                 height: '32px',
                                 width: '32px',
-                                borderRadius: '1px',
-                                backgroundColor: '#FFF',
+                                borderRadius: '50%',
+                                backgroundColor: '#fff',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                boxShadow: '0px 0px 4px #AAA'
+                                boxShadow: '0px 0px 4px #999'
                             }}
                             >
                             <div
