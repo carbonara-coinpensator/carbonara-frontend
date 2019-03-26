@@ -1,35 +1,47 @@
-import React, {Component} from 'react';
-import { Range, getTrackBackground, Direction } from 'react-range';
+import React, {Component} from 'react'
+import { Range, getTrackBackground, Direction } from 'react-range'
+import RegionInfos from './RegionInfos'
 
-const STEP = 0.1;
-const MIN = 0;
-const MAX = 100;
-const COLORS = ['#0C2960', '#276EF1', '#9CBCF8'];
+const STEP = 0.1
+const MIN = 0
+const MAX = 2800
+const COLORS = ['#9CBCF8', 'red', '#276EF1', 'orange', 'green', '#0C2960']
 
-class RangeCountries extends Component {
+class RangeRegions extends Component {
 
     constructor(...props) {
 
-        super(...props);
-
+        super(...props)
+        this.onChange = this.onChange.bind(this)
         this.state = {
-            values: this.props.values,
+            regionButtons: this.props.regionButtons,
+            colors: []
         }
-
-        this.onChange = this.onChange.bind(this);
 
     }
 
-    onChange(values) {
-        this.setState({ values });
-        this.props.onChange(values);
+    onChange(regionButtons) {
+        this.setState({ regionButtons });
+        this.props.onRegionsChange(regionButtons);
+    }
+
+    getColors() {
+        let colors = []
+        RegionInfos.forEach(function(v,k){
+            colors.push(v.color)
+        })
+        this.setState({colors})
     }
 
     componentDidMount() {
-
+        this.getColors()
     }
 
     render() {
+
+        const regionButtons = this.props.regionButtons
+        const emissionsPercent = this.props.emissionsPercent
+        const colors = this.state.colors
 
         return (
 
@@ -43,11 +55,11 @@ class RangeCountries extends Component {
                     }}
                 >
                     <Range
-                        values={this.state.values}
+                        values={regionButtons}
                         step={STEP}
                         min={MIN}
                         max={MAX}
-                        onChange={values => this.onChange( values )}
+                        onChange={(regionButtons) => this.onChange( regionButtons )}
                         renderTrack={({ props, children }) => (
                             <div
                                 onMouseDown={props.onMouseDown}
@@ -66,8 +78,8 @@ class RangeCountries extends Component {
                                         width: '100%',
                                         borderRadius: '4px',
                                         background: getTrackBackground({
-                                            values: this.state.values,
-                                            colors: COLORS,
+                                            values: regionButtons,
+                                            colors: colors,
                                             min: MIN,
                                             max: MAX
                                         }),
@@ -85,7 +97,7 @@ class RangeCountries extends Component {
                                     ...props.style,
                                     height: '32px',
                                     width: '32px',
-                                    borderRadius: '1px',
+                                    borderRadius: '50%',
                                     backgroundColor: 'rgba(255,255,255.5)',
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -97,7 +109,7 @@ class RangeCountries extends Component {
                                 style={{
                                     height: '12px',
                                     width: '3px',
-                                    backgroundColor: isDragged ? COLORS[index] : '#CCC'
+                                    backgroundColor: isDragged ? colors[index] : '#CCC'
                                 }}
                             />
                             </div>
@@ -105,13 +117,22 @@ class RangeCountries extends Component {
                     />
                     <div uk-grid="" className="uk-flex-center uk-margin">
                         <div>
-                            <span className="uk-label uk-label-danger">US: {this.state.values[0].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {emissionsPercent[0].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label uk-label-success">EU: {(this.state.values[1] - this.state.values[0]).toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {emissionsPercent[1].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label uk-label-warning">CN: {(100 - this.state.values[1]).toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {emissionsPercent[2].toFixed(1)}%</span>
+                        </div>
+                        <div>
+                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {emissionsPercent[3].toFixed(1)}%</span>
+                        </div>
+                        <div>
+                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {emissionsPercent[4].toFixed(1)}%</span>
+                        </div>
+                        <div>
+                            <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {emissionsPercent[5].toFixed(1)}%</span>
                         </div>
                     </div>
                 </div>
@@ -122,4 +143,4 @@ class RangeCountries extends Component {
     }
 }
 
-export default RangeCountries;
+export default RangeRegions;
