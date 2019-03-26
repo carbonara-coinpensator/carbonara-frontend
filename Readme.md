@@ -1,8 +1,8 @@
-# Frontend for the Carbonara project - CO2 emission calculator for the blockchain
+# Frontend for the Carbonara project &ndash; CO<sub>2</sub> emission calculator for the blockchain
 
 ## Prerequisites
 
-This application makes requests to the [carbonara backend](https://github.com/carbonara-coinpensator/carbonara-backend), which has to be referenced as endpoint base url in ´src/api.js´.
+This application makes requests to the [carbonara backend](https://github.com/carbonara-coinpensator/carbonara-backend), which has to be referenced as endpoint base url in `src/api.js`.
 
 ## Local development
 
