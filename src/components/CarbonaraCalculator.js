@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
+import cloneDeep from 'lodash/cloneDeep'
 import 'react-dates/initialize'
-import 'react-dates/lib/css/_datepicker.css'
-import { DateRangePicker } from 'react-dates'
-
-import Table from 'react-uikit-table'
+// import { DateRangePicker } from 'react-dates'
+// import 'react-dates/lib/css/_datepicker.css'
 import MaterialTable from 'material-table'
-
 import moment from 'moment'
-
 import API from '../api'
-
 import ResultSection from './ResultSection'
 import Navigation from './Navigation'
 import ConsumptionGraph from './ConsumptionGraph'
 import WhatIf from './WhatIf'
-
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
@@ -132,12 +127,13 @@ class CarbonaraCalculator extends Component {
     }
 
     submitForm(e) {
+        let event = cloneDeep(e)
         e.preventDefault()
         if (this.state.addressValidity.wallet) {
-            this.getTransactions(e)
+            this.getTransactions()
         }
         if (this.state.addressValidity.transaction) {
-            this.calculateEmission(e)
+            this.calculateEmission(event)
         }
     }
 
@@ -152,7 +148,9 @@ class CarbonaraCalculator extends Component {
         })
     }
 
-    calculateEmission(e) {
+    calculateEmission(event) {
+
+        let self = this
 
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
@@ -177,8 +175,12 @@ class CarbonaraCalculator extends Component {
             ))
             this.setState({ years: years })
 
+        }).catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
             UIkit.notification.closeAll()
-
+            self.scrollTo(event, '#results')
         })
     }
 
@@ -250,29 +252,40 @@ class CarbonaraCalculator extends Component {
         let showGamificationResults = this.state.showGamificationResults
 
         return (
-            <div>
+            <div className="uk-text-center">
 
-                <Navigation />
+                <section id="welcome" className="uk-section uk-section-gradient uk-light uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
+                    <Navigation />
+                    <div className="uk-width-1-1">
+                        <div className="uk-container uk-container-small uk-margin-large-bottom">
+                            <h1>Carbonara Coinpensator</h1>
+                            <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
+                        </div>
+                        <div className="uk-position-bottom">
+                            <div className="uk-container">
+                                <div className="uk-button-group uk-margin-large-bottom">
+                                    <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#graph')}>
+                                        BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 { 'priceChart' in this.state.chart && 'co2EmissionChart' in this.state.chart &&
-                    <section id="graph" className="uk-flex uk-flex-middle uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default"  uk-scrollspy="cls:uk-animation-fade">
+                    <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
-                                <h2>BTC Price and Energy Consumption</h2>
+                                <h2 className="uk-text-center">BTC Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.co2EmissionChart} />
                             </div>
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
-                                    <div uk-grid="">
-                                        <div className="uk-width-1-3"></div>
-                                        <div className="uk-width-2-3">
-                                            <div uk-grid="" className="uk-button-group uk-margin-large-bottom">
-                                                <div className="uk-width-1-2"></div>
-                                                <button className="uk-width-1-2 uk-button uk-button-primary uk-button-large" onClick={() => this.scrollTo(event, '#calculate')}>
-                                                    How green is my BTC Wallet? <span uk-icon="arrow-down"></span>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#calculate')}>
+                                            How green is my BTC Wallet? <span uk-icon="arrow-down"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -280,32 +293,34 @@ class CarbonaraCalculator extends Component {
                     </section>
                 }
 
-                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary"  uk-scrollspy="cls:uk-animation-fade">
+                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
                     <div className="uk-width-1-1">
                             <div className="uk-container">
 
                                 <h2>How <strong>green</strong> is my BTC Wallet?</h2>
 
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
+
+                                    <div className="uk-text-small uk-child-width-1-2 uk-margin-medium" uk-grid="">
+                                        <p>Example Wallet Address: <br /><code>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></p>
+                                        <p>Example Transaction ID: <br /><code>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></p>
+                                    </div>
+
                                     <div className="uk-margin">
                                         <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                         <div className="uk-form-controls">
-                                            <div uk-grid="" className="uk-grid-collapse">
-                                                <div className="uk-width-4-5">
-                                                    <input className="uk-input uk-form-large"
-                                                        id="address"
-                                                        type="text"
-                                                        name="address"
-                                                        placeholder="Wallet Address or Transaction ID"
-                                                        value={this.state.address}
-                                                        onChange={(event) => this.handleChange(event)}
-                                                        autoFocus
-                                                    />
-                                                </div>
-                                                <div className="uk-width-1-5">
-                                                    <button type="submit" className={'uk-width-1-1 uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default' : ' uk-button-primary')} type="submit" disabled={!this.state.addressValidity.some}>Calculate</button>
-                                                </div>
-                                            </div>
+                                            <input className="uk-input uk-form-large uk-text-center"
+                                                id="address"
+                                                type="text"
+                                                name="address"
+                                                placeholder="Wallet Address or Transaction ID"
+                                                value={this.state.address}
+                                                onChange={(event) => this.handleChange(event)}
+                                                autoFocus
+                                            />
+                                            <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} type="submit" disabled={!this.state.addressValidity.some}>
+                                                { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
+                                            </button>
                                         </div>
                                     </div>
                                     <div uk-grid="">
@@ -374,29 +389,19 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </form>
 
-                                <div className="uk-text-small">
-                                    <p>Example Wallet Address: <br /><code>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></p>
-                                    <p>Example Transaction ID: <br /><code>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></p>
-                                </div>
-
                             </div>
 
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
-                                    <div uk-grid="">
-                                        <div className="uk-width-1-3"></div>
-                                        <div className="uk-width-2-3">
-                                            <div uk-grid="" className="uk-button-group uk-margin-large-bottom">
-                                                <button className="uk-width-1-2 uk-button uk-button-default uk-button-large" onClick={() => this.scrollTo(event, '#graph')}>
-                                                    <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
-                                                </button>
-                                                { showResults &&
-                                                    <button className="uk-width-1-2 uk-button uk-button-primary uk-button-large" onClick={() => this.scrollTo(event, '#results')}>
-                                                        Calculation Result <span uk-icon="arrow-down"></span>
-                                                    </button>
-                                                }
-                                            </div>
-                                        </div>
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#graph')}>
+                                            <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
+                                        </button>
+                                        { showResults &&
+                                            <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#results')}>
+                                                Calculation Result <span uk-icon="arrow-down"></span>
+                                            </button>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -405,29 +410,23 @@ class CarbonaraCalculator extends Component {
                 </section>
 
                 { showResults &&
-                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-secondary"  uk-scrollspy="cls:uk-animation-fade">
+                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
-                                <h2>Calculation Result</h2>
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
 
                             </div>
 
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
-                                    <div uk-grid="">
-                                        <div className="uk-width-1-3"></div>
-                                        <div className="uk-width-2-3">
-                                            <div uk-grid="" className="uk-button-group uk-margin-large-bottom">
-                                                <button className="uk-width-1-2 uk-button uk-button-default uk-button-large" onClick={() => this.scrollTo(event, '#calculate')}>
-                                                    <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
-                                                </button>
-                                                <button className="uk-width-1-2 uk-button uk-button-primary uk-button-large" onClick={() => this.scrollTo(event, '#gamification')}>
-                                                    What if &hellip; <span uk-icon="arrow-down"></span>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#calculate')}>
+                                            <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
+                                        </button>
+                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamification')}>
+                                            What if &hellip; <span uk-icon="arrow-down"></span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -437,7 +436,7 @@ class CarbonaraCalculator extends Component {
                 }
 
                 { showGamification &&
-                    <section id="gamification" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default"  uk-scrollspy="cls:uk-animation-fade">
+                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
@@ -448,20 +447,15 @@ class CarbonaraCalculator extends Component {
 
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
-                                    <div uk-grid="">
-                                        <div className="uk-width-1-3"></div>
-                                        <div className="uk-width-2-3">
-                                            <div uk-grid="" className="uk-button-group uk-margin-large-bottom">
-                                                <button className="uk-width-1-2 uk-button uk-button-default uk-button-large" onClick={() => this.scrollTo(event, '#results')}>
-                                                    <span uk-icon="arrow-up"></span> Calculation Result
-                                                </button>
-                                                { showGamificationResults &&
-                                                    <button className="uk-width-1-2 uk-button uk-button-primary uk-button-large" onClick={() => this.scrollTo(event, '#gamificationresults')}>
-                                                       View Result <span uk-icon="arrow-down"></span>
-                                                    </button>
-                                                }
-                                            </div>
-                                        </div>
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#results')}>
+                                            <span uk-icon="arrow-up"></span> Calculation Result
+                                        </button>
+                                        { showGamificationResults &&
+                                            <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamificationresults')}>
+                                                View Result <span uk-icon="arrow-down"></span>
+                                            </button>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -471,27 +465,20 @@ class CarbonaraCalculator extends Component {
                 }
 
                 { showGamificationResults &&
-                    <section id="gamificationresults" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary"  uk-scrollspy="cls:uk-animation-fade">
+                    <section id="gamificationresults" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
-                                <h2>Result</h2>
                                 <ResultSection label="Better result" color="primary" result={this.state.emissionsResult} />
 
                             </div>
 
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
-                                    <div uk-grid="">
-                                        <div className="uk-width-1-3"></div>
-                                        <div className="uk-width-2-3">
-                                            <div uk-grid="" className="uk-button-group uk-margin-large-bottom">
-                                                <div className="uk-width-1-2"></div>
-                                                <button className="uk-width-1-2 uk-button uk-button-primary uk-button-large" onClick={() => this.scrollTo(event, '#gamification')}>
-                                                    <span uk-icon="arrow-up"></span> What if &hellip;
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamification')}>
+                                            <span uk-icon="arrow-up"></span> What if &hellip;
+                                        </button>
                                     </div>
                                 </div>
                             </div>
