@@ -28,3 +28,11 @@ entryPoint = "https"
 endpoint = "unix:///var/run/docker.sock"
 watch = true
 exposedByDefault = false
+
+[acme]
+email = "sascha@eth.events"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+    [acme.httpChallenge]
+    entryPoint = "http"
