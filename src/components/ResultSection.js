@@ -43,7 +43,7 @@ class ResultSection extends Component {
                             <div className="uk-width-1-2">
                                 <div className="uk-card uk-card-small">
                                     <div className="uk-card-media-top">
-                                        <img className="uk-height-small" src={car} />
+                                        <img className="uk-height-small" src={car} alt="" />
                                     </div>
                                     <div className="uk-card-body">
                                         <h3 className="uk-card-title"><strong>{ this.state.kilometersDrivenByCar }&nbsp;km</strong> <br />driven by&nbsp;car</h3>
@@ -53,7 +53,7 @@ class ResultSection extends Component {
                             <div className="uk-width-1-2">
                                 <div className="uk-card uk-card-small">
                                     <div className="uk-card-media-top">
-                                        <img className="uk-height-small" src={tree} />
+                                        <img className="uk-height-small" src={tree} alt="" />
                                     </div>
                                     <div className="uk-card-body">
                                         <h3 className="uk-card-title"><strong>{ this.state.yearsOfCo2Sequestration }&nbsp;years</strong> of&nbsp;CO<sub>2</sub> <br />sequestration</h3>
@@ -71,9 +71,9 @@ class ResultSection extends Component {
                         <div>
                             <div className="uk-card uk-card-default uk-card-small">
                                 <div className="uk-card-body">
-                                    <a className="" target="_blank" href="https://www.naturefund.de/wissen/co2_rechner/">
+                                    <a className="" target="_blank" rel="noopener noreferrer" href="https://www.naturefund.de/wissen/co2_rechner/">
                                         <div className="img uk-flex uk-flex-middle">
-                                            <img src={logonature} />
+                                            <img src={logonature} alt="" />
                                         </div>
                                         <p>Nature Fund</p>
                                     </a>
@@ -83,9 +83,9 @@ class ResultSection extends Component {
                         <div>
                             <div className="uk-card uk-card-default uk-card-small">
                                 <div className="uk-card-body">
-                                    <a className="" target="_blank" href="https://www.plant-for-the-planet.org/de/startseite">
+                                    <a className="" target="_blank" rel="noopener noreferrer" href="https://www.plant-for-the-planet.org/de/startseite">
                                         <div className="img uk-flex uk-flex-middle">
-                                            <img src={logoplanet} />
+                                            <img src={logoplanet} alt="" />
                                         </div>
                                         <p>Plant for the Planet</p>
                                     </a>
