@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import { Range, getTrackBackground, Direction } from 'react-range'
 import RegionInfos from './RegionInfos'
 
-const STEP = 0.1
+const STEP = 1
 const MIN = 0
-const MAX = 2800
-const COLORS = ['#9CBCF8', 'red', '#276EF1', 'orange', 'green', '#0C2960']
+const MAX = 100
 
 class RangeRegions extends Component {
 
@@ -40,7 +39,7 @@ class RangeRegions extends Component {
     render() {
 
         const regionButtons = this.props.regionButtons
-        const emissionsPercent = this.props.emissionsPercent
+        const consumptionsPercent = this.props.consumptionsPercent
         const colors = this.state.colors
 
         return (
@@ -117,22 +116,22 @@ class RangeRegions extends Component {
                     />
                     <div uk-grid="" className="uk-flex-center uk-margin">
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {emissionsPercent[0].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {consumptionsPercent[0].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {emissionsPercent[1].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {consumptionsPercent[1].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {emissionsPercent[2].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {consumptionsPercent[2].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {emissionsPercent[3].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {consumptionsPercent[3].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {emissionsPercent[4].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {consumptionsPercent[4].toFixed(1)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {emissionsPercent[5].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {consumptionsPercent[5].toFixed(1)}%</span>
                         </div>
                     </div>
                 </div>

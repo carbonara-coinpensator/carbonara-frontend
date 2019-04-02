@@ -44,17 +44,17 @@ var WhatIf = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (_ref = WhatIf.__proto__ || Object.getPrototypeOf(WhatIf)).call.apply(_ref, [this].concat(props)));
 
-        _this.calculateEmissionsSum = _this.calculateEmissionsSum.bind(_this);
-        _this.calculateEmissionsPercentFromProps = _this.calculateEmissionsPercentFromProps.bind(_this);
-        _this.calculateEmissionsPercentFromRegionButtons = _this.calculateEmissionsPercentFromRegionButtons.bind(_this);
+        _this.calculateConsumptionsSum = _this.calculateConsumptionsSum.bind(_this);
+        _this.calculateConsumptionsPercentFromProps = _this.calculateConsumptionsPercentFromProps.bind(_this);
+        _this.calculateConsumptionsPercentFromRegionButtons = _this.calculateConsumptionsPercentFromRegionButtons.bind(_this);
         _this.calculateRegionButtons = _this.calculateRegionButtons.bind(_this);
         _this.handleRegionsChange = _this.handleRegionsChange.bind(_this);
         _this.handleYearsChange = _this.handleYearsChange.bind(_this);
 
         _this.state = {
-            emissions: _this.props.emissions,
-            emissionsSum: _this.calculateEmissionsSum(),
-            emissionsPercent: _this.calculateEmissionsPercentFromProps(),
+            consumptions: _this.props.consumptions,
+            consumptionsSum: _this.calculateConsumptionsSum(),
+            consumptionsPercent: _this.calculateConsumptionsPercentFromProps(),
             regionButtons: _this.calculateRegionButtons(),
             regionCodes: _this.props.regions,
             selectedYearValues: [_this.props.years.sort()[_this.props.years.length - 1]]
@@ -63,64 +63,62 @@ var WhatIf = function (_Component) {
         return _this;
     }
 
-    // calculate the sum of all emissions given in props
+    // calculate the sum of all consumptions given in props
 
 
     _createClass(WhatIf, [{
-        key: 'calculateEmissionsSum',
-        value: function calculateEmissionsSum() {
+        key: 'calculateConsumptionsSum',
+        value: function calculateConsumptionsSum() {
 
-            var emissionsSum = 0;
+            var consumptionsSum = 0;
 
-            this.props.emissions.forEach(function (v, k) {
-                emissionsSum += Number(v);
+            this.props.consumptions.forEach(function (v, k) {
+                consumptionsSum += Number(v);
             });
 
-            return emissionsSum;
+            return consumptionsSum;
         }
 
-        // calculate percentage values of emissions
-        // based on emissions props
+        // calculate percentage values of consumptions
+        // based on consumptions props
 
     }, {
-        key: 'calculateEmissionsPercentFromProps',
-        value: function calculateEmissionsPercentFromProps(regionButtons) {
+        key: 'calculateConsumptionsPercentFromProps',
+        value: function calculateConsumptionsPercentFromProps() {
 
-            var emissionsPercent = [];
-            var emissionsSum = this.calculateEmissionsSum();
+            var consumptionsPercent = [];
+            var consumptionsSum = this.calculateConsumptionsSum();
 
-            this.props.emissions.forEach(function (v, k) {
-                emissionsPercent.push(Number(v) / emissionsSum * 100);
+            this.props.consumptions.forEach(function (v) {
+                consumptionsPercent.push(Number(v) / consumptionsSum * 100);
             });
 
-            return emissionsPercent;
+            return consumptionsPercent;
         }
 
-        // calculate percentage values of emissions
+        // calculate percentage values of consumptions
         // based on regionButtons (set via handleRegionsChange from child component)
 
     }, {
-        key: 'calculateEmissionsPercentFromRegionButtons',
-        value: function calculateEmissionsPercentFromRegionButtons(regionButtons) {
+        key: 'calculateConsumptionsPercentFromRegionButtons',
+        value: function calculateConsumptionsPercentFromRegionButtons(regionButtons) {
 
-            var emissionsSum = this.state.emissionsSum;
-            var emissionsPercent = [];
+            var consumptionsPercent = [];
             var thisNumber = 0;
 
             // calculate percentage of track area controlled by button
             regionButtons.forEach(function (v, k) {
                 var lastNumber = thisNumber;
-                thisNumber = Number(v) / emissionsSum * 100;
-                emissionsPercent.push(thisNumber - lastNumber);
+                consumptionsPercent.push(thisNumber - lastNumber);
             });
 
             // add a last value to complete 100% of track area
-            emissionsPercent.push(100 - thisNumber);
+            consumptionsPercent.push(100 - thisNumber);
 
             // update state
-            this.setState({ emissionsPercent: emissionsPercent });
+            this.setState({ consumptionsPercent: consumptionsPercent });
 
-            return emissionsPercent;
+            return consumptionsPercent;
         }
 
         // child component sends regionButtons array here
@@ -130,8 +128,8 @@ var WhatIf = function (_Component) {
         value: function handleRegionsChange(regionButtons) {
             // set state
             this.setState({ regionButtons: regionButtons });
-            // set emission percentages based on button values
-            this.calculateEmissionsPercentFromRegionButtons(regionButtons);
+            // set consumptions percentages based on button values
+            this.calculateConsumptionsPercentFromRegionButtons(regionButtons);
             this.props.onWhatifChange();
         }
     }, {
@@ -141,20 +139,23 @@ var WhatIf = function (_Component) {
             this.props.onWhatifChange();
         }
 
-        // set regionButtons positions based on emissions prop values
+        // set regionButtons positions based on consumptions prop values
 
     }, {
         key: 'calculateRegionButtons',
         value: function calculateRegionButtons() {
 
+            var consumptionsSum = this.calculateConsumptionsSum();
+
             // array for region buttons
             var regionButtons = [];
 
             // every buttons adds up the value of previous button
-            var emissionsAdd = 0;
-            this.props.emissions.forEach(function (v, k) {
-                emissionsAdd += Number(v);
-                regionButtons.push(emissionsAdd);
+            var consumptionsAddPercent = 0;
+
+            this.props.consumptions.forEach(function (v, k) {
+                consumptionsAddPercent += Number(v) / consumptionsSum * 100;
+                regionButtons.push(consumptionsAddPercent);
             });
 
             // last button does not exist (since we have 1 button less than percent values which are controlled by them)
@@ -165,7 +166,9 @@ var WhatIf = function (_Component) {
         }
     }, {
         key: 'componentDidMount',
-        value: function componentDidMount() {}
+        value: function componentDidMount() {
+            console.log(this.state);
+        }
     }, {
         key: 'render',
         value: function render() {
@@ -182,8 +185,8 @@ var WhatIf = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-5-6' },
-                        _react2.default.createElement(_WorldMap2.default, { emissionsPercent: this.state.emissionsPercent }),
-                        _react2.default.createElement(_RangeRegions2.default, { onRegionsChange: this.handleRegionsChange, regionButtons: this.state.regionButtons, regionCodes: this.state.regionCodes, emissionsPercent: this.state.emissionsPercent })
+                        _react2.default.createElement(_WorldMap2.default, { consumptionsPercent: this.state.consumptionsPercent }),
+                        _react2.default.createElement(_RangeRegions2.default, { onRegionsChange: this.handleRegionsChange, regionButtons: this.state.regionButtons, regionCodes: this.state.regionCodes, consumptionsPercent: this.state.consumptionsPercent })
                     ),
                     _react2.default.createElement(
                         'div',
