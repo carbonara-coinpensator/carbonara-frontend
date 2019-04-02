@@ -47,7 +47,7 @@ class WorldMap extends Component {
                     }}
                     >
                     <ZoomableGroup center={[0,20]} disablePanning>
-                        <Geographies geography="/src/assets/ne_110m_land.topojson">
+                        <Geographies geography="/assets/ne_110m_land.topojson">
                         {(geographies, projection) =>
                             geographies.map((geography, i) =>
                             geography.id !== "ATA" && (

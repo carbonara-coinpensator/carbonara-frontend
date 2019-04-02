@@ -10,15 +10,15 @@ const Navigation = () => (
 
                     <div className="uk-navbar-center-left"><div>
                         <ul className="uk-navbar-nav">
-                            <li className="uk-active"><a href="#">Calculator</a></li>
+                            <li className="uk-active"><a href="/">Calculator</a></li>
                         </ul>
                     </div></div>
-                    <a className="uk-navbar-item uk-logo" href="#">
-                        <img width="200" src={logo} />
+                    <a className="uk-navbar-item uk-logo" href="/">
+                        <img width="200" src={logo} alt="" />
                     </a>
                     <div className="uk-navbar-center-right"><div>
                         <ul className="uk-navbar-nav">
-                            <li><a href="#">Greenpaper</a></li>
+                            <li><a href="/greenpaper">Greenpaper</a></li>
                         </ul>
                     </div></div>
 

@@ -95,8 +95,11 @@ class CarbonaraCalculator extends Component {
 
         switch(fieldName) {
             case 'address':
-                walletAddressValid = value.length == 34;
-                transactionIdValid = value.length == 64;
+                walletAddressValid = value.length === 34;
+                transactionIdValid = value.length === 64;
+                break
+            default:
+                break
         }
 
         this.setState({
@@ -265,7 +268,7 @@ class CarbonaraCalculator extends Component {
 
     scrollTo(e, hash = '') {
         e.preventDefault()
-        if (hash == '' && e.target.hash) {
+        if (hash === '' && e.target.hash) {
             hash = e.target.hash
         }
         UIkit.scroll(e.target).scrollTo(hash)
@@ -291,7 +294,7 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-position-bottom">
                             <div className="uk-container">
                                 <div className="uk-button-group uk-margin-large-bottom">
-                                    <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#graph')}>
+                                    <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#graph')}>
                                         BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
                                     </button>
                                 </div>
@@ -310,7 +313,7 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#calculate')}>
+                                        <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#calculate')}>
                                             How green is my BTC Wallet? <span uk-icon="arrow-down"></span>
                                         </button>
                                     </div>
@@ -345,7 +348,7 @@ class CarbonaraCalculator extends Component {
                                                 onChange={(event) => this.handleChange(event)}
                                                 autoFocus
                                             />
-                                            <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} type="submit" disabled={!this.state.addressValidity.some}>
+                                            <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
                                                 { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
                                             </button>
                                         </div>
@@ -421,11 +424,11 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#graph')}>
+                                        <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#graph')}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </button>
                                         { showResults &&
-                                            <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#results')}>
+                                            <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#results')}>
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </button>
                                         }
@@ -448,10 +451,10 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#calculate')}>
+                                        <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#calculate')}>
                                             <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
                                         </button>
-                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamification')}>
+                                        <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#gamification')}>
                                             What if &hellip; <span uk-icon="arrow-down"></span>
                                         </button>
                                     </div>
@@ -482,11 +485,11 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-default" onClick={() => this.scrollTo(event, '#results')}>
+                                        <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#results')}>
                                             <span uk-icon="arrow-up"></span> Calculation Result
                                         </button>
                                         { showGamificationResults &&
-                                            <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamificationresults')}>
+                                            <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#gamificationresults')}>
                                                 View Result <span uk-icon="arrow-down"></span>
                                             </button>
                                         }
