@@ -36,7 +36,7 @@ class ResultSection extends Component {
                 <div uk-grid="" className="uk-flex uk-flex-middle uk-grid-divider"
                     uk-sticky="animation: uk-animation-slide-top; cls-active: calculation-results-active;">
                     <div className="uk-width-1-2 uk-text-right">
-                        <h2 className="uk-text-huge">{ this.props.result } <small>kg</small></h2>
+                        <h2 className="uk-text-huge">{ Math.round(this.props.result) } <small>kg</small></h2>
                     </div>
                     <div className="uk-width-1-2">
                         <div uk-grid="" className="uk-grid-collapse" uk-height-match=".uk-card-media-top">

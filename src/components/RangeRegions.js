@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import { Range, getTrackBackground, Direction } from 'react-range'
 import RegionInfos from './RegionInfos'
 
-const STEP = 0.1
+const STEP = 1
 const MIN = 0
-const MAX = 2800
-const COLORS = ['#9CBCF8', 'red', '#276EF1', 'orange', 'green', '#0C2960']
+const MAX = 100
 
 class RangeRegions extends Component {
 

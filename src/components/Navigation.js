@@ -2,7 +2,7 @@ import React from 'react'
 import logo from '../assets/carbonara-logo.png'
 
 const Navigation = () => (
-    <nav className="uk-navbar-container uk-navbar-transparent uk-light uk-width-1-1 uk-position-absolute uk-position-top">
+    <nav className="uk-navbar-container uk-navbar-transparent uk-width-1-1 uk-position-absolute uk-position-top">
         <div className="uk-container uk-container-expand">
             <div uk-navbar="">
 
