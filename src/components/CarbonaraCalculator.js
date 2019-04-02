@@ -59,7 +59,7 @@ class CarbonaraCalculator extends Component {
             transactions: [],
             transactionTime: 0,
             transactionYearEstimated: 0,
-            
+
             years: [],
             regions: [],
             consumptionPerRegion: [],
@@ -174,7 +174,7 @@ class CarbonaraCalculator extends Component {
         })
 
         // update state
-        this.setState({ 
+        this.setState({
             regions,
             consumptionPerRegion,
             emissionsResult,
@@ -191,7 +191,7 @@ class CarbonaraCalculator extends Component {
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
 
             console.log(res.data)
-            
+
             // obtained years are used for gamification in WhatIf component
             let years = []
 
@@ -468,13 +468,13 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container">
 
                                 <h2>What if &hellip;</h2>
-                                <WhatIf 
-                                    years={this.state.years} 
-                                    transactionYear={this.state.transactionYearEstimated} 
-                                    regions={this.state.regions} 
-                                    consumptions={this.state.consumptionPerRegion} 
-                                    onYearsChange={this.handleYearsChange} 
-                                    onRegionsChange={this.handleRegionsChange} 
+                                <WhatIf
+                                    years={this.state.years}
+                                    transactionYear={this.state.transactionYearEstimated}
+                                    regions={this.state.regions}
+                                    consumptions={this.state.consumptionPerRegion}
+                                    onYearsChange={this.handleYearsChange}
+                                    onRegionsChange={this.handleRegionsChange}
                                 />
 
                             </div>
@@ -498,7 +498,7 @@ class CarbonaraCalculator extends Component {
                     </section>
                 }
 
-                { showGamificationResults &&
+                { /*showGamificationResults &&
                     <section id="gamificationresults" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
@@ -518,7 +518,7 @@ class CarbonaraCalculator extends Component {
                             </div>
 
                         </div>
-                    </section>
+                    </section> */
                 }
 
             </div>
