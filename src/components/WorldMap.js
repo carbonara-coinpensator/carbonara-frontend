@@ -85,7 +85,7 @@ class WorldMap extends Component {
                                 <circle
                                     cx={0}
                                     cy={0}
-                                    r={this.props.emissionsPercent[i]}
+                                    r={this.props.consumptionsPercent[i]}
                                     fill={region.color}
                                     stroke="white"
                                     strokeWidth="1"

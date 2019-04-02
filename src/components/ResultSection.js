@@ -11,7 +11,9 @@ class ResultSection extends Component {
         this.state = {
             color: 'secondary',
             result: 0,
-            label: 'Result'
+            label: 'Result',
+            kilometersDrivenByCar: Math.round(this.props.result * 6),
+            yearsOfCo2Sequestration: Math.round(this.props.result * 30 / 365)
         }
     }
 
@@ -44,7 +46,7 @@ class ResultSection extends Component {
                                         <img className="uk-height-small" src={car} />
                                     </div>
                                     <div className="uk-card-body">
-                                        <h3 className="uk-card-title"><strong>{ this.props.result * 6 }&nbsp;km</strong> <br />driven by&nbsp;car</h3>
+                                        <h3 className="uk-card-title"><strong>{ this.state.kilometersDrivenByCar }&nbsp;km</strong> <br />driven by&nbsp;car</h3>
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +56,7 @@ class ResultSection extends Component {
                                         <img className="uk-height-small" src={tree} />
                                     </div>
                                     <div className="uk-card-body">
-                                        <h3 className="uk-card-title"><strong>{ Math.round(this.props.result * 30 / 365) }&nbsp;years</strong> of&nbsp;CO<sub>2</sub> <br />sequestration</h3>
+                                        <h3 className="uk-card-title"><strong>{ this.state.yearsOfCo2Sequestration }&nbsp;years</strong> of&nbsp;CO<sub>2</sub> <br />sequestration</h3>
                                     </div>
                                 </div>
                             </div>

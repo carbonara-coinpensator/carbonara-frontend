@@ -10,15 +10,11 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _cloneDeep = require('lodash/cloneDeep');
+
+var _cloneDeep2 = _interopRequireDefault(_cloneDeep);
+
 require('react-dates/initialize');
-
-require('react-dates/lib/css/_datepicker.css');
-
-var _reactDates = require('react-dates');
-
-var _reactUikitTable = require('react-uikit-table');
-
-var _reactUikitTable2 = _interopRequireDefault(_reactUikitTable);
 
 var _materialTable = require('material-table');
 
@@ -67,6 +63,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+// import { DateRangePicker } from 'react-dates'
+// import 'react-dates/lib/css/_datepicker.css'
+
 
 _uikit2.default.use(_uikitIcons2.default);
 
@@ -92,7 +91,7 @@ var CarbonaraCalculator = function (_Component) {
         _this.submitForm = _this.submitForm.bind(_this);
         _this.getTransactions = _this.getTransactions.bind(_this);
         _this.calculateEmission = _this.calculateEmission.bind(_this);
-        _this.fillInTransactionId = _this.fillInTransactionId.bind(_this);
+        _this.fillInTransactionIdAndEmptyTransactionsList = _this.fillInTransactionIdAndEmptyTransactionsList.bind(_this);
         _this.getChartData = _this.getChartData.bind(_this);
         _this.activateGamificationResults = _this.activateGamificationResults.bind(_this);
 
@@ -100,6 +99,8 @@ var CarbonaraCalculator = function (_Component) {
         // this.getMiningGearYears = this.getMiningGearYears.bind(this)
 
         _this.state = {
+
+            chart: {},
 
             address: '',
 
@@ -114,16 +115,12 @@ var CarbonaraCalculator = function (_Component) {
                 transaction: false
             },
 
-            startDate: null,
-            endDate: null,
-
-            dateRangeValid: false,
-
             transactions: [],
+            transactionTime: 0,
+
             years: [],
             regions: [],
-            emissionsPerRegion: [],
-            chart: {},
+            consumptionPerRegion: [],
 
             focusedInput: null,
             emissionsResult: 0,
@@ -198,12 +195,13 @@ var CarbonaraCalculator = function (_Component) {
     }, {
         key: 'submitForm',
         value: function submitForm(e) {
+            var event = (0, _cloneDeep2.default)(e);
             e.preventDefault();
             if (this.state.addressValidity.wallet) {
-                this.getTransactions(e);
+                this.getTransactions();
             }
             if (this.state.addressValidity.transaction) {
-                this.calculateEmission(e);
+                this.calculateEmission(event);
             }
         }
     }, {
@@ -222,38 +220,62 @@ var CarbonaraCalculator = function (_Component) {
         }
     }, {
         key: 'calculateEmission',
-        value: function calculateEmission(e) {
+        value: function calculateEmission(event) {
             var _this5 = this;
+
+            var self = this;
 
             _uikit2.default.notification('<div uk-spinner=""></div> Calculating emissions …', { status: 'primary' });
             _api2.default.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(function (res) {
 
-                var emissionsResult = 0;
-                var regions = [];
-                var emissionsPerRegion = [];
-                res.data.averageEmissionPerCountry.forEach(function (v, k) {
-                    regions.push(v.countryCode);
-                    emissionsPerRegion.push(v.co2Emission.toFixed(2));
-                    if (v.countryCode == 'US') {
-                        emissionsResult = v.co2Emission;
-                    }
-                });
-                _this5.setState({ emissionsResult: emissionsResult.toFixed(2) });
-                _this5.setState({ regions: regions });
-                _this5.setState({ emissionsPerRegion: emissionsPerRegion });
+                console.log(_this5.state);
 
+                // get year before transaction time
+                var transactionYear = (0, _moment2.default)(_this5.state.transactionTime).subtract(1, 'years').year();
+
+                // will be displayed as main result
+                var emissionsResult = res.data.calculationPerYear[transactionYear].fullCo2Emission;
+
+                // obtained region codes are used for gamification in WhatIf component
+                var regions = [];
+
+                // obtained years are used for gamification in WhatIf component
                 var years = [];
+
+                // consumption per region is used for gamification in WhatIf component
+                var consumptionPerRegion = [];
+
+                // given average emissions per region
+                res.data.calculationPerYear[transactionYear].energyConsumptionPerCountry.forEach(function (v) {
+                    // push properties to arrays
+                    regions.push(v.countryCode);
+                    consumptionPerRegion.push(v.energyConsumption);
+                });
+
+                // make a list of years available for gamification out of keys in response calculationPerYear object
                 Object.keys(res.data.calculationPerYear).map(function (k, v) {
                     return years.push(k);
                 });
-                _this5.setState({ years: years });
 
+                // update state
+                _this5.setState({
+                    regions: regions,
+                    years: years,
+                    consumptionPerRegion: consumptionPerRegion,
+                    emissionsResult: emissionsResult
+                });
+
+                console.log(_this5.state);
+            }).catch(function (error) {
+                console.log(error);
+            }).then(function () {
                 _uikit2.default.notification.closeAll();
+                self.scrollTo(event, '#results');
             });
         }
     }, {
-        key: 'fillInTransactionId',
-        value: function fillInTransactionId(e, transaction) {
+        key: 'fillInTransactionIdAndEmptyTransactionsList',
+        value: function fillInTransactionIdAndEmptyTransactionsList(e, transaction) {
             e.preventDefault();
             this.handleChange(e);
             this.setState({
@@ -262,7 +284,9 @@ var CarbonaraCalculator = function (_Component) {
                     transaction: true,
                     some: true
                 },
-                address: transaction.txid
+                address: transaction.txid,
+                transactionTime: transaction.time,
+                transactions: []
             });
         }
     }, {
@@ -328,16 +352,64 @@ var CarbonaraCalculator = function (_Component) {
 
             var showTransactions = this.state.transactions.length > 0 && this.state.formValidity.wallet;
             var showResults = this.state.emissionsResult > 0;
-            var showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.emissionsPerRegion.length > 0;
+            var showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.consumptionPerRegion.length > 0;
             var showGamificationResults = this.state.showGamificationResults;
 
             return _react2.default.createElement(
                 'div',
-                null,
-                _react2.default.createElement(_Navigation2.default, null),
+                { className: 'uk-text-center' },
+                _react2.default.createElement(
+                    'section',
+                    { id: 'welcome', className: 'uk-section uk-section-gradient uk-light uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport' },
+                    _react2.default.createElement(_Navigation2.default, null),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'uk-width-1-1' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'uk-container uk-container-small uk-margin-large-bottom' },
+                            _react2.default.createElement(
+                                'h1',
+                                null,
+                                'Carbonara Coinpensator'
+                            ),
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                'Welcome to the ',
+                                _react2.default.createElement(
+                                    'strong',
+                                    null,
+                                    'Carbonara Coinpensator'
+                                ),
+                                '. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'uk-position-bottom' },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'uk-container' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
+                                    _react2.default.createElement(
+                                        'button',
+                                        { className: 'uk-button uk-button-default', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#graph');
+                                            } },
+                                        'BTC Price and Energy Consumption ',
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
                 'priceChart' in this.state.chart && 'co2EmissionChart' in this.state.chart && _react2.default.createElement(
                     'section',
-                    { id: 'graph', className: 'uk-flex uk-flex-middle uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default', 'uk-scrollspy': 'cls:uk-animation-fade' },
+                    { id: 'graph', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default' },
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-1-1' },
@@ -346,7 +418,7 @@ var CarbonaraCalculator = function (_Component) {
                             { className: 'uk-container' },
                             _react2.default.createElement(
                                 'h2',
-                                null,
+                                { className: 'uk-text-center' },
                                 'BTC Price and Energy Consumption'
                             ),
                             _react2.default.createElement(_ConsumptionGraph2.default, { className: 'uk-margin-top', prices: this.state.chart.priceChart, consumptions: this.state.chart.co2EmissionChart })
@@ -359,24 +431,14 @@ var CarbonaraCalculator = function (_Component) {
                                 { className: 'uk-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { 'uk-grid': '' },
-                                    _react2.default.createElement('div', { className: 'uk-width-1-3' }),
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
                                     _react2.default.createElement(
-                                        'div',
-                                        { className: 'uk-width-2-3' },
-                                        _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-button-group uk-margin-large-bottom' },
-                                            _react2.default.createElement('div', { className: 'uk-width-1-2' }),
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-primary uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#calculate');
-                                                    } },
-                                                'How green is my BTC Wallet? ',
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
-                                            )
-                                        )
+                                        'button',
+                                        { className: 'uk-button uk-button-primary', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#calculate');
+                                            } },
+                                        'How green is my BTC Wallet? ',
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
                                     )
                                 )
                             )
@@ -385,7 +447,7 @@ var CarbonaraCalculator = function (_Component) {
                 ),
                 _react2.default.createElement(
                     'section',
-                    { id: 'calculate', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary', 'uk-scrollspy': 'cls:uk-animation-fade' },
+                    { id: 'calculate', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary' },
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-1-1' },
@@ -408,6 +470,32 @@ var CarbonaraCalculator = function (_Component) {
                                 { onSubmit: this.submitForm, className: 'uk-margin-large-top' },
                                 _react2.default.createElement(
                                     'div',
+                                    { className: 'uk-text-small uk-child-width-1-2 uk-margin-medium', 'uk-grid': '' },
+                                    _react2.default.createElement(
+                                        'p',
+                                        null,
+                                        'Example Wallet Address: ',
+                                        _react2.default.createElement('br', null),
+                                        _react2.default.createElement(
+                                            'code',
+                                            null,
+                                            '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'p',
+                                        null,
+                                        'Example Transaction ID: ',
+                                        _react2.default.createElement('br', null),
+                                        _react2.default.createElement(
+                                            'code',
+                                            null,
+                                            'e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8'
+                                        )
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'div',
                                     { className: 'uk-margin' },
                                     _react2.default.createElement(
                                         'label',
@@ -417,33 +505,21 @@ var CarbonaraCalculator = function (_Component) {
                                     _react2.default.createElement(
                                         'div',
                                         { className: 'uk-form-controls' },
+                                        _react2.default.createElement('input', { className: 'uk-input uk-form-large uk-text-center',
+                                            id: 'address',
+                                            type: 'text',
+                                            name: 'address',
+                                            placeholder: 'Wallet Address or Transaction ID',
+                                            value: this.state.address,
+                                            onChange: function onChange(event) {
+                                                return _this7.handleChange(event);
+                                            },
+                                            autoFocus: true
+                                        }),
                                         _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-grid-collapse' },
-                                            _react2.default.createElement(
-                                                'div',
-                                                { className: 'uk-width-4-5' },
-                                                _react2.default.createElement('input', { className: 'uk-input uk-form-large',
-                                                    id: 'address',
-                                                    type: 'text',
-                                                    name: 'address',
-                                                    placeholder: 'Wallet Address or Transaction ID',
-                                                    value: this.state.address,
-                                                    onChange: function onChange(event) {
-                                                        return _this7.handleChange(event);
-                                                    },
-                                                    autoFocus: true
-                                                })
-                                            ),
-                                            _react2.default.createElement(
-                                                'div',
-                                                { className: 'uk-width-1-5' },
-                                                _react2.default.createElement(
-                                                    'button',
-                                                    (_React$createElement = { type: 'submit', className: 'uk-width-1-1 uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default' : ' uk-button-primary') }, _defineProperty(_React$createElement, 'type', 'submit'), _defineProperty(_React$createElement, 'disabled', !this.state.addressValidity.some), _React$createElement),
-                                                    'Calculate'
-                                                )
-                                            )
+                                            'button',
+                                            (_React$createElement = { type: 'submit', className: 'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary') }, _defineProperty(_React$createElement, 'type', 'submit'), _defineProperty(_React$createElement, 'disabled', !this.state.addressValidity.some), _React$createElement),
+                                            this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : ''
                                         )
                                     )
                                 ),
@@ -471,37 +547,11 @@ var CarbonaraCalculator = function (_Component) {
                                                     icon: 'file_copy',
                                                     tooltip: 'select this transaction',
                                                     onClick: function onClick(event, rowData) {
-                                                        _this7.fillInTransactionId(event, rowData);
+                                                        _this7.fillInTransactionIdAndEmptyTransactionsList(event, rowData);
                                                     }
                                                 }]
                                             })
                                         )
-                                    )
-                                )
-                            ),
-                            _react2.default.createElement(
-                                'div',
-                                { className: 'uk-text-small' },
-                                _react2.default.createElement(
-                                    'p',
-                                    null,
-                                    'Example Wallet Address: ',
-                                    _react2.default.createElement('br', null),
-                                    _react2.default.createElement(
-                                        'code',
-                                        null,
-                                        '1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC'
-                                    )
-                                ),
-                                _react2.default.createElement(
-                                    'p',
-                                    null,
-                                    'Example Transaction ID: ',
-                                    _react2.default.createElement('br', null),
-                                    _react2.default.createElement(
-                                        'code',
-                                        null,
-                                        'e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8'
                                     )
                                 )
                             )
@@ -514,31 +564,22 @@ var CarbonaraCalculator = function (_Component) {
                                 { className: 'uk-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { 'uk-grid': '' },
-                                    _react2.default.createElement('div', { className: 'uk-width-1-3' }),
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
                                     _react2.default.createElement(
-                                        'div',
-                                        { className: 'uk-width-2-3' },
-                                        _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-button-group uk-margin-large-bottom' },
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-default uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#graph');
-                                                    } },
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
-                                                ' BTC Price and Energy Consumption'
-                                            ),
-                                            showResults && _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-primary uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#results');
-                                                    } },
-                                                'Calculation Result ',
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
-                                            )
-                                        )
+                                        'button',
+                                        { className: 'uk-button uk-button-default', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#graph');
+                                            } },
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
+                                        ' BTC Price and Energy Consumption'
+                                    ),
+                                    showResults && _react2.default.createElement(
+                                        'button',
+                                        { className: 'uk-button uk-button-primary', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#results');
+                                            } },
+                                        'Calculation Result ',
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
                                     )
                                 )
                             )
@@ -547,19 +588,14 @@ var CarbonaraCalculator = function (_Component) {
                 ),
                 showResults && _react2.default.createElement(
                     'section',
-                    { id: 'results', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-secondary', 'uk-scrollspy': 'cls:uk-animation-fade' },
+                    { id: 'results', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light' },
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-1-1' },
                         _react2.default.createElement(
                             'div',
                             { className: 'uk-container' },
-                            _react2.default.createElement(
-                                'h2',
-                                null,
-                                'Calculation Result'
-                            ),
-                            _react2.default.createElement(_ResultSection2.default, { label: 'Result', color: 'secondary', result: this.state.emissionsResult })
+                            _react2.default.createElement(_ResultSection2.default, { label: 'Result', color: 'secondary', result: this.state.emissionsResult.toFixed(2) })
                         ),
                         _react2.default.createElement(
                             'div',
@@ -569,31 +605,22 @@ var CarbonaraCalculator = function (_Component) {
                                 { className: 'uk-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { 'uk-grid': '' },
-                                    _react2.default.createElement('div', { className: 'uk-width-1-3' }),
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
                                     _react2.default.createElement(
-                                        'div',
-                                        { className: 'uk-width-2-3' },
-                                        _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-button-group uk-margin-large-bottom' },
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-default uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#calculate');
-                                                    } },
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
-                                                ' How green is my BTC Wallet?'
-                                            ),
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-primary uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#gamification');
-                                                    } },
-                                                'What if \u2026 ',
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
-                                            )
-                                        )
+                                        'button',
+                                        { className: 'uk-button uk-button-default', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#calculate');
+                                            } },
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
+                                        ' How green is my BTC Wallet?'
+                                    ),
+                                    _react2.default.createElement(
+                                        'button',
+                                        { className: 'uk-button uk-button-primary', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#gamification');
+                                            } },
+                                        'What if \u2026 ',
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
                                     )
                                 )
                             )
@@ -602,7 +629,7 @@ var CarbonaraCalculator = function (_Component) {
                 ),
                 showGamification && _react2.default.createElement(
                     'section',
-                    { id: 'gamification', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default', 'uk-scrollspy': 'cls:uk-animation-fade' },
+                    { id: 'gamification', className: 'uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default' },
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-1-1' },
@@ -614,7 +641,7 @@ var CarbonaraCalculator = function (_Component) {
                                 null,
                                 'What if \u2026'
                             ),
-                            _react2.default.createElement(_WhatIf2.default, { years: this.state.years, regions: this.state.regions, emissions: this.state.emissionsPerRegion, onWhatifChange: this.activateGamificationResults })
+                            _react2.default.createElement(_WhatIf2.default, { years: this.state.years, regions: this.state.regions, consumptions: this.state.consumptionPerRegion, onWhatifChange: this.activateGamificationResults })
                         ),
                         _react2.default.createElement(
                             'div',
@@ -624,31 +651,22 @@ var CarbonaraCalculator = function (_Component) {
                                 { className: 'uk-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { 'uk-grid': '' },
-                                    _react2.default.createElement('div', { className: 'uk-width-1-3' }),
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
                                     _react2.default.createElement(
-                                        'div',
-                                        { className: 'uk-width-2-3' },
-                                        _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-button-group uk-margin-large-bottom' },
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-default uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#results');
-                                                    } },
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
-                                                ' Calculation Result'
-                                            ),
-                                            showGamificationResults && _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-primary uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#gamificationresults');
-                                                    } },
-                                                'View Result ',
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
-                                            )
-                                        )
+                                        'button',
+                                        { className: 'uk-button uk-button-default', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#results');
+                                            } },
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
+                                        ' Calculation Result'
+                                    ),
+                                    showGamificationResults && _react2.default.createElement(
+                                        'button',
+                                        { className: 'uk-button uk-button-primary', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#gamificationresults');
+                                            } },
+                                        'View Result ',
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-down' })
                                     )
                                 )
                             )
@@ -657,18 +675,13 @@ var CarbonaraCalculator = function (_Component) {
                 ),
                 showGamificationResults && _react2.default.createElement(
                     'section',
-                    { id: 'gamificationresults', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary', 'uk-scrollspy': 'cls:uk-animation-fade' },
+                    { id: 'gamificationresults', className: 'uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary' },
                     _react2.default.createElement(
                         'div',
                         { className: 'uk-width-1-1' },
                         _react2.default.createElement(
                             'div',
                             { className: 'uk-container' },
-                            _react2.default.createElement(
-                                'h2',
-                                null,
-                                'Result'
-                            ),
                             _react2.default.createElement(_ResultSection2.default, { label: 'Better result', color: 'primary', result: this.state.emissionsResult })
                         ),
                         _react2.default.createElement(
@@ -679,24 +692,14 @@ var CarbonaraCalculator = function (_Component) {
                                 { className: 'uk-container' },
                                 _react2.default.createElement(
                                     'div',
-                                    { 'uk-grid': '' },
-                                    _react2.default.createElement('div', { className: 'uk-width-1-3' }),
+                                    { className: 'uk-button-group uk-margin-large-bottom' },
                                     _react2.default.createElement(
-                                        'div',
-                                        { className: 'uk-width-2-3' },
-                                        _react2.default.createElement(
-                                            'div',
-                                            { 'uk-grid': '', className: 'uk-button-group uk-margin-large-bottom' },
-                                            _react2.default.createElement('div', { className: 'uk-width-1-2' }),
-                                            _react2.default.createElement(
-                                                'button',
-                                                { className: 'uk-width-1-2 uk-button uk-button-primary uk-button-large', onClick: function onClick() {
-                                                        return _this7.scrollTo(event, '#gamification');
-                                                    } },
-                                                _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
-                                                ' What if \u2026'
-                                            )
-                                        )
+                                        'button',
+                                        { className: 'uk-button uk-button-primary', onClick: function onClick() {
+                                                return _this7.scrollTo(event, '#gamification');
+                                            } },
+                                        _react2.default.createElement('span', { 'uk-icon': 'arrow-up' }),
+                                        ' What if \u2026'
                                     )
                                 )
                             )
