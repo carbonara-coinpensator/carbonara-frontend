@@ -16,6 +16,9 @@ import '../scss/css.scss'
 
 UIkit.use(Icons);
 
+// Formula to calculate FullCo2Emission is a sum for every CountryCode of:
+// (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
+
 class CarbonaraCalculator extends Component {
 
     constructor(...props) {
@@ -31,10 +34,10 @@ class CarbonaraCalculator extends Component {
         this.calculateEmission = this.calculateEmission.bind(this)
         this.fillInTransactionIdAndEmptyTransactionsList = this.fillInTransactionIdAndEmptyTransactionsList.bind(this)
         this.getChartData = this.getChartData.bind(this)
-        this.activateGamificationResults = this.activateGamificationResults.bind(this)
-
-        // this.onChangeDateRange = this.onChangeDateRange.bind(this)
-        // this.getMiningGearYears = this.getMiningGearYears.bind(this)
+        this.handleYearsChange = this.handleYearsChange.bind(this)
+        this.handleRegionsChange = this.handleRegionsChange.bind(this)
+        this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
+        this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
 
         this.state = {
 
@@ -55,6 +58,7 @@ class CarbonaraCalculator extends Component {
 
             transactions: [],
             transactionTime: 0,
+            transactionYearEstimated: 0,
             
             years: [],
             regions: [],
@@ -64,7 +68,9 @@ class CarbonaraCalculator extends Component {
             emissionsResult: 0,
 
             showGamificationResults: false,
-            gamificationResult: 0
+            gamificationResult: 0,
+
+            mainCalculationResult: {}
 
         }
 
@@ -145,6 +151,38 @@ class CarbonaraCalculator extends Component {
         })
     }
 
+    calculateGamificationForRegions() {
+        console.log('ok')
+    }
+
+    calculateGamificationForYear(transactionYearEstimated) {
+
+        // will be displayed as main result
+        let emissionsResult = this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].fullCo2Emission
+
+        // obtained region codes are used for gamification in WhatIf component
+        let regions = []
+
+        // consumption per region is used for gamification in WhatIf component
+        let consumptionPerRegion = []
+
+        // given average emissions per region
+        this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+            // push properties to arrays
+            regions.push(v.countryCode)
+            consumptionPerRegion.push(v.energyConsumption)
+        })
+
+        // update state
+        this.setState({ 
+            regions,
+            consumptionPerRegion,
+            emissionsResult,
+            transactionYearEstimated
+         })
+
+    }
+
     calculateEmission(event) {
 
         let self = this
@@ -152,44 +190,26 @@ class CarbonaraCalculator extends Component {
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
 
-            console.log(this.state)
-
-            // get year before transaction time
-            let transactionYear = moment(this.state.transactionTime).subtract(1, 'years').year()
+            console.log(res.data)
             
-            // will be displayed as main result
-            let emissionsResult = res.data.calculationPerYear[transactionYear].fullCo2Emission
-
-            // obtained region codes are used for gamification in WhatIf component
-            let regions = []
-
             // obtained years are used for gamification in WhatIf component
             let years = []
 
-            // consumption per region is used for gamification in WhatIf component
-            let consumptionPerRegion = []
-
-            // given average emissions per region
-            res.data.calculationPerYear[transactionYear].energyConsumptionPerCountry.forEach(function(v){
-                // push properties to arrays
-                regions.push(v.countryCode)
-                consumptionPerRegion.push(v.energyConsumption)
-            })
-
             // make a list of years available for gamification out of keys in response calculationPerYear object
-            Object.keys(res.data.calculationPerYear).map((k, v) => (
+            Object.keys(res.data.calculationPerYear).map((k) => (
                 years.push(k)
             ))
 
-            // update state
-            this.setState({ 
-                regions,
-                years,
-                consumptionPerRegion,
-                emissionsResult
+            // get year before transaction time
+            let transactionYearEstimated = moment(this.state.transactionTime).subtract(1, 'years').year()
+
+            this.setState({
+                mainCalculationResult: res.data,
+                transactionYearEstimated: transactionYearEstimated,
+                years: years
              })
 
-             console.log(this.state)
+            this.calculateGamificationForYear(transactionYearEstimated)
 
         }).catch(function (error) {
             console.log(error);
@@ -223,26 +243,15 @@ class CarbonaraCalculator extends Component {
         });
     }
 
-    activateGamificationResults() {
+    handleRegionsChange(regions) {
+        this.calculateGamificationForRegions()
         this.setState({showGamificationResults: true})
     }
 
-    /*onChangeDateRange(startDate, endDate) {
-        this.setState({
-            startDate: startDate,
-            endDate: endDate,
-            dateRangeValid: true
-        });
-        if (startDate && endDate) {
-            this.validateWalletForm();
-        }
-    }*/
-
-    /*getMiningGearYears() {
-        API.get('api/Carbonara/MinningGearYearsSelection').then(res => {
-            this.setState({ years: res.data });
-        });
-    }*/
+    handleYearsChange(year) {
+        this.calculateGamificationForYear(year[0])
+        this.setState({showGamificationResults: true})
+    }
 
     componentDidMount() {
         this.getChartData()
@@ -272,7 +281,7 @@ class CarbonaraCalculator extends Component {
         return (
             <div className="uk-text-center">
 
-                <section id="welcome" className="uk-section uk-section-gradient uk-light uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
+                <section id="welcome" className="uk-section uk-section-background uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
                     <Navigation />
                     <div className="uk-width-1-1">
                         <div className="uk-container uk-container-small uk-margin-large-bottom">
@@ -432,7 +441,7 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
-                                <ResultSection label="Result" color="secondary" result={this.state.emissionsResult.toFixed(2)} />
+                                <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
 
                             </div>
 
@@ -459,7 +468,14 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container">
 
                                 <h2>What if &hellip;</h2>
-                                <WhatIf years={this.state.years} regions={this.state.regions} consumptions={this.state.consumptionPerRegion} onWhatifChange={this.activateGamificationResults} />
+                                <WhatIf 
+                                    years={this.state.years} 
+                                    transactionYear={this.state.transactionYearEstimated} 
+                                    regions={this.state.regions} 
+                                    consumptions={this.state.consumptionPerRegion} 
+                                    onYearsChange={this.handleYearsChange} 
+                                    onRegionsChange={this.handleRegionsChange} 
+                                />
 
                             </div>
 

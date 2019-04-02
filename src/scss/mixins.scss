@@ -17,6 +17,10 @@
     background: linear-gradient(45deg, $global-secondary-color 0%,lighten($global-secondary-color,10%) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
+.uk-section-background {
+    background: url(../assets/landscape.jpg);
+}
+
 @mixin b {
     border: 1px solid red;
 }

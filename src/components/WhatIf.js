@@ -22,7 +22,7 @@ class WhatIf extends Component {
             consumptionsPercent: this.calculateConsumptionsPercentFromProps(),
             regionButtons: this.calculateRegionButtons(),
             regionCodes: this.props.regions,
-            selectedYearValues: [this.props.years.sort()[this.props.years.length - 1]]
+            selectedYearValue: this.props.transactionYear
         }
 
     }
@@ -43,10 +43,10 @@ class WhatIf extends Component {
     // calculate percentage values of consumptions
     // based on consumptions props
     calculateConsumptionsPercentFromProps() {
-
+        
         let consumptionsPercent = []
         let consumptionsSum = this.calculateConsumptionsSum()
-
+        
         this.props.consumptions.forEach(function(v){
             consumptionsPercent.push(Number(v) / consumptionsSum * 100)
         })
@@ -63,8 +63,9 @@ class WhatIf extends Component {
         let thisNumber = 0;
 
         // calculate percentage of track area controlled by button
-        regionButtons.forEach(function(v,k){
+        regionButtons.forEach(function(v){
             let lastNumber = thisNumber
+            thisNumber = v
             consumptionsPercent.push(thisNumber - lastNumber)
         })
 
@@ -84,12 +85,12 @@ class WhatIf extends Component {
         this.setState({ regionButtons })
         // set consumptions percentages based on button values
         this.calculateConsumptionsPercentFromRegionButtons(regionButtons)
-        this.props.onWhatifChange()
+        // this.props.onRegionsChange(regionButtons)
     }
 
-    handleYearsChange(selectedYearValues) {
-        this.setState({ selectedYearValues })
-        this.props.onWhatifChange()
+    handleYearsChange(selectedYearValue) {
+        this.setState({ selectedYearValue })
+        this.props.onYearsChange(selectedYearValue)
     }
 
     // set regionButtons positions based on consumptions prop values
@@ -117,13 +118,12 @@ class WhatIf extends Component {
     }
 
     componentDidMount() {
-        console.log(this.state)
+        
     }
 
     render() {
 
         const years = this.props.years.sort()
-        const selectedYearValues = this.state.selectedYearValues
 
         return (
             <div>
@@ -133,7 +133,7 @@ class WhatIf extends Component {
                         <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
                     </div>
                     <div className="uk-width-1-6">
-                        <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={selectedYearValues} />
+                        <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
                     </div>
                 </div>
             </div>
