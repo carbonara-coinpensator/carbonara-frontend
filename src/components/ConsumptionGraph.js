@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-import Moment from 'react-moment'
+// import Moment from 'react-moment'
 
 class ConsumptionGraph extends Component {
 
