@@ -29,7 +29,7 @@ class CarbonaraCalculator extends Component {
         this.submitForm = this.submitForm.bind(this)
         this.getTransactions = this.getTransactions.bind(this)
         this.calculateEmission = this.calculateEmission.bind(this)
-        this.fillInTransactionId = this.fillInTransactionId.bind(this)
+        this.fillInTransactionIdAndEmptyTransactionsList = this.fillInTransactionIdAndEmptyTransactionsList.bind(this)
         this.getChartData = this.getChartData.bind(this)
         this.activateGamificationResults = this.activateGamificationResults.bind(this)
 
@@ -37,6 +37,8 @@ class CarbonaraCalculator extends Component {
         // this.getMiningGearYears = this.getMiningGearYears.bind(this)
 
         this.state = {
+
+            chart: {},
 
             address: '',
 
@@ -51,17 +53,12 @@ class CarbonaraCalculator extends Component {
                 transaction: false
             },
 
-            startDate: null,
-            endDate: null,
-
-
-            dateRangeValid: false,
-
             transactions: [],
+            transactionTime: 0,
+            
             years: [],
             regions: [],
-            emissionsPerRegion: [],
-            chart: {},
+            consumptionPerRegion: [],
 
             focusedInput: null,
             emissionsResult: 0,
@@ -155,25 +152,44 @@ class CarbonaraCalculator extends Component {
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
 
-            let emissionsResult = 0
-            let regions = []
-            let emissionsPerRegion = []
-            res.data.averageEmissionPerCountry.forEach(function(v,k){
-                regions.push(v.countryCode)
-                emissionsPerRegion.push(v.co2Emission.toFixed(2))
-                if (v.countryCode == 'US') {
-                    emissionsResult = v.co2Emission
-                }
-            })
-            this.setState({ emissionsResult: emissionsResult.toFixed(2) })
-            this.setState({ regions: regions })
-            this.setState({ emissionsPerRegion: emissionsPerRegion })
+            console.log(this.state)
 
+            // get year before transaction time
+            let transactionYear = moment(this.state.transactionTime).subtract(1, 'years').year()
+            
+            // will be displayed as main result
+            let emissionsResult = res.data.calculationPerYear[transactionYear].fullCo2Emission
+
+            // obtained region codes are used for gamification in WhatIf component
+            let regions = []
+
+            // obtained years are used for gamification in WhatIf component
             let years = []
+
+            // consumption per region is used for gamification in WhatIf component
+            let consumptionPerRegion = []
+
+            // given average emissions per region
+            res.data.calculationPerYear[transactionYear].energyConsumptionPerCountry.forEach(function(v){
+                // push properties to arrays
+                regions.push(v.countryCode)
+                consumptionPerRegion.push(v.energyConsumption)
+            })
+
+            // make a list of years available for gamification out of keys in response calculationPerYear object
             Object.keys(res.data.calculationPerYear).map((k, v) => (
                 years.push(k)
             ))
-            this.setState({ years: years })
+
+            // update state
+            this.setState({ 
+                regions,
+                years,
+                consumptionPerRegion,
+                emissionsResult
+             })
+
+             console.log(this.state)
 
         }).catch(function (error) {
             console.log(error);
@@ -184,7 +200,7 @@ class CarbonaraCalculator extends Component {
         })
     }
 
-    fillInTransactionId(e, transaction) {
+    fillInTransactionIdAndEmptyTransactionsList(e, transaction) {
         e.preventDefault();
         this.handleChange(e);
         this.setState({
@@ -193,8 +209,10 @@ class CarbonaraCalculator extends Component {
                 transaction: true,
                 some: true
             },
-            address: transaction.txid
-         });
+            address: transaction.txid,
+            transactionTime: transaction.time,
+            transactions: []
+         })
     }
 
     getChartData() {
@@ -248,7 +266,7 @@ class CarbonaraCalculator extends Component {
 
         let showTransactions = this.state.transactions.length > 0 && this.state.formValidity.wallet
         let showResults = this.state.emissionsResult > 0
-        let showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.emissionsPerRegion.length > 0
+        let showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.consumptionPerRegion.length > 0
         let showGamificationResults = this.state.showGamificationResults
 
         return (
@@ -370,7 +388,7 @@ class CarbonaraCalculator extends Component {
                                                                 icon: 'file_copy',
                                                                 tooltip: 'select this transaction',
                                                                 onClick: (event, rowData) => {
-                                                                    this.fillInTransactionId(event, rowData)
+                                                                    this.fillInTransactionIdAndEmptyTransactionsList(event, rowData)
                                                                 },
                                                             }
                                                         ]}
@@ -378,7 +396,7 @@ class CarbonaraCalculator extends Component {
                                                     {/*<Table className="uk-table uk-table-small uk-table-divider uk-table-hover" caption='Transactions' head={['time', 'txid', 'value']} body={this.state.transactions}/>*/}
                                                     {/*<ul className="uk-list uk-list-striped uk-resize-vertical uk-height-small">
                                                         { this.state.transactions.map((transaction,index) => <li key={index}>
-                                                            <a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionId(event, transaction)}></a>
+                                                            <a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionIdAndEmptyTransactionsList(event, transaction)}></a>
                                                             time: {transaction.time}<br />txid: {transaction.txid}<br />value: {transaction.value}</li>)
                                                         }
                                                     </ul>*/}
@@ -414,7 +432,7 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
-                                <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
+                                <ResultSection label="Result" color="secondary" result={this.state.emissionsResult.toFixed(2)} />
 
                             </div>
 
@@ -441,7 +459,7 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container">
 
                                 <h2>What if &hellip;</h2>
-                                <WhatIf years={this.state.years} regions={this.state.regions} emissions={this.state.emissionsPerRegion} onWhatifChange={this.activateGamificationResults} />
+                                <WhatIf years={this.state.years} regions={this.state.regions} consumptions={this.state.consumptionPerRegion} onWhatifChange={this.activateGamificationResults} />
 
                             </div>
 

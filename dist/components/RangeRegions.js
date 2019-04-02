@@ -80,7 +80,7 @@ var RangeRegions = function (_Component) {
             var _this2 = this;
 
             var regionButtons = this.props.regionButtons;
-            var emissionsPercent = this.props.emissionsPercent;
+            var consumptionsPercent = this.props.consumptionsPercent;
             var colors = this.state.colors;
 
             return _react2.default.createElement(
@@ -176,7 +176,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[0] } },
                                 'CA: ',
-                                emissionsPercent[0].toFixed(1),
+                                consumptionsPercent[0].toFixed(1),
                                 '%'
                             )
                         ),
@@ -187,7 +187,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[1] } },
                                 'CN: ',
-                                emissionsPercent[1].toFixed(1),
+                                consumptionsPercent[1].toFixed(1),
                                 '%'
                             )
                         ),
@@ -198,7 +198,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[2] } },
                                 'EU: ',
-                                emissionsPercent[2].toFixed(1),
+                                consumptionsPercent[2].toFixed(1),
                                 '%'
                             )
                         ),
@@ -209,7 +209,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[3] } },
                                 'JP: ',
-                                emissionsPercent[3].toFixed(1),
+                                consumptionsPercent[3].toFixed(1),
                                 '%'
                             )
                         ),
@@ -220,7 +220,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[4] } },
                                 'SG: ',
-                                emissionsPercent[4].toFixed(1),
+                                consumptionsPercent[4].toFixed(1),
                                 '%'
                             )
                         ),
@@ -231,7 +231,7 @@ var RangeRegions = function (_Component) {
                                 'span',
                                 { className: 'uk-label', style: { backgroundColor: colors[5] } },
                                 'US: ',
-                                emissionsPercent[5].toFixed(1),
+                                consumptionsPercent[5].toFixed(1),
                                 '%'
                             )
                         )

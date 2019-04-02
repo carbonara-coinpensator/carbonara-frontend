@@ -119,7 +119,7 @@ var WorldMap = function (_Component) {
                                     _react2.default.createElement('circle', {
                                         cx: 0,
                                         cy: 0,
-                                        r: _this2.props.emissionsPercent[i],
+                                        r: _this2.props.consumptionsPercent[i],
                                         fill: region.color,
                                         stroke: 'white',
                                         strokeWidth: '1'

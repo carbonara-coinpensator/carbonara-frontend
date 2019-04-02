@@ -18,6 +18,14 @@ var _tree = require('../assets/tree.svg');
 
 var _tree2 = _interopRequireDefault(_tree);
 
+var _logoNaturefund = require('../assets/logo-naturefund.png');
+
+var _logoNaturefund2 = _interopRequireDefault(_logoNaturefund);
+
+var _logoPlanet = require('../assets/logo-planet.svg');
+
+var _logoPlanet2 = _interopRequireDefault(_logoPlanet);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43,7 +51,9 @@ var ResultSection = function (_Component) {
         _this.state = {
             color: 'secondary',
             result: 0,
-            label: 'Result'
+            label: 'Result',
+            kilometersDrivenByCar: Math.round(_this.props.result * 6),
+            yearsOfCo2Sequestration: Math.round(_this.props.result * 30 / 365)
         };
         return _this;
     }
@@ -59,35 +69,10 @@ var ResultSection = function (_Component) {
                 null,
                 _react2.default.createElement(
                     'div',
-                    { 'uk-grid': '' },
-                    _react2.default.createElement('div', { className: 'uk-width-1-2' }),
+                    { 'uk-grid': '', className: 'uk-flex uk-flex-bottom' },
                     _react2.default.createElement(
                         'div',
-                        { className: 'uk-width-1-2' },
-                        _react2.default.createElement(
-                            'p',
-                            { className: 'uk-text-muted' },
-                            'correspond to'
-                        )
-                    )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { 'uk-grid': '', 'uk-height-match': '.uk-card-media-top', className: 'uk-flex uk-flex-middle' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'uk-width-1-2' },
-                        _react2.default.createElement(
-                            'h2',
-                            { className: 'uk-text-huge' },
-                            this.props.result,
-                            ' ',
-                            _react2.default.createElement(
-                                'small',
-                                null,
-                                'kg'
-                            )
-                        ),
+                        { className: 'uk-width-1-2 uk-text-right' },
                         _react2.default.createElement(
                             'p',
                             { className: 'uk-text-muted' },
@@ -102,66 +87,168 @@ var ResultSection = function (_Component) {
                     ),
                     _react2.default.createElement(
                         'div',
-                        { className: 'uk-width-1-4' },
+                        { className: 'uk-width-1-2 uk-text-left' },
                         _react2.default.createElement(
-                            'div',
-                            { className: 'uk-card' },
+                            'p',
+                            { className: 'uk-text-muted' },
+                            'correspond to:'
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { 'uk-grid': '', className: 'uk-flex uk-flex-middle uk-grid-divider',
+                        'uk-sticky': 'animation: uk-animation-slide-top; cls-active: calculation-results-active;' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'uk-width-1-2 uk-text-right' },
+                        _react2.default.createElement(
+                            'h2',
+                            { className: 'uk-text-huge' },
+                            this.props.result,
+                            ' ',
                             _react2.default.createElement(
-                                'div',
-                                { className: 'uk-card-media-top' },
-                                _react2.default.createElement('img', { className: 'uk-height-small uk-margin-medium-left', src: _car2.default })
-                            ),
-                            _react2.default.createElement(
-                                'div',
-                                { className: 'uk-card-body' },
-                                _react2.default.createElement(
-                                    'h3',
-                                    { className: 'uk-card-title' },
-                                    _react2.default.createElement(
-                                        'strong',
-                                        null,
-                                        this.props.result * 6,
-                                        ' km'
-                                    ),
-                                    ' ',
-                                    _react2.default.createElement('br', null),
-                                    'driven by car'
-                                )
+                                'small',
+                                null,
+                                'kg'
                             )
                         )
                     ),
                     _react2.default.createElement(
                         'div',
-                        { className: 'uk-width-1-4' },
+                        { className: 'uk-width-1-2' },
                         _react2.default.createElement(
                             'div',
-                            { className: 'uk-card' },
+                            { 'uk-grid': '', className: 'uk-grid-collapse', 'uk-height-match': '.uk-card-media-top' },
                             _react2.default.createElement(
                                 'div',
-                                { className: 'uk-card-media-top' },
-                                _react2.default.createElement('img', { className: 'uk-height-small uk-margin-medium-left', src: _tree2.default })
+                                { className: 'uk-width-1-2' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'uk-card uk-card-small' },
+                                    _react2.default.createElement(
+                                        'div',
+                                        { className: 'uk-card-media-top' },
+                                        _react2.default.createElement('img', { className: 'uk-height-small', src: _car2.default })
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        { className: 'uk-card-body' },
+                                        _react2.default.createElement(
+                                            'h3',
+                                            { className: 'uk-card-title' },
+                                            _react2.default.createElement(
+                                                'strong',
+                                                null,
+                                                this.state.kilometersDrivenByCar,
+                                                '\xA0km'
+                                            ),
+                                            ' ',
+                                            _react2.default.createElement('br', null),
+                                            'driven by\xA0car'
+                                        )
+                                    )
+                                )
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'uk-card-body' },
+                                { className: 'uk-width-1-2' },
                                 _react2.default.createElement(
-                                    'h3',
-                                    { className: 'uk-card-title' },
+                                    'div',
+                                    { className: 'uk-card uk-card-small' },
                                     _react2.default.createElement(
-                                        'strong',
-                                        null,
-                                        Math.round(this.props.result * 30 / 365),
-                                        ' years'
+                                        'div',
+                                        { className: 'uk-card-media-top' },
+                                        _react2.default.createElement('img', { className: 'uk-height-small', src: _tree2.default })
                                     ),
-                                    ' of CO',
                                     _react2.default.createElement(
-                                        'sub',
-                                        null,
-                                        '2'
-                                    ),
-                                    ' ',
-                                    _react2.default.createElement('br', null),
-                                    'sequestration'
+                                        'div',
+                                        { className: 'uk-card-body' },
+                                        _react2.default.createElement(
+                                            'h3',
+                                            { className: 'uk-card-title' },
+                                            _react2.default.createElement(
+                                                'strong',
+                                                null,
+                                                this.state.yearsOfCo2Sequestration,
+                                                '\xA0years'
+                                            ),
+                                            ' of\xA0CO',
+                                            _react2.default.createElement(
+                                                'sub',
+                                                null,
+                                                '2'
+                                            ),
+                                            ' ',
+                                            _react2.default.createElement('br', null),
+                                            'sequestration'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'uk-margin-large-top', 'uk-height-match': '.uk-card' },
+                    _react2.default.createElement(
+                        'h3',
+                        { className: '' },
+                        'Here are some compensation options for you:'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'uk-child-width-1-6 uk-light uk-flex uk-flex-center', 'uk-grid': '', 'uk-height-match': '.img' },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'uk-card uk-card-default uk-card-small' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'uk-card-body' },
+                                    _react2.default.createElement(
+                                        'a',
+                                        { className: '', target: '_blank', href: 'https://www.naturefund.de/wissen/co2_rechner/' },
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: 'img uk-flex uk-flex-middle' },
+                                            _react2.default.createElement('img', { src: _logoNaturefund2.default })
+                                        ),
+                                        _react2.default.createElement(
+                                            'p',
+                                            null,
+                                            'Nature Fund'
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'uk-card uk-card-default uk-card-small' },
+                                _react2.default.createElement(
+                                    'div',
+                                    { className: 'uk-card-body' },
+                                    _react2.default.createElement(
+                                        'a',
+                                        { className: '', target: '_blank', href: 'https://www.plant-for-the-planet.org/de/startseite' },
+                                        _react2.default.createElement(
+                                            'div',
+                                            { className: 'img uk-flex uk-flex-middle' },
+                                            _react2.default.createElement('img', { src: _logoPlanet2.default })
+                                        ),
+                                        _react2.default.createElement(
+                                            'p',
+                                            null,
+                                            'Plant for the Planet'
+                                        )
+                                    )
                                 )
                             )
                         )
