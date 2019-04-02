@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Range, getTrackBackground, Direction } from 'react-range'
+import { Range, getTrackBackground } from 'react-range'
 import RegionInfos from './RegionInfos'
 
 const STEP = 1
