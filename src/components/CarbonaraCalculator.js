@@ -156,8 +156,10 @@ class CarbonaraCalculator extends Component {
 
     getEnergyConsumptionOfCountryInYear(countryCode, year) {
         let energyConsumption = 0
+        console.log(countryCode,year)
         this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountry.forEach(function(v){
             if (v.countryCode === countryCode) {
+                console.log(v)
                 energyConsumption = v.energyConsumption
             }
         })
@@ -166,16 +168,46 @@ class CarbonaraCalculator extends Component {
 
     // Formula to calculate FullCo2Emission is a sum for every CountryCode of:
     // (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
-    calculateGamificationForRegions(regions) {
-        let self = this
+    calculateGamificationForRegions(regionsPercent) {
+
+
+
+
+        /*let self = this
         let gamificationResult = 0
-        regions.forEach(function(v){
+
+        // total energy consumption for currently selected year
+        let totalEnergyConsumptionForYear = 0
+        this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+            totalEnergyConsumptionForYear += Number(v.energyConsumption)
+        })
+
+        // total co2 emission for currently selected year
+        this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].fullCo2Emission
+
+        // total co2 emission with different country percentages
+        this.regionsPercent.forEach(function(regionPercent,k){
+            let countryConsumption = this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry[k].energyConsumption
+            let countryConsumptionPercent = contryConsumption / totalEnergyConsumptionForYear * 100
+        })
+
+        this.regions.forEach(function(region,k){
+            // this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry[k].energyConsumption
+        })
+
+        this.mainCalculationResult.averageEmissionPerCountry.forEach(function(v){
+            (Number(v.co2Emission) / 1000) *
+        })
+
+        regions.forEach(function(v,k){
             gamificationResult += Number(v) / 1000 * self.getEnergyConsumptionOfCountryInYear(v.countryCode, self.state.transactionYearEstimated)
         })
+
+        console.log(gamificationResult)
         this.setState({
             // consumptionPerRegion: regions,
             gamificationResult: gamificationResult
-        })
+        })*/
     }
 
     calculateGamificationForYear(year) {
