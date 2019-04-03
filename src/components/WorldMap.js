@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import geodata from '../assets/ne_110m_land.topojson'
 import {
   ComposableMap,
   ZoomableGroup,
@@ -47,7 +48,7 @@ class WorldMap extends Component {
                     }}
                     >
                     <ZoomableGroup center={[0,20]} disablePanning>
-                        <Geographies geography="/assets/ne_110m_land.topojson">
+                        <Geographies geography={geodata}>
                         {(geographies, projection) =>
                             geographies.map((geography, i) =>
                             geography.id !== "ATA" && (

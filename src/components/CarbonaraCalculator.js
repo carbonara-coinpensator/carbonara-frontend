@@ -193,8 +193,6 @@ class CarbonaraCalculator extends Component {
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
         API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
 
-            console.log(res.data)
-
             // obtained years are used for gamification in WhatIf component
             let years = []
 
@@ -203,8 +201,11 @@ class CarbonaraCalculator extends Component {
                 years.push(k)
             ))
 
+            // get transaction time or now
+            let transactionTime = this.state.transactionTime ? this.state.transactionTime : moment()
+
             // get year before transaction time
-            let transactionYearEstimated = moment(this.state.transactionTime).subtract(1, 'years').year()
+            let transactionYearEstimated = moment(transactionTime).subtract(1, 'years').year()
 
             this.setState({
                 mainCalculationResult: res.data,
@@ -260,6 +261,7 @@ class CarbonaraCalculator extends Component {
         this.getChartData()
         // UIkit.scroll(e.target)
         // this.getMiningGearYears()
+        console.log(process.env)
     }
 
     componentWillUnmount() {
@@ -284,24 +286,26 @@ class CarbonaraCalculator extends Component {
         return (
             <div className="uk-text-center">
 
-                <section id="welcome" className="uk-section uk-section-background uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
-                    <Navigation />
-                    <div className="uk-width-1-1">
-                        <div className="uk-container uk-container-small uk-margin-large-bottom">
-                            <h1>Carbonara Coinpensator</h1>
-                            <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
-                        </div>
-                        <div className="uk-position-bottom">
-                            <div className="uk-container">
-                                <div className="uk-button-group uk-margin-large-bottom">
-                                    <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#graph')}>
-                                        BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
-                                    </button>
+                <div className="background-landscape">
+                    <section id="welcome" className="uk-section uk-section-default uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
+                        <Navigation />
+                        <div className="uk-width-1-1">
+                            <div className="uk-container uk-container-small uk-margin-large-bottom">
+                                <h1>Carbonara Coinpensator</h1>
+                                <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
+                            </div>
+                            <div className="uk-position-bottom">
+                                <div className="uk-container">
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#graph')}>
+                                            BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
 
                 { 'priceChart' in this.state.chart && 'co2EmissionChart' in this.state.chart &&
                     <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
