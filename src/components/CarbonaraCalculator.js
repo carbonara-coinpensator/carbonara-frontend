@@ -6,6 +6,7 @@ import 'react-dates/initialize'
 import MaterialTable from 'material-table'
 import moment from 'moment'
 import API from '../api'
+import ResultGrid from './ResultGrid'
 import ResultSection from './ResultSection'
 import Navigation from './Navigation'
 import ConsumptionGraph from './ConsumptionGraph'
@@ -15,9 +16,6 @@ import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
 
 UIkit.use(Icons);
-
-// Formula to calculate FullCo2Emission is a sum for every CountryCode of:
-// (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
 
 class CarbonaraCalculator extends Component {
 
@@ -36,8 +34,10 @@ class CarbonaraCalculator extends Component {
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
+        this.calculateEmissionsForYear = this.calculateEmissionsForYear.bind(this)
         this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
         this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
+        this.getEnergyConsumptionOfCountryInYear = this.getEnergyConsumptionOfCountryInYear.bind(this)
 
         this.state = {
 
@@ -154,11 +154,36 @@ class CarbonaraCalculator extends Component {
         })
     }
 
-    calculateGamificationForRegions() {
-        console.log('ok')
+    getEnergyConsumptionOfCountryInYear(countryCode, year) {
+        let energyConsumption = 0
+        this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountry.forEach(function(v){
+            if (v.countryCode === countryCode) {
+                energyConsumption = v.energyConsumption
+            }
+        })
+        return energyConsumption
     }
 
-    calculateGamificationForYear(transactionYearEstimated) {
+    // Formula to calculate FullCo2Emission is a sum for every CountryCode of:
+    // (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
+    calculateGamificationForRegions(regions) {
+        let self = this
+        let gamificationResult = 0
+        regions.forEach(function(v){
+            gamificationResult += Number(v) / 1000 * self.getEnergyConsumptionOfCountryInYear(v.countryCode, self.state.transactionYearEstimated)
+        })
+        this.setState({
+            // consumptionPerRegion: regions,
+            gamificationResult: gamificationResult
+        })
+    }
+
+    calculateGamificationForYear(year) {
+        let gamificationResult = this.state.mainCalculationResult.calculationPerYear[year].fullCo2Emission
+        this.setState({ gamificationResult })
+    }
+
+    calculateEmissionsForYear(transactionYearEstimated) {
 
         // will be displayed as main result
         let emissionsResult = this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].fullCo2Emission
@@ -185,6 +210,7 @@ class CarbonaraCalculator extends Component {
          })
 
     }
+
 
     calculateEmission(event) {
 
@@ -213,7 +239,7 @@ class CarbonaraCalculator extends Component {
                 years: years
              })
 
-            this.calculateGamificationForYear(transactionYearEstimated)
+            this.calculateEmissionsForYear(transactionYearEstimated)
 
         }).catch(function (error) {
             console.log(error);
@@ -248,7 +274,7 @@ class CarbonaraCalculator extends Component {
     }
 
     handleRegionsChange(regions) {
-        this.calculateGamificationForRegions()
+        this.calculateGamificationForRegions(regions)
         this.setState({showGamificationResults: true})
     }
 
@@ -261,7 +287,6 @@ class CarbonaraCalculator extends Component {
         this.getChartData()
         // UIkit.scroll(e.target)
         // this.getMiningGearYears()
-        console.log(process.env)
     }
 
     componentWillUnmount() {
@@ -486,46 +511,14 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div className="uk-position-bottom">
-                                <div className="uk-container">
-                                    <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#results')}>
-                                            <span uk-icon="arrow-up"></span> Calculation Result
-                                        </button>
-                                        { showGamificationResults &&
-                                            <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#gamificationresults')}>
-                                                View Result <span uk-icon="arrow-down"></span>
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
+                            <div className="uk-container uk-light">
+                                { showGamificationResults &&
+                                    <ResultGrid result={this.state.gamificationResult} scrollSticky={false} position="bottom" type="primary" />
+                                }
                             </div>
 
                         </div>
                     </section>
-                }
-
-                { /*showGamificationResults &&
-                    <section id="gamificationresults" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
-                        <div className="uk-width-1-1">
-                            <div className="uk-container">
-
-                                <ResultSection label="Better result" color="primary" result={this.state.emissionsResult} />
-
-                            </div>
-
-                            <div className="uk-position-bottom">
-                                <div className="uk-container">
-                                    <div className="uk-button-group uk-margin-large-bottom">
-                                        <button className="uk-button uk-button-primary" onClick={() => this.scrollTo(event, '#gamification')}>
-                                            <span uk-icon="arrow-up"></span> What if &hellip;
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </section> */
                 }
 
             </div>
