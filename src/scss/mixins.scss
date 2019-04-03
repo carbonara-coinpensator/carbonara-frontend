@@ -17,8 +17,12 @@
     background: linear-gradient(45deg, $global-secondary-color 0%,lighten($global-secondary-color,10%) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
-.uk-section-background {
+.background-landscape {
     background: url(../assets/landscape.jpg);
+    .uk-section-default { background-color: rgba(255,255,255,.9); }
+    .uk-section-muted { background-color: rgba($global-muted-color,.9); }
+    .uk-section-secondary {background-color: rgba($global-secondary-color,.9); }
+    .uk-section-primary {background-color: rgba($global-primary-color,.9); }
 }
 
 @mixin b {
