@@ -17,15 +17,72 @@
 
 .b { @include b; }
 
-.calculation-results-active {
-    transform: scale(.35) translateX(-14px);
-    transform-origin: top center;
-    background: $global-secondary-color;
-    z-index: $global-z-index + 1;
-    .uk-card-title {
-        font-size: 200%;
+.calculation-results {
+
+    &.calculation-results-fixed {
+        position: fixed;
+        width: 1200px;
+        transform-origin: bottom center;
     }
-    img {
-        transform: scale(.5);
+
+    &.calculation-results-top { transform-origin: top center; }
+    &.calculation-results-bottom { bottom: 0; }
+    &.calculation-results-primary { background: rgba($global-primary-color, .9); }
+    &.calculation-results-secondary { background: rgba($global-secondary-color, .9); }
+
+    &.calculation-results-active {
+
+        z-index: $global-z-index + 1;
+        transform: scale(.5) translateX(-14px);
+        margin: 0;
+        padding: 0;
+
+        .grid-label { display: none; margin: 0; }
+        .uk-width-1-4 { width: 25%; }
+        .uk-width-3-4 { width: 75%; }
+
+
+        .uk-text-huge {
+            font-size: 3rem;
+            text-align: center;
+        }
+        .uk-card {
+            .uk-card-media-top {
+                width: 3rem;
+                float: left;
+                img {
+                    width: 6rem;
+                    height: 6rem;
+                    margin: 1rem 0;
+                }
+            }
+            .uk-card-body {
+                width: calc(100% - 5rem);
+                float: right;
+                padding: 0;
+                margin: 1rem 0;
+                .uk-card-title {
+                    font-size: 2rem;
+                    text-align: left;
+                }
+            }
+        }
+
     }
+
+}
+
+.uk-section-gradient {
+    background: $global-primary-color;
+    background: -moz-linear-gradient(45deg, $global-secondary-color 0%, darken($global-secondary-color,10%) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg, $global-secondary-color 0%,darken($global-secondary-color,10%) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg, $global-secondary-color 0%,darken($global-secondary-color,10%) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.background-landscape {
+    background: url(../assets/landscape.jpg);
+    .uk-section-default { background-color: rgba(255,255,255,.9); }
+    .uk-section-muted { background-color: rgba($global-muted-color,.9); }
+    .uk-section-secondary {background-color: rgba($global-secondary-color,.9); }
+    .uk-section-primary {background-color: rgba($global-primary-color,.9); }
 }

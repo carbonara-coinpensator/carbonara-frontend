@@ -43,10 +43,10 @@ class WhatIf extends Component {
     // calculate percentage values of consumptions
     // based on consumptions props
     calculateConsumptionsPercentFromProps() {
-        
+
         let consumptionsPercent = []
         let consumptionsSum = this.calculateConsumptionsSum()
-        
+
         this.props.consumptions.forEach(function(v){
             consumptionsPercent.push(Number(v) / consumptionsSum * 100)
         })
@@ -85,7 +85,7 @@ class WhatIf extends Component {
         this.setState({ regionButtons })
         // set consumptions percentages based on button values
         this.calculateConsumptionsPercentFromRegionButtons(regionButtons)
-        // this.props.onRegionsChange(regionButtons)
+        this.props.onRegionsChange(regionButtons)
     }
 
     handleYearsChange(selectedYearValue) {
@@ -118,7 +118,7 @@ class WhatIf extends Component {
     }
 
     componentDidMount() {
-        
+
     }
 
     render() {
