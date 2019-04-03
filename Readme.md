@@ -10,3 +10,10 @@ This application makes requests to the [carbonara backend](https://github.com/ca
 - Install Node Packages with `npm install`
 - Run app with `npm run start`
 - App is running on <http://localhost:3000>
+
+## Docker
+```bash
+docker-compose up --build --detach
+```
+https://backend.127.0.0.1.xip.io/api/Carbonara/Charts
+https://frontend.127.0.0.1.xip.io/api/Carbonara/Charts

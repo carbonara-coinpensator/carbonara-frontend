@@ -1,0 +1,29 @@
+version: '2.4'
+services:
+  backend:
+    image: carbonaracoinpensator/backend:latest
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:backend.127.0.0.1.xip.io"
+      - "traefik.port=80"
+
+  frontend:
+    # image: carbonaracoinpensator/frontend:latest
+    build: .
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:frontend.127.0.0.1.xip.io"
+      - "traefik.port=80"
+
+  traefik:
+    image: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml

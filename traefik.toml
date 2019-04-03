@@ -1,0 +1,38 @@
+debug = true
+logLevel = "DEBUG"
+
+defaultEntryPoints = ["http", "https"]
+
+# This will expose the dashboard at http://localhost:8080/dashboard/
+# Deactivate for production
+[api]
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+        [entryPoints.http.redirect]
+        entryPoint = "https"
+
+    [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.tls]
+
+[retry]
+
+# Heartbeat endpoint at https://localhost/ping
+[ping]
+entryPoint = "https"
+
+# Get actual configuration from docker. See docker-compose.yml
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+watch = true
+exposedByDefault = false
+
+[acme]
+email = "sascha@eth.events"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+    [acme.httpChallenge]
+    entryPoint = "http"
