@@ -31,7 +31,7 @@ class ResultGrid extends Component {
                     </div>
                 </div>
                 <div uk-grid="" className={'calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle uk-grid-divider'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
-                    <div className="uk-width-1-4 uk-width-1-2@m uk-text-right">
+                    <div className="uk-width-1-4 uk-width-1-2@m uk-text-center">
                         <h2 className="uk-text-huge">{ Math.round(this.props.result) } <small>kg</small></h2>
                     </div>
                     <div className="uk-width-3-4 uk-width-1-2@m">
