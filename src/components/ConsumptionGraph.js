@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-// import Moment from 'react-moment'
 
 class ConsumptionGraph extends Component {
 
@@ -8,35 +7,103 @@ class ConsumptionGraph extends Component {
 
         super(...props)
         this.state = {
-            chart: {
-                options: {
-                    colors: ['#14121D', '#336600'],
-                    chart: {
-                        id: 'priceandconsumption'
+            options: {
+                colors: ['#14121D', '#336600'],
+                chart: {
+                    id: 'priceandconsumption',
+                    fontFamily: '"Encode Sans", Helvetica, Arial, sans-serif',
+                    foreColor: '#484260',
+                    selection: {
+                        enabled: true,
+                        type: 'x',
+                        fill: {
+                          color: '#484260',
+                          opacity: 0.1
+                        },
+                        stroke: {
+                          width: 1,
+                          dashArray: 3,
+                          color: '#484260',
+                          opacity: 0.4
+                        },
+                        xaxis: {
+                          min: undefined,
+                          max: undefined
+                        },
+                        yaxis: {
+                          min: undefined,
+                          max: undefined
+                        }
                     },
-                    xaxis: {
-                        type: 'datetime'
+                    toolbar: {
+                    show: true,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true | '<img src="/static/icons/reset.png" width="20">',
+                            customIcons: []
+                        },
+                        autoSelected: 'zoom'
                     },
-                    stroke: {
-                        show: true,
-                        curve: 'straight',
-                        lineCap: 'butt',
-                        colors: undefined,
-                        width: 2,
-                        dashArray: 0,
+                },
+                grid: {
+                    show: true,
+                    borderColor: '#f2f2f2',
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                yaxis: [
+                    {
+                        title: {
+                            text: 'BTC price [US$]'
+                        },
+                        labels: {
+                            formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
+                        }
+                    },
+                    {
+                        opposite: true,
+                        title: {
+                            text: 'Energy Comsumption [kWh]'
+                        },
+                        labels: {
+                            formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
+                        },
+                        // min: 0,
+                        max: 600,
+                        // forceNiceScale: true,
+                    }
+                ],
+                stroke: {
+                    show: true,
+                    curve: 'straight',
+                    lineCap: 'square',
+                    width: 2,
+                },
+                legend: {
+                    show: true,
+                    itemMargin: {
+                        horizontal: 20,
+                        vertical: 10
                     }
                 },
-                series: [
-                    {
-                        name: 'BTC price',
-                        data: this.transformValues(this.props.prices, 2)
-                    },
-                    {
-                        name: 'Energy comsumption',
-                        data: this.transformValues(this.props.consumptions)
-                    }
-                ]
-            }
+
+            },
+            series: [
+                {
+                    name: 'BTC price [US$]',
+                    data: this.transformValues(this.props.prices, 5)
+                },
+                {
+                    name: 'Energy Comsumption [kWh]',
+                    data: this.transformValues(this.props.consumptions)
+                }
+            ]
         }
 
     }
@@ -46,7 +113,7 @@ class ConsumptionGraph extends Component {
         let counter = 0
         values.forEach(function(v){
             if (counter%mod === 0) {
-                returnvalues.push([Number(v.x) * 1000, v.y])
+                returnvalues.push([Number(v.x) * 1000, v.y.toFixed(0)])
             }
             counter++
         })
@@ -61,7 +128,7 @@ class ConsumptionGraph extends Component {
 
         return (
             <div>
-                <Chart options={this.state.chart.options} series={this.state.chart.series} type="line" width="100%" height={350} />
+                <Chart options={this.state.options} series={this.state.series} type="line" width="100%" height={(window.innerHeight/2)} />
             </div>
         )
     }
