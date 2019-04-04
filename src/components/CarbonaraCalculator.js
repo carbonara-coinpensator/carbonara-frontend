@@ -382,7 +382,7 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 600">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 600; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#graph')}>
