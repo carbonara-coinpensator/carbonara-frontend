@@ -31,7 +31,9 @@ class CarbonaraCalculator extends Component {
         this.validateTransactionForm = this.validateTransactionForm.bind(this)
         this.submitForm = this.submitForm.bind(this)
         this.getTransactions = this.getTransactions.bind(this)
-        this.calculateEmission = this.calculateEmission.bind(this)
+        this.getEmissions = this.getEmissions.bind(this)
+        this.getYears = this.getYears.bind(this)
+        this.getConsumptionPerRegion = this.getConsumptionPerRegion.bind(this)
         this.fillInTransactionIdAndEmptyTransactionsList = this.fillInTransactionIdAndEmptyTransactionsList.bind(this)
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
@@ -39,7 +41,6 @@ class CarbonaraCalculator extends Component {
         this.calculateEmissionsForYear = this.calculateEmissionsForYear.bind(this)
         this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
         this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
-        this.getEnergyConsumptionOfCountryInYear = this.getEnergyConsumptionOfCountryInYear.bind(this)
 
         this.state = {
 
@@ -78,23 +79,25 @@ class CarbonaraCalculator extends Component {
 
     }
 
-    handleChange(event) {
 
-        const name = event.target.name
-        const value = event.target.value
 
-        this.setState(
-            {[name]: value},
-            () => {this.validateField(name, value)}
-        )
 
-    }
+
+
+
+
+
+
+
+
+
+    /**
+     * FORM ACTIONS
+     */
 
     validateField(fieldName, value) {
-
         let walletAddressValid = this.state.addressValidity.wallet
         let transactionIdValid = this.state.addressValidity.transaction
-
         switch(fieldName) {
             case 'address':
                 walletAddressValid = value.length === 34;
@@ -103,7 +106,6 @@ class CarbonaraCalculator extends Component {
             default:
                 break
         }
-
         this.setState({
             addressValidity: {
                 wallet: walletAddressValid,
@@ -112,7 +114,6 @@ class CarbonaraCalculator extends Component {
             }
 
         }, () => this.validateForms())
-
     }
 
     validateForms() {
@@ -134,156 +135,6 @@ class CarbonaraCalculator extends Component {
         this.setState({ formValidity: { transaction: transactionFormValid } })
     }
 
-    submitForm(e) {
-        let event = cloneDeep(e)
-        e.preventDefault()
-        if (this.state.addressValidity.wallet) {
-            this.getTransactions()
-        }
-        if (this.state.addressValidity.transaction) {
-            this.calculateEmission(event)
-        }
-    }
-
-    getTransactions(e) {
-        UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
-        API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
-            res.data.forEach(function(v,k){
-                v.time = moment.unix(v.time).format()
-            })
-            this.setState({ transactions: res.data })
-            UIkit.notification.closeAll()
-        })
-    }
-
-    getEnergyConsumptionOfCountryInYear(countryCode, year) {
-        let energyConsumption = 0
-        console.log(countryCode,year)
-        this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountry.forEach(function(v){
-            if (v.countryCode === countryCode) {
-                console.log(v)
-                energyConsumption = v.energyConsumption
-            }
-        })
-        return energyConsumption
-    }
-
-    // Formula to calculate FullCo2Emission is a sum for every CountryCode of:
-    // (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
-    calculateGamificationForRegions(regionsPercent) {
-
-
-        // TODO
-
-        /*let self = this
-        let gamificationResult = 0
-
-        // total energy consumption for currently selected year
-        let totalEnergyConsumptionForYear = 0
-        this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
-            totalEnergyConsumptionForYear += Number(v.energyConsumption)
-        })
-
-        // total co2 emission for currently selected year
-        this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].fullCo2Emission
-
-        // total co2 emission with different country percentages
-        this.regionsPercent.forEach(function(regionPercent,k){
-            let countryConsumption = this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry[k].energyConsumption
-            let countryConsumptionPercent = contryConsumption / totalEnergyConsumptionForYear * 100
-        })
-
-        this.regions.forEach(function(region,k){
-            // this.mainCalculationResult.calculationPerYear[this.transactionYearEstimated].energyConsumptionPerCountry[k].energyConsumption
-        })
-
-        this.mainCalculationResult.averageEmissionPerCountry.forEach(function(v){
-            (Number(v.co2Emission) / 1000) *
-        })
-
-        regions.forEach(function(v,k){
-            gamificationResult += Number(v) / 1000 * self.getEnergyConsumptionOfCountryInYear(v.countryCode, self.state.transactionYearEstimated)
-        })
-
-        console.log(gamificationResult)
-        this.setState({
-            // consumptionPerRegion: regions,
-            gamificationResult: gamificationResult
-        })*/
-    }
-
-    calculateGamificationForYear(year) {
-        let gamificationResult = this.state.mainCalculationResult.calculationPerYear[year].fullCo2Emission
-        this.setState({ gamificationResult })
-    }
-
-    calculateEmissionsForYear(transactionYearEstimated) {
-
-        // will be displayed as main result
-        let emissionsResult = this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].fullCo2Emission
-
-        // obtained region codes are used for gamification in WhatIf component
-        let regions = []
-
-        // consumption per region is used for gamification in WhatIf component
-        let consumptionPerRegion = []
-
-        // given average emissions per region
-        this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
-            // push properties to arrays
-            regions.push(v.countryCode)
-            consumptionPerRegion.push(v.energyConsumption)
-        })
-
-        // update state
-        this.setState({
-            regions,
-            consumptionPerRegion,
-            emissionsResult,
-            transactionYearEstimated
-         })
-
-    }
-
-
-    calculateEmission(event) {
-
-        let self = this
-
-        UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
-        API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
-
-            // obtained years are used for gamification in WhatIf component
-            let years = []
-
-            // make a list of years available for gamification out of keys in response calculationPerYear object
-            Object.keys(res.data.calculationPerYear).map((k) => (
-                years.push(k)
-            ))
-
-            // get transaction time or now
-            let transactionTime = this.state.transactionTime ? this.state.transactionTime : moment()
-
-            // get year before transaction time
-            let transactionYearEstimated = moment(transactionTime).subtract(1, 'years').year()
-
-            this.setState({
-                mainCalculationResult: res.data,
-                transactionYearEstimated: transactionYearEstimated,
-                years: years
-             })
-
-            this.calculateEmissionsForYear(transactionYearEstimated)
-
-        }).catch(function (error) {
-            console.log(error);
-        })
-        .then(function () {
-            UIkit.notification.closeAll()
-            self.scrollTo(event, '#results')
-        })
-    }
-
     fillInTransactionIdAndEmptyTransactionsList(e, transaction) {
         e.preventDefault();
         this.handleChange(e);
@@ -299,12 +150,269 @@ class CarbonaraCalculator extends Component {
          })
     }
 
+    submitForm(e) {
+        let event = cloneDeep(e)
+        e.preventDefault()
+        if (this.state.addressValidity.wallet) {
+            this.getTransactions()
+        }
+        if (this.state.addressValidity.transaction) {
+            this.getEmissions(event)
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * API CALLS
+     */
+
     getChartData() {
         UIkit.notification('<div uk-spinner=""></div> Getting chart data …', {status: 'primary'})
         API.get('api/Carbonara/Charts').then(res => {
             this.setState({ chart: res.data });
             UIkit.notification.closeAll()
         });
+    }
+
+    getTransactions(e) {
+        UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
+        API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
+            res.data.forEach(function(v,k){
+                v.time = moment.unix(v.time).format()
+            })
+            this.setState({ transactions: res.data })
+            UIkit.notification.closeAll()
+        })
+    }
+
+    getEmissions(event) {
+
+        let self = this
+
+        this.setTransactionYearEstimated()
+
+        UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
+        API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
+
+            // set main result
+            this.setState({ mainCalculationResult: res.data })
+
+            // set various state vars based on mainCalculationResult state
+            this.setState({
+                consumptionPerRegion: this.getConsumptionPerRegion(),
+                regions: this.getRegions(),
+                years: this.getYears()
+            })
+
+            // main emission result
+            this.setState({
+                emissionsResult: this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].fullCo2Emission
+            })
+
+        }).catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
+            UIkit.notification.closeAll()
+            self.scrollTo(event, '#results')
+        })
+    }
+
+
+
+
+
+
+
+
+    /**
+     * GETTERS (from state)
+     */
+
+    getYears() {
+        let years = []
+        // make a list of years available for gamification out of keys in response calculationPerYear object
+        Object.keys(this.state.mainCalculationResult.calculationPerYear).map((k) => (
+            years.push(k)
+        ))
+        return years
+    }
+
+    getRegions() {
+        // obtained region codes are used for gamification in WhatIf component
+        let regions = []
+        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+            // push properties to arrays
+            regions.push(v.countryCode)
+        })
+        return regions
+    }
+
+    getConsumptionPerRegion() {
+        // consumption per region is used for gamification in WhatIf component
+        let consumptionPerRegion = []
+        // given average emissions per region
+        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+            // push properties to arrays
+            consumptionPerRegion.push(v.energyConsumption)
+        })
+        return consumptionPerRegion
+    }
+
+    getConsumptionPerRegionBasedOnButtonPositions() {
+
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * SETTERS (to state)
+     */
+
+    setTransactionYearEstimated() {
+        // get transaction time or now
+        let transactionTime = this.state.transactionTime ? this.state.transactionTime : moment()
+        // get year before transaction time
+        let transactionYearEstimated = moment(transactionTime).subtract(1, 'years').year()
+        this.setState({ transactionYearEstimated })
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * CALCULATIONS
+     */
+
+    calculateEmissionsForYear(transactionYearEstimated) {
+        // // will be displayed as main result
+        // let emissionsResult = this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].fullCo2Emission
+        // // update state
+        // this.setState({
+        //     // regions: regions,
+        //     consumptionPerRegion: this.getConsumptionPerRegion(),
+        //     // emissionsResult,
+        //     transactionYearEstimated: transactionYearEstimated
+        //  })
+        //  return emissionsResult
+    }
+
+    calculateTotalEnergyConsumptionForYear(year) {
+        let sum = 0
+        this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountry.forEach(function(v){
+            sum += v.energyConsumption
+        })
+        return sum
+    }
+
+    calculateRegionPercentagePositionsFromConsumptionValues() {
+        let totalEnergyConsumptionInCurrentYear = this.calculateTotalEnergyConsumptionForYear(this.state.transactionYearEstimated)
+        let regionsPercentagePositions = []
+        let lastPercentagePosition = 0
+        this.state.consumptionPerRegion.forEach(function(v){
+            lastPercentagePosition += v
+            regionsPercentagePositions.push(lastPercentagePosition/totalEnergyConsumptionInCurrentYear*100)
+        })
+        regionsPercentagePositions.pop()
+        return regionsPercentagePositions
+    }
+
+    calculateGamificationForYear(year) {
+        // set new year in state
+        this.setState({ transactionYearEstimated: year })
+        // calculate gamification again
+        let regionsPercentagePositions = this.calculateRegionPercentagePositionsFromConsumptionValues()
+        this.calculateGamificationForRegions(regionsPercentagePositions)
+    }
+
+    calculateGamificationForRegions(regionsPercentagePositions) {
+
+        // add last percentage value to positions
+        if (regionsPercentagePositions.length < this.state.mainCalculationResult.averageEmissionPerCountry.length) {
+            regionsPercentagePositions.push(100)
+        }
+
+        // calculate single percentage values out of region slider positions
+        let regionsPercentages = []
+        let lastPercentageValue = 0
+        regionsPercentagePositions.forEach(function(v){
+            // add up percentage values
+            regionsPercentages.push(v - lastPercentageValue)
+            lastPercentageValue = v
+        })
+
+        // calculate sum of energy consumption of all countries in current year
+        let totalEnergyConsumptionInCurrentYear = this.calculateTotalEnergyConsumptionForYear(this.state.transactionYearEstimated)
+
+        // calculate new values from new percentages
+        let newEnergyConsumptionsPerCountry = []
+        regionsPercentages.forEach(function(v){
+            newEnergyConsumptionsPerCountry.push(v * totalEnergyConsumptionInCurrentYear / 100)
+        })
+
+        // calculate full emission with formula (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
+        let gamificationResult = 0
+        this.state.mainCalculationResult.averageEmissionPerCountry.forEach(function(v,k){
+            gamificationResult += v.co2Emission / 1000 * newEnergyConsumptionsPerCountry[k]
+        })
+
+        regionsPercentagePositions.pop()
+
+        // set state
+        this.setState({
+            gamificationResult: gamificationResult,
+            consumptionPerRegion: newEnergyConsumptionsPerCountry
+        })
+
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * HANDLERS
+     */
+
+    handleChange(event) {
+        const name = event.target.name
+        const value = event.target.value
+        this.setState(
+            {[name]: value},
+            () => {this.validateField(name, value)}
+        )
     }
 
     handleRegionsChange(regions) {
@@ -324,6 +432,26 @@ class CarbonaraCalculator extends Component {
         })
     }
 
+
+
+
+
+    /**
+     * ACTIONS
+     */
+
+    scrollTo(e, hash = '') {
+        e.preventDefault()
+        if (hash === '' && e.target.hash) {
+            hash = e.target.hash
+        }
+        UIkit.scroll(e.target).scrollTo(hash)
+    }
+
+
+
+
+
     componentDidMount() {
         this.getChartData()
         this.handleInputFocus()
@@ -333,13 +461,7 @@ class CarbonaraCalculator extends Component {
 
     }
 
-    scrollTo(e, hash = '') {
-        e.preventDefault()
-        if (hash === '' && e.target.hash) {
-            hash = e.target.hash
-        }
-        UIkit.scroll(e.target).scrollTo(hash)
-    }
+
 
     render() {
 
@@ -361,10 +483,10 @@ class CarbonaraCalculator extends Component {
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
-                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
-                                            <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
+                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
+                                            <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
-                                                    <img src={zuehlke} alt="" />
+                                                    <img src={unibright} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
                                                             <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
@@ -373,10 +495,10 @@ class CarbonaraCalculator extends Component {
                                                 </div>
                                             </a>
                                         </div>
-                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
-                                            <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
+                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
+                                            <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
-                                                    <img src={unibright} alt="" />
+                                                    <img src={zuehlke} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
                                                             <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
@@ -540,11 +662,8 @@ class CarbonaraCalculator extends Component {
                     <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
-
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
-
                             </div>
-
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
@@ -557,8 +676,14 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                        { showGamificationResults &&
+                            <div className="uk-container uk-light">
+                                <div uk-sticky="cls-inactive: uk-invisible; cls-active: calculation-result-active calculation-result-active-bottom">
+                                    <ResultGrid result={this.state.gamificationResult} type="primary" position="bottom" />
+                                </div>
+                            </div>
+                        }
                     </section>
                 }
 
@@ -578,15 +703,6 @@ class CarbonaraCalculator extends Component {
                                 />
 
                             </div>
-
-                            <div className="uk-container uk-light">
-                                { showGamificationResults &&
-                                    <div className="uk-sticky calculation-result-active uk-sticky-fixed uk-sticky-below calculation-result-active-bottom">
-                                        <ResultGrid result={this.state.gamificationResult} type="primary" position="bottom" />
-                                    </div>
-                                }
-                            </div>
-
                         </div>
                     </section>
                 }
