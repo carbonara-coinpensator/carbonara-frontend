@@ -17,30 +17,30 @@
 
 .b { @include b; }
 
-.calculation-results {
+.calculation-result-active {
 
-    &.calculation-results-fixed {
-        position: fixed;
+    position: fixed;
+    z-index: $global-z-index + 1;
+
+    &.calculation-result-active-bottom {
+        bottom: 0;
         width: 1200px;
-        transform-origin: bottom center;
     }
 
-    &.calculation-results-top { transform-origin: top center; }
-    &.calculation-results-bottom { bottom: 0; }
-    &.calculation-results-primary { background: rgba($global-primary-color, .9); }
-    &.calculation-results-secondary { background: rgba($global-secondary-color, .9); }
+    .calcgrid {
 
-    &.calculation-results-active {
-
-        z-index: $global-z-index + 1;
-        transform: scale(.5) translateX(-14px);
+        transform: scale(.5);
         margin: 0;
         padding: 0;
 
-        .grid-label { display: none; margin: 0; }
+        &.calcgrid-top { transform-origin: top center; }
+        &.calcgrid-bottom { transform-origin: bottom center; }
+
+        &.calcgrid-primary { background: rgba($global-primary-color, .9); }
+        &.calcgrid-secondary { background: rgba($global-secondary-color, .9); }
+
         .uk-width-1-4 { width: 25%; }
         .uk-width-3-4 { width: 75%; }
-
 
         .uk-text-huge {
             font-size: 3rem;
@@ -70,6 +70,7 @@
 
     }
 
+    .grid-label { display: none; margin: 0; }
 }
 
 .uk-section-gradient {

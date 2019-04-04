@@ -19,8 +19,6 @@ class ResultGrid extends Component {
 
         let kilometersDrivenByCar = Math.round(this.props.result * 6)
         let yearsOfCo2Sequestration = Math.round(this.props.result * 30 / 365)
-        let className = this.props.scrollSticky ? 'calculation-results uk-flex uk-flex-middle uk-grid-divider' : 'uk-flex uk-flex-middle calculation-results calculation-results-active calculation-results-fixed calculation-results-' + this.props.position + ' calculation-results-' + this.props.type
-        let ukSticky = this.props.scrollSticky ? 'animation: uk-animation-slide-top; cls-active: calculation-results-active calculation-results-' + this.props.position + ' calculation-results-' + this.props.type + ';' : 'false'
 
         return (
             <div>
@@ -32,7 +30,7 @@ class ResultGrid extends Component {
                         <p className="uk-text-muted">correspond to:</p>
                     </div>
                 </div>
-                <div uk-grid="" className={className} uk-sticky={ukSticky}>
+                <div uk-grid="" className={'calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle uk-grid-divider'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                     <div className="uk-width-1-4 uk-width-1-2@m uk-text-right">
                         <h2 className="uk-text-huge">{ Math.round(this.props.result) } <small>kg</small></h2>
                     </div>
