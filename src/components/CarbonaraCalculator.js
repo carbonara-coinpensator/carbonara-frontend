@@ -38,7 +38,6 @@ class CarbonaraCalculator extends Component {
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
-        this.calculateEmissionsForYear = this.calculateEmissionsForYear.bind(this)
         this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
         this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
 
@@ -82,17 +81,8 @@ class CarbonaraCalculator extends Component {
 
 
 
-
-
-
-
-
-
-
-
-
     /**
-     * FORM ACTIONS
+     * FORM HANDLING
      */
 
     validateField(fieldName, value) {
@@ -176,33 +166,6 @@ class CarbonaraCalculator extends Component {
         })
     }
 
-    resetCalculations() {
-        this.setState({
-            transactionTime: 0,
-            transactionYearEstimated: 0,
-            years: [],
-            regions: [],
-            consumptionPerRegion: [],
-            focusedInput: null,
-            emissionsResult: 0,
-            showGamificationResults: false,
-            gamificationResult: 0,
-            mainCalculationResult: {}
-        })
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -263,10 +226,6 @@ class CarbonaraCalculator extends Component {
 
 
 
-
-
-
-
     /**
      * GETTERS (from state)
      */
@@ -301,17 +260,6 @@ class CarbonaraCalculator extends Component {
         return consumptionPerRegion
     }
 
-    getConsumptionPerRegionBasedOnButtonPositions() {
-
-    }
-
-
-
-
-
-
-
-
 
 
     /**
@@ -329,29 +277,9 @@ class CarbonaraCalculator extends Component {
 
 
 
-
-
-
-
-
-
-
     /**
      * CALCULATIONS
      */
-
-    calculateEmissionsForYear(transactionYearEstimated) {
-        // // will be displayed as main result
-        // let emissionsResult = this.state.mainCalculationResult.calculationPerYear[transactionYearEstimated].fullCo2Emission
-        // // update state
-        // this.setState({
-        //     // regions: regions,
-        //     consumptionPerRegion: this.getConsumptionPerRegion(),
-        //     // emissionsResult,
-        //     transactionYearEstimated: transactionYearEstimated
-        //  })
-        //  return emissionsResult
-    }
 
     calculateTotalEnergyConsumptionForYear(year) {
         let sum = 0
@@ -422,12 +350,20 @@ class CarbonaraCalculator extends Component {
 
     }
 
-
-
-
-
-
-
+    resetCalculations() {
+        this.setState({
+            transactionTime: 0,
+            transactionYearEstimated: 0,
+            years: [],
+            regions: [],
+            consumptionPerRegion: [],
+            focusedInput: null,
+            emissionsResult: 0,
+            showGamificationResults: false,
+            gamificationResult: 0,
+            mainCalculationResult: {}
+        })
+    }
 
 
 
@@ -460,10 +396,6 @@ class CarbonaraCalculator extends Component {
             this.focus()
         })
     }
-
-
-
-
 
 
 
