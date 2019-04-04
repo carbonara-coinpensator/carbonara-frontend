@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import car from '../assets/car.svg'
-import tree from '../assets/tree.svg'
+import car from '../static/media/car.svg'
+import tree from '../static/media/tree.svg'
 
 class ResultGrid extends Component {
 

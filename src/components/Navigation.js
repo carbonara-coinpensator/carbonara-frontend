@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../assets/carbonara-logo.png'
+import logo from '../static/media/carbonara-logo.png'
 
 const Navigation = () => (
     <nav className="uk-navbar-container uk-navbar-transparent uk-width-1-1 uk-position-absolute uk-position-top">

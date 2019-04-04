@@ -11,6 +11,8 @@ import ResultSection from './ResultSection'
 import Navigation from './Navigation'
 import ConsumptionGraph from './ConsumptionGraph'
 import WhatIf from './WhatIf'
+import zuehlke from '../static/media/zuehlke.png'
+import unibright from '../static/media/unibright.png'
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
@@ -347,11 +349,40 @@ class CarbonaraCalculator extends Component {
                     <section id="welcome" className="uk-section uk-section-default uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
                         <Navigation />
                         <div className="uk-width-1-1">
-                            <div className="uk-container uk-container-small uk-margin-large-bottom">
+                            <div className="uk-container uk-container-small uk-margin-large-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h1>Carbonara Coinpensator</h1>
                                 <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
+                                <div className="uk-margin-medium-top uk-text-small">
+                                    <p>Powered by</p>
+                                    <div uk-grid="" className="uk-flex-center uk-animation-fast">
+                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
+                                            <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                    <img src={zuehlke} alt="" />
+                                                    <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
+                                                        <div className="uk-position-center">
+                                                            <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
+                                            <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                    <img src={unibright} alt="" />
+                                                    <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
+                                                        <div className="uk-position-center">
+                                                            <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="uk-position-bottom">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 600">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#graph')}>
