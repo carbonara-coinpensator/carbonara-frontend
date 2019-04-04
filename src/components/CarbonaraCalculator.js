@@ -173,7 +173,7 @@ class CarbonaraCalculator extends Component {
     calculateGamificationForRegions(regionsPercent) {
 
 
-
+        // TODO
 
         /*let self = this
         let gamificationResult = 0
@@ -317,10 +317,16 @@ class CarbonaraCalculator extends Component {
         this.setState({showGamificationResults: true})
     }
 
+    handleInputFocus() {
+        UIkit.scrollspy('#address', { repeat: true })
+        UIkit.util.on('#address', 'inview', function () {
+            this.focus()
+        })
+    }
+
     componentDidMount() {
         this.getChartData()
-        // UIkit.scroll(e.target)
-        // this.getMiningGearYears()
+        this.handleInputFocus()
     }
 
     componentWillUnmount() {
@@ -382,7 +388,7 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; delay: 600; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#graph')}>
@@ -398,11 +404,11 @@ class CarbonaraCalculator extends Component {
                 { 'priceChart' in this.state.chart && 'co2EmissionChart' in this.state.chart &&
                     <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
-                            <div className="uk-container">
+                            <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h2 className="uk-text-center">BTC Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.co2EmissionChart} />
                             </div>
-                            <div className="uk-position-bottom">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#calculate')}>
@@ -417,7 +423,7 @@ class CarbonaraCalculator extends Component {
 
                 <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
                     <div className="uk-width-1-1">
-                            <div className="uk-container">
+                            <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
 
                                 <h2>How <strong>green</strong> is my BTC Wallet?</h2>
 
@@ -438,7 +444,6 @@ class CarbonaraCalculator extends Component {
                                                 placeholder="Wallet Address or Transaction ID"
                                                 value={this.state.address}
                                                 onChange={(event) => this.handleChange(event)}
-                                                autoFocus
                                             />
                                             <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
                                                 { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
@@ -475,7 +480,7 @@ class CarbonaraCalculator extends Component {
                                         <div className="uk-width-1-1">
 
                                             { showTransactions &&
-                                                <div>
+                                                <div uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                     <label className="uk-form-label">Please select a transaction</label>
                                                     <br />
                                                     <MaterialTable
@@ -513,14 +518,14 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div className="uk-position-bottom">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#graph')}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </button>
                                         { showResults &&
-                                            <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#results')}>
+                                            <button className="uk-button uk-button-primary" onClick={(event) => this.scrollTo(event, '#results')} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </button>
                                         }
@@ -540,7 +545,7 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div className="uk-position-bottom">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <button className="uk-button uk-button-default" onClick={(event) => this.scrollTo(event, '#calculate')}>
@@ -576,7 +581,9 @@ class CarbonaraCalculator extends Component {
 
                             <div className="uk-container uk-light">
                                 { showGamificationResults &&
-                                    <ResultGrid result={this.state.gamificationResult} scrollSticky={false} position="bottom" type="primary" />
+                                    <div className="uk-sticky calculation-result-active uk-sticky-fixed uk-sticky-below calculation-result-active-bottom">
+                                        <ResultGrid result={this.state.gamificationResult} type="primary" position="bottom" />
+                                    </div>
                                 }
                             </div>
 
@@ -585,7 +592,7 @@ class CarbonaraCalculator extends Component {
                 }
 
             </div>
-        );
+        )
     }
 }
 

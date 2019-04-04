@@ -20,7 +20,9 @@ class ResultSection extends Component {
         return (
             <div>
 
-                <ResultGrid result={this.props.result} scrollSticky={true} position="top" type="secondary" />
+                <div uk-sticky="cls-active: calculation-result-active">
+                    <ResultGrid result={this.props.result} type="secondary" position="top" />
+                </div>
 
                 <div className="uk-margin-large-top" uk-height-match=".uk-card">
                     <h3 className="">Here are some compensation options for you:</h3>
