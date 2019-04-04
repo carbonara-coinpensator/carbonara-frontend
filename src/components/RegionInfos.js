@@ -1,32 +1,32 @@
 const RegionRatio = [
     {
         'name': 'CA',
-        'coordinates': [-90.4737, 31.2304],
+        'coordinates': [-118.6919, 34.0207],
         'color': '#336600'
     },
     {
         'name': 'CN',
-        'coordinates': [121.4737, 31.2304],
+        'coordinates': [116.2350, 39.5426],
         'color': '#2E8C78'
     },
     {
         'name': 'EU',
-        'coordinates': [2.3522, 48.8566],
+        'coordinates': [8.5666, 50.1194],
         'color': '#894E27'
     },
     {
         'name': 'JP',
-        'coordinates': [130.4737, 31.2304],
+        'coordinates': [139.6012, 35.6675],
         'color': '#6A6254'
     },
     {
         'name': 'SG',
-        'coordinates': [110.4737, 20.2304],
+        'coordinates': [103.7450, 1.3439],
         'color': '#14121D'
     },
     {
         'name': 'US',
-        'coordinates': [-74.0059, 40.7128],
+        'coordinates': [-77.0846, 38.8937],
         'color': '#48616B'
     }
 ]

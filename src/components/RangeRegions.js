@@ -116,22 +116,22 @@ class RangeRegions extends Component {
                     />
                     <div uk-grid="" className="uk-flex-center uk-margin">
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {consumptionsPercent[0].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {consumptionsPercent[0].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {consumptionsPercent[1].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {consumptionsPercent[1].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {consumptionsPercent[2].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {consumptionsPercent[2].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {consumptionsPercent[3].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {consumptionsPercent[3].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {consumptionsPercent[4].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {consumptionsPercent[4].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {consumptionsPercent[5].toFixed(1)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {consumptionsPercent[5].toFixed(0)}%</span>
                         </div>
                     </div>
                 </div>
