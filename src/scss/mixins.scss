@@ -1747,7 +1747,9 @@
     text-align: center;
 }
 // @mixin hook-notification-close(){}
-// @mixin hook-notification-message-primary(){}
+@mixin hook-notification-message-primary(){
+    background: rgba($global-secondary-background,.9);
+}
 // @mixin hook-notification-message-success(){}
 // @mixin hook-notification-message-warning(){}
 // @mixin hook-notification-message-danger(){}

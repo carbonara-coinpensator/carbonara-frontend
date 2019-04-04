@@ -22,12 +22,11 @@
 
 .calculation-result-active {
 
-    position: fixed;
-    z-index: $global-z-index + 1;
+    pointer-events: none;
 
     &.calculation-result-active-bottom {
+        top: auto !important;
         bottom: 0;
-        width: 1200px;
     }
 
     .calcgrid {
