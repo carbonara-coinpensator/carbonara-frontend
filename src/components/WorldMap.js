@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import geodata from '../assets/ne_110m_land.topojson'
+import geodata from '../static/media/ne_110m_land.topojson'
 import {
   ComposableMap,
   ZoomableGroup,

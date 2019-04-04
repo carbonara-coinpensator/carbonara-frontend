@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import ResultGrid from './ResultGrid'
-import logonature from '../assets/logo-naturefund.png'
-import logoplanet from '../assets/logo-planet.svg'
+import logonature from '../static/media/logo-naturefund.png'
+import logoplanet from '../static/media/logo-planet.svg'
 
 class ResultSection extends Component {
 
