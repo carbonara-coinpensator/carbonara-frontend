@@ -360,23 +360,23 @@ class CarbonaraCalculator extends Component {
                                 <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
+                                    <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
+                                        <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
+                                            <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                <img src={unibright} alt="" />
+                                                <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
+                                                    <div className="uk-position-center">
+                                                        <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
                                         <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
                                             <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={zuehlke} alt="" />
-                                                    <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
-                                                        <div className="uk-position-center">
-                                                            <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
-                                            <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
-                                                    <img src={unibright} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
                                                             <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
