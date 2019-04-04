@@ -317,10 +317,16 @@ class CarbonaraCalculator extends Component {
         this.setState({showGamificationResults: true})
     }
 
+    handleInputFocus() {
+        UIkit.scrollspy('#address', { repeat: true })
+        UIkit.util.on('#address', 'inview', function () {
+            this.focus()
+        })
+    }
+
     componentDidMount() {
         this.getChartData()
-        // UIkit.scroll(e.target)
-        // this.getMiningGearYears()
+        this.handleInputFocus()
     }
 
     componentWillUnmount() {
@@ -438,7 +444,6 @@ class CarbonaraCalculator extends Component {
                                                 placeholder="Wallet Address or Transaction ID"
                                                 value={this.state.address}
                                                 onChange={(event) => this.handleChange(event)}
-                                                autoFocus
                                             />
                                             <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
                                                 { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
@@ -585,7 +590,7 @@ class CarbonaraCalculator extends Component {
                 }
 
             </div>
-        );
+        )
     }
 }
 
