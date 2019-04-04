@@ -15,30 +15,42 @@ class ConsumptionGraph extends Component {
                         id: 'priceandconsumption'
                     },
                     xaxis: {
-                        categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
+                        type: 'datetime'
                     },
                     stroke: {
                         show: true,
                         curve: 'straight',
                         lineCap: 'butt',
                         colors: undefined,
-                        width: 3,
+                        width: 2,
                         dashArray: 0,
                     }
                 },
                 series: [
                     {
                         name: 'BTC price',
-                        data: [30, 40, 45, 50, 49, 60, 50, 20, 90, 70]
+                        data: this.transformValues(this.props.prices, 2)
                     },
                     {
                         name: 'Energy comsumption',
-                        data: [50, 70, 55, 60, 50, 50, 50, 40, 60, 50]
+                        data: this.transformValues(this.props.consumptions)
                     }
                 ]
             }
         }
 
+    }
+
+    transformValues(values, mod = 1) {
+        let returnvalues = []
+        let counter = 0
+        values.forEach(function(v){
+            if (counter%mod === 0) {
+                returnvalues.push([Number(v.x) * 1000, v.y])
+            }
+            counter++
+        })
+        return returnvalues
     }
 
     componentDidMount() {
