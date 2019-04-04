@@ -29,7 +29,7 @@ class WorldMap extends Component {
     }
 
     componentDidMount() {
-        console.log('topojson data', geodata)
+
     }
 
     render() {
