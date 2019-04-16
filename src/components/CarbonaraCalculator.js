@@ -11,6 +11,7 @@ import ConsumptionGraph from './ConsumptionGraph'
 import WhatIf from './WhatIf'
 import zuehlke from '../static/media/zuehlke.png'
 import unibright from '../static/media/unibright.png'
+import ethevents from '../static/media/ethevents.png'
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
@@ -437,7 +438,7 @@ class CarbonaraCalculator extends Component {
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
-                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
+                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                                             <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={unibright} alt="" />
@@ -453,6 +454,18 @@ class CarbonaraCalculator extends Component {
                                             <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={zuehlke} alt="" />
+                                                    <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
+                                                        <div className="uk-position-center">
+                                                            <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
+                                            <a href="https://eth.events/" target="zuehlke" className="uk-animation-toggle">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                    <img src={ethevents} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
                                                             <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
