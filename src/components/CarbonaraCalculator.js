@@ -300,7 +300,7 @@ class CarbonaraCalculator extends Component {
         let regionsPercentagePositions = []
         let lastPercentagePosition = 0
         this.state.regionRanges.forEach(function(v){
-            lastPercentagePosition += v.energyConsumptionInKWh
+            lastPercentagePosition += v.energyConsumption
             regionsPercentagePositions.push(lastPercentagePosition/totalEnergyConsumptionInCurrentYear*100)
         })
         regionsPercentagePositions.pop()
