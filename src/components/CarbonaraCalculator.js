@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'react-dates/initialize'
-import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { Link, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import MaterialTable from 'material-table'
 import moment from 'moment'
 import API from '../api'
@@ -217,16 +217,12 @@ class CarbonaraCalculator extends Component {
         })
         .then(function () {
             UIkit.notification.closeAll()
-<<<<<<< Updated upstream
-            UIkit.scroll('#results').scrollTo('#results')
-=======
             // UIkit.scroll('#results').scrollTo('#results')
             scroller.scrollTo('results', {
                 spy: true,
                 smooth: true,
                 duration: 500
             })
->>>>>>> Stashed changes
         })
     }
 
@@ -436,7 +432,8 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-container-small uk-margin-large-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h1>Carbonara Coinpensator</h1>
-                                <p>Welcome to the <strong>Carbonara Coinpensator</strong>.</p>
+                                <p>The Carbonara Coinpensator (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
+                                <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
