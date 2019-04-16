@@ -16,6 +16,7 @@
     "react-moment": "^0.8.4",
     "react-range": "^1.0.5",
     "react-scripts": "2.1.8",
+    "react-scroll": "^1.7.11",
     "react-simple-maps": "^0.12.1",
     "redux": "^4.0.1",
     "uikit": "^3.0.3"
