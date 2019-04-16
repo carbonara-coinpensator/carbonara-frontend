@@ -64,6 +64,7 @@ class CarbonaraCalculator extends Component {
             years: [],
             regions: [],
             consumptionPerRegion: [],
+            regionRanges: [],
 
             focusedInput: null,
             emissionsResult: 0,
@@ -204,6 +205,7 @@ class CarbonaraCalculator extends Component {
             // set various state vars based on mainCalculationResult state
             this.setState({
                 consumptionPerRegion: this.getConsumptionPerRegion(),
+                regionRanges: this.getConsumptionPerRegion(),
                 regions: this.getRegions(),
                 years: this.getYears()
             })
@@ -297,23 +299,22 @@ class CarbonaraCalculator extends Component {
         let totalEnergyConsumptionInCurrentYear = this.calculateTotalEnergyConsumptionForYear(this.state.transactionYearEstimated)
         let regionsPercentagePositions = []
         let lastPercentagePosition = 0
-        this.state.consumptionPerRegion.forEach(function(v){
-            lastPercentagePosition += v
+        this.state.regionRanges.forEach(function(v){
+            lastPercentagePosition += v.energyConsumptionInKWh
             regionsPercentagePositions.push(lastPercentagePosition/totalEnergyConsumptionInCurrentYear*100)
         })
         regionsPercentagePositions.pop()
         return regionsPercentagePositions
     }
 
-    calculateGamificationForYear(year) {
-        // set new year in state
-        this.setState({ transactionYearEstimated: year })
-        // calculate gamification again
-        let regionsPercentagePositions = this.calculateRegionPercentagePositionsFromConsumptionValues()
-        this.calculateGamificationForRegions(regionsPercentagePositions)
+    calculateGamificationForYear() {
+        this.calculateGamificationForRegions()
     }
 
-    calculateGamificationForRegions(regionsPercentagePositions) {
+    calculateGamificationForRegions() {
+
+        // let regionsPercentagePositions = this.calculateRegionPercentagePositionsFromConsumptionValues()
+        let regionsPercentagePositions = this.state.regionRanges
 
         // add last percentage value to positions
         if (regionsPercentagePositions.length < this.state.mainCalculationResult.averageEmissionPerCountry.length) {
@@ -385,13 +386,19 @@ class CarbonaraCalculator extends Component {
     }
 
     handleRegionsChange(regions) {
-        this.calculateGamificationForRegions(regions)
-        this.setState({showGamificationResults: true})
+        this.setState({
+            showGamificationResults: true,
+            regionRanges: regions
+        })
+        this.calculateGamificationForRegions()
     }
 
     handleYearsChange(year) {
-        this.calculateGamificationForYear(year[0])
-        this.setState({showGamificationResults: true})
+        this.setState({
+            showGamificationResults: true,
+            transactionYearEstimated: year[0]
+        })
+        this.calculateGamificationForYear()
     }
 
     handleInputFocus() {
