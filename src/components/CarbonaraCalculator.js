@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-// import cloneDeep from 'lodash/cloneDeep'
 import 'react-dates/initialize'
-// import { DateRangePicker } from 'react-dates'
-// import 'react-dates/lib/css/_datepicker.css'
+import { Link, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import MaterialTable from 'material-table'
 import moment from 'moment'
 import API from '../api'
@@ -13,6 +11,7 @@ import ConsumptionGraph from './ConsumptionGraph'
 import WhatIf from './WhatIf'
 import zuehlke from '../static/media/zuehlke.png'
 import unibright from '../static/media/unibright.png'
+import ethevents from '../static/media/ethevents.png'
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
@@ -220,6 +219,11 @@ class CarbonaraCalculator extends Component {
         .then(function () {
             UIkit.notification.closeAll()
             // UIkit.scroll('#results').scrollTo('#results')
+            scroller.scrollTo('results', {
+                spy: true,
+                smooth: true,
+                duration: 500
+            })
         })
     }
 
@@ -403,10 +407,12 @@ class CarbonaraCalculator extends Component {
     componentDidMount() {
         this.getChartData()
         this.handleInputFocus()
+        scrollSpy.update();
     }
 
     componentWillUnmount() {
-
+        Events.scrollEvent.remove('begin');
+        Events.scrollEvent.remove('end');
     }
 
 
@@ -427,11 +433,12 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-container-small uk-margin-large-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h1>Carbonara Coinpensator</h1>
-                                <p>Welcome to the <strong>Carbonara Coinpensator</strong>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quis hendrerit ligula. Praesent sed tincidunt ante. Duis a hendrerit metus. Sed ultricies semper libero at ultrices. Donec eget velit et magna ultricies efficitur eget tincidunt massa. Nulla convallis scelerisque nunc, vel elementum turpis cursus in. Proin suscipit lacus finibus, lobortis justo sed, viverra tortor. Nunc magna lectus, volutpat at dignissim quis, tristique vel quam.</p>
+                                <p>The Carbonara Coinpensator (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
+                                <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
-                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 550">
+                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                                             <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={unibright} alt="" />
@@ -455,15 +462,27 @@ class CarbonaraCalculator extends Component {
                                                 </div>
                                             </a>
                                         </div>
+                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
+                                            <a href="https://eth.events/" target="zuehlke" className="uk-animation-toggle">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                    <img src={ethevents} alt="" />
+                                                    <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
+                                                        <div className="uk-position-center">
+                                                            <span className="uk-transition-fade" uk-icon="icon: link; ratio: 2"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <a href="#graph" className="uk-button uk-button-primary" uk-scroll="">
+                                        <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
                                             BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -481,9 +500,9 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <a href="#calculate" className="uk-button uk-button-primary" uk-scroll="">
+                                        <Link className="uk-button uk-button-primary" to="calculate" spy={true} smooth={true} duration={500}>
                                             How green is my BTC Wallet? <span uk-icon="arrow-down"></span>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -591,13 +610,13 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <a href="#graph" className="uk-button uk-button-primary" uk-scroll="">
+                                        <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
-                                        </a>
+                                        </Link>
                                         { showResults &&
-                                            <a href="#results" className="uk-button uk-button-primary" uk-scroll="" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
-                                            </a>
+                                            </Link>
                                         }
                                     </div>
                                 </div>
@@ -615,12 +634,12 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
-                                        <a href="#calculate" className="uk-button uk-button-default" uk-scroll="">
+                                        <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
-                                        </a>
-                                        <a href="#gamification" className="uk-button uk-button-primary" uk-scroll="">
+                                        </Link>
+                                        <Link className="uk-button uk-button-primary" to="gamification" spy={true} smooth={true} duration={500}>
                                             What if &hellip; <span uk-icon="arrow-down"></span>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
