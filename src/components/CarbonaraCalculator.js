@@ -210,7 +210,7 @@ class CarbonaraCalculator extends Component {
 
             // main emission result
             this.setState({
-                emissionsResult: this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].fullCo2Emission
+                emissionsResult: this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].fullCo2EmissionInKg
             })
 
         }).catch(function (error) {
@@ -246,7 +246,7 @@ class CarbonaraCalculator extends Component {
     getRegions() {
         // obtained region codes are used for gamification in WhatIf component
         let regions = []
-        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountryInKWh.forEach(function(v){
             // push properties to arrays
             regions.push(v.countryCode)
         })
@@ -257,9 +257,9 @@ class CarbonaraCalculator extends Component {
         // consumption per region is used for gamification in WhatIf component
         let consumptionPerRegion = []
         // given average emissions per region
-        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountry.forEach(function(v){
+        this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].energyConsumptionPerCountryInKWh.forEach(function(v){
             // push properties to arrays
-            consumptionPerRegion.push(v.energyConsumption)
+            consumptionPerRegion.push(v.energyConsumptionInKWh)
         })
         return consumptionPerRegion
     }
@@ -287,8 +287,8 @@ class CarbonaraCalculator extends Component {
 
     calculateTotalEnergyConsumptionForYear(year) {
         let sum = 0
-        this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountry.forEach(function(v){
-            sum += v.energyConsumption
+        this.state.mainCalculationResult.calculationPerYear[year].energyConsumptionPerCountryInKWh.forEach(function(v){
+            sum += v.energyConsumptionInKWh
         })
         return sum
     }
@@ -316,7 +316,7 @@ class CarbonaraCalculator extends Component {
     calculateGamificationForRegions(regionsPercentagePositions) {
 
         // add last percentage value to positions
-        if (regionsPercentagePositions.length < this.state.mainCalculationResult.averageEmissionPerCountry.length) {
+        if (regionsPercentagePositions.length < this.state.mainCalculationResult.averageCo2EmissionPerCountryInKg.length) {
             regionsPercentagePositions.push(100)
         }
 
@@ -338,10 +338,10 @@ class CarbonaraCalculator extends Component {
             newEnergyConsumptionsPerCountry.push(v * totalEnergyConsumptionInCurrentYear / 100)
         })
 
-        // calculate full emission with formula (AverageEmissionPerCountry.Co2Emission / 1000) * EnergyConsumptionPerCountry.EnergyConsumption
+        // calculate full emission with formula (averageCo2EmissionPerCountryInKg.Co2Emission / 1000) * energyConsumptionPerCountryInKWh.EnergyConsumption
         let gamificationResult = 0
-        this.state.mainCalculationResult.averageEmissionPerCountry.forEach(function(v,k){
-            gamificationResult += v.co2Emission / 1000 * newEnergyConsumptionsPerCountry[k]
+        this.state.mainCalculationResult.averageCo2EmissionPerCountryInKg.forEach(function(v,k){
+            gamificationResult += v.co2EmissionInKg / 1000 * newEnergyConsumptionsPerCountry[k]
         })
 
         regionsPercentagePositions.pop()
