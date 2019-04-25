@@ -342,7 +342,7 @@ class CarbonaraCalculator extends Component {
         // calculate full emission with formula (averageCo2EmissionPerCountryInKg.Co2Emission / 1000) * energyConsumptionPerCountryInKWh.EnergyConsumption
         let gamificationResult = 0
         this.state.mainCalculationResult.averageCo2EmissionPerCountryInKg.forEach(function(v,k){
-            gamificationResult += v.co2EmissionInKg / 1000 * newEnergyConsumptionsPerCountry[k]
+            gamificationResult += v.co2Emission / 1000 * newEnergyConsumptionsPerCountry[k]
         })
 
         regionsPercentagePositions.pop()
