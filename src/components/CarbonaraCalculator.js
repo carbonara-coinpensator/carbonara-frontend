@@ -497,12 +497,12 @@ class CarbonaraCalculator extends Component {
                     </section>
                 </div>
 
-                { 'priceChart' in this.state.chart && 'co2EmissionChart' in this.state.chart &&
+                { 'priceChart' in this.state.chart && 'energyConsumptionChart' in this.state.chart &&
                     <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
                             <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h2 className="uk-text-center">BTC Price and Energy Consumption</h2>
-                                <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.co2EmissionChart} />
+                                <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.energyConsumptionChart} />
                             </div>
                             <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">

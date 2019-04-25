@@ -14,7 +14,7 @@ class ConsumptionGraph extends Component {
                     fontFamily: '"Encode Sans", Helvetica, Arial, sans-serif',
                     foreColor: '#484260',
                     selection: {
-                        enabled: true,
+                        enabled: false,
                         type: 'x',
                         fill: {
                           color: '#484260',
@@ -38,12 +38,12 @@ class ConsumptionGraph extends Component {
                     toolbar: {
                     show: true,
                         tools: {
-                            download: true,
-                            selection: true,
+                            download: false,
+                            selection: false,
                             zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
                             reset: true | '<img src="/static/icons/reset.png" width="20">',
                             customIcons: []
                         },
@@ -59,6 +59,7 @@ class ConsumptionGraph extends Component {
                 },
                 yaxis: [
                     {
+                        // opposite: true,
                         title: {
                             text: 'BTC price [US$]'
                         },
@@ -75,7 +76,7 @@ class ConsumptionGraph extends Component {
                             formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
                         },
                         // min: 0,
-                        max: 600,
+                        // max: 600,
                         // forceNiceScale: true,
                     }
                 ],
@@ -97,22 +98,22 @@ class ConsumptionGraph extends Component {
             series: [
                 {
                     name: 'BTC price [US$]',
-                    data: this.transformValues(this.props.prices, 5)
+                    data: this.transformValues(this.props.prices, 4, 1)
                 },
                 {
                     name: 'Energy Comsumption [kWh]',
-                    data: this.transformValues(this.props.consumptions)
+                    data: this.transformValues(this.props.consumptions, 1, 10)
                 }
             ]
         }
 
     }
 
-    transformValues(values, mod = 1) {
+    transformValues(values, mod = 1, miny = -1) {
         let returnvalues = []
         let counter = 0
         values.forEach(function(v){
-            if (counter%mod === 0) {
+            if (counter%mod === 0 && v.y > miny) {
                 returnvalues.push([Number(v.x) * 1000, v.y.toFixed(0)])
             }
             counter++
