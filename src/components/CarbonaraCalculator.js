@@ -433,12 +433,11 @@ class CarbonaraCalculator extends Component {
 
         return (
             <div className="uk-text-center">
-
                 <div className="background-landscape">
-                    <section id="welcome" className="uk-section uk-section-default uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
+                    <section id="welcome" className="uk-section uk-section-default uk-padding-remove-vertical uk-text-center uk-flex uk-flex-column uk-position-relative uk-height-viewport">
                         <Navigation />
                         <div className="uk-width-1-1">
-                            <div className="uk-container uk-container-small uk-margin-large-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                            <div className="uk-container uk-container-small" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <h1>Carbonara Coinpensator</h1>
                                 <p>The Carbonara Coinpensator (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
                                 <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
@@ -484,9 +483,9 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
-                                    <div className="uk-button-group uk-margin-large-bottom">
+                                    <div className="uk-button-group uk-margin-large-bottom uk-margin-small-top">
                                         <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
                                             BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
                                         </Link>
@@ -504,7 +503,7 @@ class CarbonaraCalculator extends Component {
                                 <h2 className="uk-text-center">BTC Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.energyConsumptionChart} />
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-primary" to="calculate" spy={true} smooth={true} duration={500}>
@@ -525,9 +524,9 @@ class CarbonaraCalculator extends Component {
 
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                    <div className="uk-text-small uk-child-width-1-2 uk-margin-medium" uk-grid="">
-                                        <p>Example Wallet Address: <br /><code>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></p>
-                                        <p>Example Transaction ID: <br /><code>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></p>
+                                    <div className="uk-text-small uk-child-width-auto uk-margin-medium">
+                                        <p>Example Wallet Address: <br /></p><pre>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</pre>
+                                        <p>Example Transaction ID: <br /></p><pre>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</pre>
                                     </div>
 
                                     <div className="uk-margin">
@@ -633,7 +632,7 @@ class CarbonaraCalculator extends Component {
                 </section>
 
                 { showResults &&
-                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
+                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light" uk-grid="">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
@@ -662,7 +661,7 @@ class CarbonaraCalculator extends Component {
                 }
 
                 { showGamification &&
-                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default">
+                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default" uk-grid="">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 
