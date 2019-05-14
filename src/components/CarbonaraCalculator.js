@@ -613,14 +613,14 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
-                                    <div className="uk-button-group uk-margin-large-bottom">
+                                    <div className="uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </Link>
                                         { showResults &&
-                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                                            <Link className="uk-button uk-button-primary uk-margin-large-top" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </Link>
                                         }
