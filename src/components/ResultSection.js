@@ -20,11 +20,11 @@ class ResultSection extends Component {
         return (
             <div>
 
-                <div uk-sticky="cls-active: calculation-result-active">
+                <div>
                     <ResultGrid result={this.props.result} type="secondary" position="top" />
                 </div>
 
-                <div className="uk-margin-large-top" uk-height-match=".uk-tile">
+                <div className="uk-margin-small-top" uk-height-match=".uk-tile">
                     <p className="">Here are some compensation options for you:</p>
 
                     <div uk-grid="" className="uk-flex uk-flex-center uk-animation-fast uk-child-width-1-6@m uk-child-width-1-4" uk-scrollspy="target: > div; cls: uk-animation-slide-right-small; repeat: true; delay: 200">

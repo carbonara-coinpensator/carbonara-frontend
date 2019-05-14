@@ -637,7 +637,7 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
