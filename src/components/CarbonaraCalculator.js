@@ -34,6 +34,9 @@ class CarbonaraCalculator extends Component {
         this.getYears = this.getYears.bind(this)
         this.getConsumptionPerRegion = this.getConsumptionPerRegion.bind(this)
         this.fillInTransactionIdAndEmptyTransactionsList = this.fillInTransactionIdAndEmptyTransactionsList.bind(this)
+        this.copyWalletAddress = this.copyWalletAddress.bind(this)
+        this.copyTransactionId = this.copyTransactionId.bind(this)
+        this.resetForm = this.resetForm.bind(this)
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
@@ -140,6 +143,32 @@ class CarbonaraCalculator extends Component {
          })
     }
 
+    copyWalletAddress(e) {
+        e.preventDefault();
+        this.handleChange(e);
+        this.setState({
+            addressValidity: {
+                wallet: true,
+                transaction: false,
+                some: true
+            },
+            address: e.target.innerHTML
+         })
+    }
+
+    copyTransactionId(e) {
+        e.preventDefault();
+        this.handleChange(e);
+        this.setState({
+            addressValidity: {
+                wallet: false,
+                transaction: true,
+                some: true
+            },
+            address: e.target.innerHTML
+         })
+    }
+
     submitForm(e) {
         e.preventDefault()
         if (this.state.addressValidity.wallet) {
@@ -151,7 +180,9 @@ class CarbonaraCalculator extends Component {
         }
     }
 
-    resetForm() {
+    resetForm(e) {
+        e.preventDefault();
+        this.handleChange(e);
         this.setState({
             address: '',
             addressValidity: {
@@ -165,6 +196,7 @@ class CarbonaraCalculator extends Component {
             }
         })
     }
+
 
 
 
@@ -524,22 +556,25 @@ class CarbonaraCalculator extends Component {
 
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                    <div className="uk-text-small uk-child-width-auto uk-margin-medium">
-                                        <p>Example Wallet Address: <br /></p><pre>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</pre>
-                                        <p>Example Transaction ID: <br /></p><pre>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</pre>
-                                    </div>
+                                    <div className="uk-text-small uk-child-width-1-2 uk-margin-medium" uk-grid="">
+                                            <p>Example Wallet Address: <br /><span onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</span></p>
+                                            <p>Example Transaction ID: <br /><span onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</span></p>
+                                        </div>
 
                                     <div className="uk-margin">
                                         <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                         <div className="uk-form-controls">
-                                            <input className="uk-input uk-form-large uk-text-center"
-                                                id="address"
-                                                type="text"
-                                                name="address"
-                                                placeholder="Wallet Address or Transaction ID"
-                                                value={this.state.address}
-                                                onChange={(event) => this.handleChange(event)}
-                                            />
+                                            <div className="input-container">
+                                                <input className="uk-input uk-form-large uk-text-center"
+                                                    id="address"
+                                                    type="text"
+                                                    name="address"
+                                                    placeholder="Wallet Address or Transaction ID"
+                                                    value={this.state.address}
+                                                    onChange={(event) => this.handleChange(event)}
+                                                />
+                                                {this.state.address ? <button className={'clear-button'} onClick={this.resetForm}>&#10006;</button> : null}
+                                            </div>
                                             <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
                                                 { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
                                             </button>
