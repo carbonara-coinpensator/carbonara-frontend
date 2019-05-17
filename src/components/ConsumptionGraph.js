@@ -8,7 +8,7 @@ class ConsumptionGraph extends Component {
         super(...props)
         this.state = {
             options: {
-                colors: ['#14121D', '#336600'],
+                colors: ['#14121D', '#ff5500'],
                 chart: {
                     id: 'priceandconsumption',
                     fontFamily: '"Encode Sans", Helvetica, Arial, sans-serif',
@@ -88,8 +88,10 @@ class ConsumptionGraph extends Component {
                 },
                 legend: {
                     show: true,
+                    horizontalAlign: 'center',
+                    position: 'bottom',
                     itemMargin: {
-                        horizontal: 20,
+                        horizontal: 5,
                         vertical: 10
                     }
                 },
