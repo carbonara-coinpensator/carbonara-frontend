@@ -18,6 +18,10 @@
     font-size: 6rem;
 }
 
+.uk-width-1-1 {
+    min-width: 131px !important;
+}
+
 .b { @include b; }
 
 .input-container {
