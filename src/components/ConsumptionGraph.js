@@ -70,7 +70,7 @@ class ConsumptionGraph extends Component {
                     {
                         opposite: true,
                         title: {
-                            text: 'Energy Comsumption [kWh]'
+                            text: 'Energy Consumption [kWh]'
                         },
                         labels: {
                             formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
