@@ -519,7 +519,7 @@ class CarbonaraCalculator extends Component {
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom uk-margin-small-top">
                                         <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
-                                            Bitcoin (BTC) Price and Energy Consumption <span uk-icon="arrow-down"></span>
+                                            BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
                                         </Link>
                                     </div>
                                 </div>
@@ -532,7 +532,7 @@ class CarbonaraCalculator extends Component {
                     <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
                             <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
-                                <h2 className="uk-text-center">BTC Price and Energy Consumption</h2>
+                                <h2 className="uk-text-center">Bitcoin (BTC) Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.energyConsumptionChart} />
                             </div>
                             <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
