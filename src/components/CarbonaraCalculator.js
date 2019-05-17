@@ -519,7 +519,7 @@ class CarbonaraCalculator extends Component {
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom uk-margin-small-top">
                                         <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
-                                            BTC Price and Energy Consumption <span uk-icon="arrow-down"></span>
+                                            Bitcoin (BTC) Price and Energy Consumption <span uk-icon="arrow-down"></span>
                                         </Link>
                                     </div>
                                 </div>
