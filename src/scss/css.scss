@@ -54,6 +54,10 @@
     background-color: rgba(255,255,255,0.1)
 }
 
+.uk-text-small span:hover {
+    cursor: pointer;
+}
+
 .calculation-result-active {
 
     pointer-events: none;
