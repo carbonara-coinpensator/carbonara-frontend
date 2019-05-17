@@ -162,13 +162,3 @@
     }
 
 }
-
-@media screen and (min-width: $breakpoint-medium) {
-
-    .apexcharts-toolbar svg {
-        min-height: 42px;
-        min-width: 42px;
-        margin: 8px 4px;
-        padding: 4px;
-    }
-}
