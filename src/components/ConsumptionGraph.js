@@ -101,7 +101,7 @@ class ConsumptionGraph extends Component {
                     data: this.transformValues(this.props.prices, 4, 1)
                 },
                 {
-                    name: 'Energy Comsumption [kWh]',
+                    name: 'Energy Consumption [kWh]',
                     data: this.transformValues(this.props.consumptions, 1, 10)
                 }
             ]
