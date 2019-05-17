@@ -516,9 +516,9 @@ class CarbonaraCalculator extends Component {
                     </section>
                 }
 
-                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
+                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary uk-padding-remove-bottom">
                     <div className="uk-width-1-1">
-                            <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                            <div className="uk-container uk-margin-small-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
 
                                 <h2>How <strong>green</strong> is my BTC Wallet?</h2>
 
@@ -616,11 +616,11 @@ class CarbonaraCalculator extends Component {
                             <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-margin-large-bottom">
-                                        <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
+                                        <Link className="uk-button uk-button-default uk-width-1-1" to="graph" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </Link>
                                         { showResults &&
-                                            <Link className="uk-button uk-button-primary uk-margin-large-top" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                                            <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </Link>
                                         }
@@ -638,15 +638,13 @@ class CarbonaraCalculator extends Component {
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
                             <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
-                                <div className="uk-container">
-                                    <div className="uk-button-group uk-margin-large-bottom">
-                                        <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
-                                            <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
-                                        </Link>
-                                        <Link className="uk-button uk-button-primary" to="gamification" spy={true} smooth={true} duration={500}>
-                                            What if &hellip; <span uk-icon="arrow-down"></span>
-                                        </Link>
-                                    </div>
+                                <div className="uk-container uk-margin-small-bottom">
+                                    <Link className="uk-button uk-button-default uk-width-1-1" to="calculate" spy={true} smooth={true} duration={500}>
+                                        <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
+                                    </Link>
+                                    <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="gamification" spy={true} smooth={true} duration={500}>
+                                        What if &hellip; <span uk-icon="arrow-down"></span>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
