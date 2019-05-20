@@ -699,6 +699,7 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container">
 
                                 <h2>What if &hellip;</h2>
+                                <p>Check out the geographical distribution of mining pools. See how changing the share of each pool and with it the respective energy mix and mining hardware production standards throughout the years are affecting the CO2 emissions of transactions.</p>
                                 <WhatIf
                                     years={this.state.years}
                                     transactionYear={this.state.transactionYearEstimated}
