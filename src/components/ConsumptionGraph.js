@@ -44,7 +44,7 @@ class ConsumptionGraph extends Component {
                             zoomin: false,
                             zoomout: false,
                             pan: false,
-                            reset: true | '<img src="/static/icons/reset.png" width="20">',
+                            reset: true  | '<img src="/static/media/tree.svg" width="40">',
                             customIcons: []
                         },
                         autoSelected: 'zoom'
