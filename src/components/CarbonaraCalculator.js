@@ -632,19 +632,21 @@ class CarbonaraCalculator extends Component {
                 </section>
 
                 { showResults &&
-                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light" uk-grid="">
+                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
-                            <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
-                                <div className="uk-container uk-margin-small-bottom">
-                                    <Link className="uk-button uk-button-default uk-width-1-1" to="calculate" spy={true} smooth={true} duration={500}>
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                                <div className="uk-container">
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
                                         <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
                                     </Link>
-                                    <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="gamification" spy={true} smooth={true} duration={500}>
+                                        <Link className="uk-button uk-button-primary" to="gamification" spy={true} smooth={true} duration={500}>
                                         What if &hellip; <span uk-icon="arrow-down"></span>
                                     </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -659,7 +661,7 @@ class CarbonaraCalculator extends Component {
                 }
 
                 { showGamification &&
-                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default" uk-grid="">
+                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
                             <div className="uk-container">
 

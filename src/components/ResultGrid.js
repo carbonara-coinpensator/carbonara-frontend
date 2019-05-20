@@ -20,18 +20,13 @@ class ResultGrid extends Component {
 
         return (
             <div>
-                <div className={'uk-flex uk-flex-column'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
-                    <div className="uk-width-1-1@m uk-text-center">
-                        <div className="uk-width-1-1 uk-text-center uk-text-large">
+                <div uk-grid="" className="grid-label uk-flex uk-flex-bottom">
+                    <div className="uk-width-1-2 uk-text-right">
                             <p className="uk-text-muted">CO<sub>2</sub> emissions</p>
                         </div>
-                        <p className="uk-text-huge">{Math.round(this.props.result)}
-                            <small>kg</small>
-                        </p>
+                    <div className="uk-width-1-2 uk-text-left">
+                        <p className="uk-text-muted">correspond to:</p>
                     </div>
-                    <div className=" uk-width-1-1@m">
-                        <div className="uk-width-1-1 uk-text-center uk-text-large">
-                            <p className="uk-text-muted">correspond to</p>
                         </div>
                         <div uk-grid=""
                              className={'calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle uk-grid-divider'}
@@ -41,8 +36,9 @@ class ResultGrid extends Component {
                                     <small>kg</small>
                                 </h2>
                             </div>
-                            <div className="uk-grid-collapse" uk-height-match=".uk-card-media-top">
-                                <div className="uk-width-1-1">
+                    <div className="uk-width-3-4 uk-width-1-2@m">
+                        <div uk-grid="" className="uk-grid-collapse" uk-height-match=".uk-card-media-top">
+                            <div className="uk-width-1-2">
                                     <div className="uk-card uk-card-small">
                                         <div className="uk-card-media-top">
                                             <img className="uk-height-small" src={car} alt=""/>
@@ -54,7 +50,7 @@ class ResultGrid extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="uk-width-1-1">
+                            <div className="uk-width-1-2">
                                     <div className="uk-card uk-card-small">
                                         <div className="uk-card-media-top">
                                             <img className="uk-height-small" src={tree} alt=""/>
@@ -63,7 +59,6 @@ class ResultGrid extends Component {
                                             <h3 className="uk-card-title">
                                                 <strong>{yearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub>
                                                 <br/>sequestration</h3>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
