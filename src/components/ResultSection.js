@@ -39,7 +39,7 @@ class ResultSection extends Component {
                                     </div>
                                 </div>
                             </a>
-                        </div>qqqqqq
+                        </div>
                         <div>
                             <a href="https://www.arktik.de/CO2-ausgleich" target="aktik" className="uk-animation-toggle">
                                 <div className="uk-inline-clip uk-transition-toggle uk-tile uk-tile-default uk-padding-remove uk-width-1-1" tabIndex="0">
