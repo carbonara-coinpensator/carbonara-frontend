@@ -470,8 +470,7 @@ class CarbonaraCalculator extends Component {
                         <Navigation />
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-container-small" uk-scrollspy="cls: uk-animation-fade; repeat: true">
-                                <h1>Carbonara Coinpensator</h1>
-                                <p>The Carbonara Coinpensator (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
+                                <p>The <strong>Carbonara Coinpensator</strong> (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
                                 <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
                                 <div className="uk-margin-medium-top uk-text-small">
                                     <p>Powered by</p>
@@ -557,9 +556,10 @@ class CarbonaraCalculator extends Component {
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
                                     <div className="uk-text-small uk-text-center uk-child-width-1-2 uk-margin-medium uk-flex uk-flex-column uk-flex-wrap uk-flex-middle " uk-grid="">
-                                            <p>Example Wallet Address: <br /><span onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</span></p>
-                                            <p>Example Transaction ID: <br /><span onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</span></p>
-                                        </div>
+                                        <p>Example Wallet Address: <br /><span onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</span></p>
+                                        <p>Example Transaction ID: <br /><span onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</span></p>
+                                    </div>
+                                    <small>You can click on the example data to play around with the calculations.</small>
 
                                     <div className="uk-margin">
                                         <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
