@@ -556,7 +556,7 @@ class CarbonaraCalculator extends Component {
 
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                    <div className="uk-text-small uk-child-width-1-2 uk-margin-medium" uk-grid="">
+                                    <div className="uk-text-small uk-text-center uk-child-width-1-2 uk-margin-medium uk-flex uk-flex-column uk-flex-wrap uk-flex-middle " uk-grid="">
                                             <p>Example Wallet Address: <br /><span onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</span></p>
                                             <p>Example Transaction ID: <br /><span onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</span></p>
                                         </div>
@@ -564,7 +564,7 @@ class CarbonaraCalculator extends Component {
                                     <div className="uk-margin">
                                         <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                         <div className="uk-form-controls">
-                                            <div className="input-container">
+                                            <div className="input-container uk-flex uk-flex-column uk-flex-center">
                                                 <input className="uk-input uk-form-large uk-text-center"
                                                     id="address"
                                                     type="text"

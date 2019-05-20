@@ -15,8 +15,6 @@
 @import "uikit/src/scss/uikit-theme.scss";
 
 .uk-button {
-    text-transform: none !important;
-    line-height: 1.5 !important;
     padding: 15px 30px
 }
 
@@ -30,15 +28,6 @@
 
 .b { @include b; }
 
-.input-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.input-container input {
-    padding-right: 58px !important
-} 
 
 .clear-button {
     border: none;
@@ -61,7 +50,8 @@
 
 .uk-text-small span {
     font-family: monospace;
-    background-color: rgba(255,255,255,0.1)
+    background-color: rgba(255,255,255,0.1);
+    word-break: break-all
 }
 
 .uk-text-small span:hover {
@@ -148,14 +138,6 @@
         padding-right: 12px;
         font-size: 24px;
     }
-
-    .uk-text-small {
-        flex-direction: column;
-        align-content: center;
-        flex-wrap: wrap;
-        word-break: break-all;
-    }
-    
 
     .uk-text-small span:hover {
         cursor: pointer;
