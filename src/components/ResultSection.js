@@ -20,7 +20,7 @@ class ResultSection extends Component {
         return (
             <div>
 
-                <div>
+                <div uk-sticky="cls-active: calculation-result-active">
                     <ResultGrid result={this.props.result} type="secondary" position="top" />
                 </div>
 
@@ -39,7 +39,7 @@ class ResultSection extends Component {
                                     </div>
                                 </div>
                             </a>
-                        </div>
+                        </div>qqqqqq
                         <div>
                             <a href="https://www.arktik.de/CO2-ausgleich" target="aktik" className="uk-animation-toggle">
                                 <div className="uk-inline-clip uk-transition-toggle uk-tile uk-tile-default uk-padding-remove uk-width-1-1" tabIndex="0">
