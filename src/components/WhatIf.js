@@ -127,7 +127,7 @@ class WhatIf extends Component {
 
         return (
             <div>
-                <div uk-grid="">
+                <div uk-grid="" className="uk-margin-large-bottom">
                     <div className="uk-width-1-1">
                         <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
                         <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />

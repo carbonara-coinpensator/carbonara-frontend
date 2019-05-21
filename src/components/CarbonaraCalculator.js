@@ -671,7 +671,7 @@ class CarbonaraCalculator extends Component {
                 { showResults &&
                     <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light" uk-grid="">
                         <div className="uk-width-1-1">
-                            <div className="uk-container">
+                            <div className="uk-container uk-margin-large-top">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
                             <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
@@ -697,20 +697,20 @@ class CarbonaraCalculator extends Component {
 
                                 <h2>What if &hellip;</h2>
                                 <p>Check out the geographical distribution of mining pools. See how changing the share of each pool and with it the respective energy mix and mining hardware production standards throughout the years are affecting the CO2 emissions of transactions.</p>
-                                {/*<div uk-grid="" className="calculation-result uk-grid-collapse uk-light uk-margin-small-topp">
-                                    <div className="uk-width-expand">
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
-                                    </div>
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
-                                    </div>
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
-                                    </div>
+                                <div className="uk-width-1-1 uk-inline">
+                                    <div uk-grid="" className="calculation-result uk-grid-collapse uk-light uk-position-top-center" id="row-top">
+                                            <div className="uk-width-1-1@s">
+                                                <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                            </div>
+                                            <div className="uk-width-1-1@s">
+                                                <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
+                                            </div>
+                                            <div className="uk-width-1-1@s">
+                                                <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
+                                            </div>
+                                            <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                        </div>
                                 </div>
-                                <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
-                                </div>*/}
                                 <WhatIf
                                     years={this.state.years}
                                     transactionYear={this.state.transactionYearEstimated}
@@ -723,7 +723,7 @@ class CarbonaraCalculator extends Component {
                             </div>
                             { showGamificationResults &&
                                 <div className="uk-width-1-1 uk-inline">
-                                    <div uk-grid="" className="gamification-result uk-grid-collapse uk-light">
+                                    <div uk-grid="" className="gamification-result uk-grid-collapse uk-light uk-position-bottom-center" id="row-bottom">
                                         <div className="uk-width-1-1@s">
                                             <strong>{Math.round(this.state.gamificationResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
                                         </div>
