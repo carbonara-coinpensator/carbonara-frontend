@@ -664,17 +664,20 @@ class CarbonaraCalculator extends Component {
 
                 { showGamification &&
                     <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default uk-inline">
-                        <div className="uk-width-1-1">
+                        <div className="uk-width-1-1 uk-inline">
                             <div uk-grid="" className="calculation-result uk-grid-collapse uk-light uk-position-top">
-                                <div className="uk-width-1-1@s">
-                                    <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                <div className="uk-width-expand">
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                    </div>
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
+                                    </div>
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
+                                    </div>
                                 </div>
-                                <div className="uk-width-1-1@s">
-                                    <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
-                                </div>
-                                <div className="uk-width-1-1@s">
-                                    <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
-                                </div>
+                                <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
                             </div>
                             <div className="uk-container uk-margin-small-top">
 
@@ -690,15 +693,18 @@ class CarbonaraCalculator extends Component {
 
                             </div>
                             { showGamificationResults &&
-                                <div uk-grid="" className="gamification-result uk-grid-collapse uk-light">
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{Math.round(this.state.gamificationResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
-                                    </div>
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{gamificationKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
-                                    </div>
-                                    <div className="uk-width-1-1@s">
-                                        <strong>{gamificationYearsOfCo2Sequestration}&nbsp;years</strong>&nbsp;of CO<sub>2</sub> sequestration
+                                <div className="uk-width-1-1 uk-inline">
+                                    <div uk-grid="" className="gamification-result uk-grid-collapse uk-light">
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{Math.round(this.state.gamificationResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                        </div>
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{gamificationKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
+                                        </div>
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{gamificationYearsOfCo2Sequestration}&nbsp;years</strong>&nbsp;of CO<sub>2</sub> sequestration
+                                        </div>
+                                        <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
                                     </div>
                                 </div>
                             }
