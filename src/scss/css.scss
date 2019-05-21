@@ -29,6 +29,13 @@
 
 .b { @include b; }
 
+.calculation-result {
+    background: rgba($global-secondary-color, .9);
+}
+.gamification-result {
+    background: rgba($global-primary-color, .9);
+}
+
 
 .clear-button {
     border: none;
@@ -69,7 +76,6 @@
     }
 
     .calcgrid {
-
         transform: scale(.5);
         margin: 0;
         padding: 0;
@@ -133,7 +139,7 @@
 
     .input-container input {
         padding-right: 42px !important;
-    } 
+    }
 
     .clear-button {
         padding-right: 12px;

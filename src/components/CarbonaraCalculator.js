@@ -454,14 +454,16 @@ class CarbonaraCalculator extends Component {
         Events.scrollEvent.remove('end');
     }
 
-
-
     render() {
 
         let showTransactions = this.state.transactions.length > 0 && this.state.formValidity.wallet
         let showResults = this.state.emissionsResult > 0
         let showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.consumptionPerRegion.length > 0
         let showGamificationResults = this.state.showGamificationResults
+        let gamificationKilometersDrivenByCar = Math.round(this.state.gamificationResult * 6)
+        let gamificationYearsOfCo2Sequestration = Math.round(this.state.gamificationResult * 30 / 365)
+        let emissionResultKilometersDrivenByCar = Math.round(this.state.emissionsResult * 6)
+        let emissionResultYearsOfCo2Sequestration = Math.round(this.state.emissionsResult  * 30 / 365)
 
         return (
             <div className="uk-text-center">
@@ -680,26 +682,35 @@ class CarbonaraCalculator extends Component {
                                     <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="gamification" spy={true} smooth={true} duration={500}>
                                         What if &hellip; <span uk-icon="arrow-down"></span>
                                     </Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        { showGamificationResults &&
-                            <div className="uk-container uk-light">
-                                <div uk-sticky="cls-inactive: uk-invisible; cls-active: calculation-result-active calculation-result-active-bottom">
-                                    <ResultGrid result={this.state.gamificationResult} type="primary" position="bottom" />
-                                </div>
-                            </div>
-                        }
+
                     </section>
                 }
 
                 { showGamification &&
-                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default" uk-grid="">
-                        <div className="uk-width-1-1">
-                            <div className="uk-container">
+                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default uk-inline uk-padding-remove">
+                        <div className="uk-width-1-1 uk-inline">
+
+                            <div className="uk-container uk-margin-small-top">
 
                                 <h2>What if &hellip;</h2>
                                 <p>Check out the geographical distribution of mining pools. See how changing the share of each pool and with it the respective energy mix and mining hardware production standards throughout the years are affecting the CO2 emissions of transactions.</p>
+                                {/*<div uk-grid="" className="calculation-result uk-grid-collapse uk-light uk-margin-small-topp">
+                                    <div className="uk-width-expand">
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                    </div>
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
+                                    </div>
+                                    <div className="uk-width-1-1@s">
+                                        <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
+                                    </div>
+                                </div>
+                                <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                </div>*/}
                                 <WhatIf
                                     years={this.state.years}
                                     transactionYear={this.state.transactionYearEstimated}
@@ -710,6 +721,22 @@ class CarbonaraCalculator extends Component {
                                 />
 
                             </div>
+                            { showGamificationResults &&
+                                <div className="uk-width-1-1 uk-inline">
+                                    <div uk-grid="" className="gamification-result uk-grid-collapse uk-light">
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{Math.round(this.state.gamificationResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
+                                        </div>
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{gamificationKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
+                                        </div>
+                                        <div className="uk-width-1-1@s">
+                                            <strong>{gamificationYearsOfCo2Sequestration}&nbsp;years</strong>&nbsp;of CO<sub>2</sub> sequestration
+                                        </div>
+                                        <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </section>
                 }

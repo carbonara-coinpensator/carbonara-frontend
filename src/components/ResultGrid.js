@@ -6,9 +6,7 @@ class ResultGrid extends Component {
 
     constructor(...props) {
         super(...props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     componentDidMount() {
@@ -35,22 +33,26 @@ class ResultGrid extends Component {
                         </div>
                         <div className="uk-grid-collapse" uk-height-match=".uk-card-media-top">
                             <div className="uk-width-1-1">
-                                <div className="uk-card uk-card-small">
-                                    <div className="uk-card-media-top">
-                                        <img className="uk-height-small" src={car} alt="" />
-                                    </div>
-                                    <div className="uk-card-body">
-                                        <h3 className="uk-card-title"><strong>{ kilometersDrivenByCar }&nbsp;km</strong> <br />driven by&nbsp;car</h3>
+                                    <div className="uk-card uk-card-small">
+                                        <div className="uk-card-media-top">
+                                            <img className="uk-height-small" src={car} alt=""/>
+                                        </div>
+                                        <div className="uk-card-body">
+                                            <h3 className="uk-card-title">
+                                                <strong>{kilometersDrivenByCar}&nbsp;km</strong> <br/>driven by&nbsp;car
+                                            </h3>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <div className="uk-width-1-1">
-                                <div className="uk-card uk-card-small">
-                                    <div className="uk-card-media-top">
-                                        <img className="uk-height-small" src={tree} alt="" />
-                                    </div>
-                                    <div className="uk-card-body">
-                                        <h3 className="uk-card-title"><strong>{ yearsOfCo2Sequestration }&nbsp;years</strong> of&nbsp;CO<sub>2</sub> <br />sequestration</h3>
+                                    <div className="uk-card uk-card-small">
+                                        <div className="uk-card-media-top">
+                                            <img className="uk-height-small" src={tree} alt=""/>
+                                        </div>
+                                        <div className="uk-card-body">
+                                            <h3 className="uk-card-title">
+                                                <strong>{yearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub>
+                                                <br/>sequestration</h3>
                                     </div>
                                 </div>
                             </div>
@@ -61,4 +63,5 @@ class ResultGrid extends Component {
         )
     }
 }
+
 export default ResultGrid;
