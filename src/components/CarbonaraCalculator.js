@@ -671,7 +671,7 @@ class CarbonaraCalculator extends Component {
                 { showResults &&
                     <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light" uk-grid="">
                         <div className="uk-width-1-1">
-                            <div className="uk-container">
+                            <div className="uk-container uk-margin-large-top">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
                             <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">

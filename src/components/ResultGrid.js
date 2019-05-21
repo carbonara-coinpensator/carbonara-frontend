@@ -20,7 +20,7 @@ class ResultGrid extends Component {
 
         return (
             <div>
-                <div className={'uk-flex uk-flex-column'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                <div className={'uk-flex uk-flex-column uk-margin-large-top'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                     <div className="uk-width-1-1@m uk-text-center">
                         <div className="uk-width-1-1 uk-text-center uk-text-large">
                             <p className="uk-text-muted">CO<sub>2</sub> emissions</p>
