@@ -14,6 +14,15 @@
 // 4. Import UIkit.
 @import "uikit/src/scss/uikit-theme.scss";
 
+#row-top {
+    position: fixed !important;
+    top: 0 !important
+}
+
+#row-bottom {
+    position: fixed !important;
+    bottom: 0 !important
+}
 
 .uk-button {
     padding: 15px 30px
