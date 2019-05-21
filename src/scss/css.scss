@@ -14,8 +14,17 @@
 // 4. Import UIkit.
 @import "uikit/src/scss/uikit-theme.scss";
 
+
+.uk-button {
+    padding: 15px 30px
+}
+
 .uk-text-huge {
     font-size: 6rem;
+}
+
+.uk-width-1-1 {
+    min-width: 131px !important;
 }
 
 .b { @include b; }
@@ -25,6 +34,36 @@
 }
 .gamification-result {
     background: rgba($global-primary-color, .9);
+}
+
+
+.clear-button {
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    align-self: flex-end;
+    color: $lightbox-button-hover-color;
+    font-weight: 400;
+    font-size: 28px;
+    padding-right: 15px;
+}
+
+.clear-button:hover{
+    cursor: pointer;
+}
+
+.clear-button:focus {
+    outline: none
+}
+
+.uk-text-small span {
+    font-family: monospace;
+    background-color: rgba(255,255,255,0.1);
+    word-break: break-all
+}
+
+.uk-text-small span:hover {
+    cursor: pointer;
 }
 
 .calculation-result-active {
@@ -94,4 +133,29 @@
     .uk-section-muted { background-color: rgba($global-muted-color,.9); }
     .uk-section-secondary {background-color: rgba($global-secondary-color,.9); }
     .uk-section-primary {background-color: rgba($global-primary-color,.9); }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+
+    .input-container input {
+        padding-right: 42px !important;
+    }
+
+    .clear-button {
+        padding-right: 12px;
+        font-size: 24px;
+    }
+
+    .uk-text-small span:hover {
+        cursor: pointer;
+    }
+
+}
+
+@media screen and (min-width: $breakpoint-small) {
+    .apexcharts-reset-zoom-icon,
+    .apexcharts-zoom-icon {
+        width: 55px
+    }
+
 }

@@ -44,7 +44,7 @@ class ConsumptionGraph extends Component {
                             zoomin: false,
                             zoomout: false,
                             pan: false,
-                            reset: true | '<img src="/static/icons/reset.png" width="20">',
+                            reset: true,
                             customIcons: []
                         },
                         autoSelected: 'zoom'
@@ -70,7 +70,7 @@ class ConsumptionGraph extends Component {
                     {
                         opposite: true,
                         title: {
-                            text: 'Energy Comsumption [kWh]'
+                            text: 'Energy Consumption [kWh]'
                         },
                         labels: {
                             formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
@@ -103,7 +103,7 @@ class ConsumptionGraph extends Component {
                     data: this.transformValues(this.props.prices, 4, 1)
                 },
                 {
-                    name: 'Energy Comsumption [kWh]',
+                    name: 'Energy Consumption [kWh]',
                     data: this.transformValues(this.props.consumptions, 1, 10)
                 }
             ]

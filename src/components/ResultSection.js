@@ -26,9 +26,8 @@ class ResultSection extends Component {
 
                 <div className="uk-margin-small-top" uk-height-match=".uk-tile">
                     <p className="">Here are some compensation options for you:</p>
-
-                    <div uk-grid="" className="uk-flex uk-flex-center uk-animation-fast uk-child-width-1-6@m uk-child-width-1-4" uk-scrollspy="target: > div; cls: uk-animation-slide-right-small; repeat: true; delay: 200">
-                        <div>
+                    <div uk-grid="" className="uk-flex-center uk-animation-fast">
+                    <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                             <a className="uk-animation-toggle" target="naturefund" rel="noopener noreferrer" href="https://www.naturefund.de/wissen/co2_rechner/">
                                 <div className="uk-inline-clip uk-transition-toggle uk-tile uk-tile-default uk-padding-remove uk-width-1-1" tabIndex="0">
                                     <img className="uk-width-1-1" src={naturefund} alt="" />
@@ -39,8 +38,8 @@ class ResultSection extends Component {
                                     </div>
                                 </div>
                             </a>
-                        </div>
-                        <div>
+                    </div>
+                    <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                             <a href="https://www.arktik.de/CO2-ausgleich" target="aktik" className="uk-animation-toggle">
                                 <div className="uk-inline-clip uk-transition-toggle uk-tile uk-tile-default uk-padding-remove uk-width-1-1" tabIndex="0">
                                     <img className="uk-width-1-1" src={arktik} alt="" />
@@ -51,12 +50,12 @@ class ResultSection extends Component {
                                     </div>
                                 </div>
                             </a>
+                    </div>
                         </div>
+
                     </div>
 
                 </div>
-
-            </div>
         )
     }
 }
