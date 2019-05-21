@@ -74,7 +74,7 @@ class RangeYears extends Component {
                                         colors: ['rgb(51,102,0)', '#ccc'],
                                         min: MIN,
                                         max: MAX,
-                                        direction: Direction.Up
+                                        direction: Direction.Right
                                     }),
                                     alignSelf: 'center'
                                 }}
