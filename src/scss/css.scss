@@ -20,6 +20,13 @@
 
 .b { @include b; }
 
+.calculation-result {
+    background: rgba($global-secondary-color, .9);
+}
+.gamification-result {
+    background: rgba($global-primary-color, .9);
+}
+
 .calculation-result-active {
 
     pointer-events: none;
@@ -30,7 +37,6 @@
     }
 
     .calcgrid {
-
         transform: scale(.5);
         margin: 0;
         padding: 0;

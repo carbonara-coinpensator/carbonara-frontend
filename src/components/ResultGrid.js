@@ -20,6 +20,7 @@ class ResultGrid extends Component {
 
         return (
             <div>
+                {/*OLD GRID*/}
                 <div uk-grid="" className="grid-label uk-flex uk-flex-bottom">
                     <div className="uk-width-1-2 uk-text-right">
                             <p className="uk-text-muted">CO<sub>2</sub> emissions</p>
@@ -28,9 +29,7 @@ class ResultGrid extends Component {
                         <p className="uk-text-muted">correspond to:</p>
                     </div>
                         </div>
-                        <div uk-grid=""
-                             className={'calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle uk-grid-divider'}
-                             uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                        <div uk-grid="">
                             <div className="uk-width-1-4 uk-width-1-2@m uk-text-center">
                                 <h2 className="uk-text-huge">{Math.round(this.props.result)}
                                     <small>kg</small>

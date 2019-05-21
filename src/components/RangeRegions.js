@@ -50,7 +50,9 @@ class RangeRegions extends Component {
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
-                        flexWrap: 'wrap'
+                        flexWrap: 'wrap',
+                        paddingLeft:'30px',
+                        paddingRight:'30px'
                     }}
                 >
                     <Range
@@ -114,7 +116,7 @@ class RangeRegions extends Component {
                             </div>
                         )}
                     />
-                    <div uk-grid="" className="uk-flex-center uk-margin">
+                    <div uk-grid="" className="uk-flex-center uk-margin-small-top">
                         <div>
                             <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {consumptionsPercent[0].toFixed(0)}%</span>
                         </div>

@@ -20,7 +20,7 @@ class ResultSection extends Component {
         return (
             <div>
 
-                <div uk-sticky="cls-active: calculation-result-active">
+                <div>
                     <ResultGrid result={this.props.result} type="secondary" position="top" />
                 </div>
 

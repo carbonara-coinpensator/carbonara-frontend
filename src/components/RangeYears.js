@@ -2,19 +2,17 @@ import React, {Component} from 'react'
 import { Range, getTrackBackground, Direction } from 'react-range'
 
 class RangeYears extends Component {
-
+    state = {
+        values: [2013],
+    }
     constructor(...props) {
 
         super(...props)
         this.onChange = this.onChange.bind(this)
-        this.state = {
-            selectedYearValues: this.props.selectedYearValues,
-        }
-
     }
 
     onChange(selectedYearValues) {
-        this.setState({ selectedYearValues });
+        this.setState({ selectedYearValues, values: [50]});
         this.props.onYearsChange(selectedYearValues);
     }
 
@@ -33,22 +31,22 @@ class RangeYears extends Component {
 
         return (
 
-            <div>
+            <div uk-grid="" className="uk-grid-collapse uk-margin-remove-vertical">
 
-                <div className="uk-margin-medium-bottom uk-text-center">
-                    <span className="uk-label uk-label-primary">Year: { selectedYearValues[0] }</span>
+                <div className="uk-text-center uk-text-small uk-width-1-1@s uk-margin-small-top">
+                    Mining Hardware Production Standard
                 </div>
 
-                <div
+                <div className="uk-width-1-1@s"
                     style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        height: '300px',
-                        flexDirection: 'column'
+                        display: "flex",
+                        justifyContent: "center",
+                        flexWrap: "wrap",
+                        paddingLeft:'30px',
+                        paddingRight:'30px'
                     }}
                 >
                     <Range
-                        direction={Direction.Up}
                         values={selectedYearValues}
                         step={STEP}
                         min={MIN}
@@ -60,18 +58,16 @@ class RangeYears extends Component {
                                 onTouchStart={props.onTouchStart}
                                 style={{
                                     ...props.style,
-                                    flexGrow: 1,
-                                    width: '32px',
-                                    marginLeft: '32px',
+                                    width: '100%',
                                     display: 'flex',
-                                    height: '300px'
+                                    height: '36px'
                                 }}
                             >
                             <div
                                 ref={props.ref}
                                 style={{
-                                    width: '3px',
-                                    height: '300px',
+                                    width: '100%',
+                                    height: '5px',
                                     borderRadius: '4px',
                                     background: getTrackBackground({
                                         values: selectedYearValues,
@@ -114,8 +110,8 @@ class RangeYears extends Component {
                     />
                 </div>
 
-                <div className="uk-margin-top uk-text-center uk-text-small">
-                    Mining Hardware Production Standard
+                <div className="uk-margin-medium-bottom uk-text-center uk-width-1-1@s">
+                    <span className="uk-label uk-label-primary">Year: { selectedYearValues[0] }</span>
                 </div>
 
             </div>
