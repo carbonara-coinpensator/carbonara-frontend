@@ -708,7 +708,10 @@ class CarbonaraCalculator extends Component {
                                             <div className="uk-width-1-1@s">
                                                 <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
                                             </div>
-                                            <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                            <span uk-icon="question" className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                            <div uk-drop="" id="drop">
+                                                <div className="">Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered.</div>
+                                            </div>
                                         </div>
                                 </div>
                                 <WhatIf
@@ -733,7 +736,10 @@ class CarbonaraCalculator extends Component {
                                         <div className="uk-width-1-1@s">
                                             <strong>{gamificationYearsOfCo2Sequestration}&nbsp;years</strong>&nbsp;of CO<sub>2</sub> sequestration
                                         </div>
-                                        <span uk-icon="question" uk-tooltip="Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered." className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                        <span uk-icon="question" className="uk-text-center uk-padding-small uk-position-center-right"></span>
+                                        <div uk-drop="" id="drop">
+                                                <div className="">Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered.</div>
+                                        </div>
                                     </div>
                                 </div>
                             }
