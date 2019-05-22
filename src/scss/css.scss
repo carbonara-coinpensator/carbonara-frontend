@@ -24,6 +24,21 @@
     bottom: 0 !important
 }
 
+
+.carbonara-tooltip {
+    z-index: $tooltip-z-index;
+    max-width: $tooltip-max-width;
+    padding-top: $tooltip-padding-vertical;
+    padding-bottom: $tooltip-padding-vertical;
+    padding-left: $tooltip-padding-horizontal;
+    padding-right: $tooltip-padding-horizontal;
+    border-radius: $tooltip-border-radius;
+    color: $tooltip-color;
+    font-size: $tooltip-font-size;
+    margin: $tooltip-margin;
+    background: $tooltip-background
+}
+
 .uk-button {
     padding: 15px 30px
 }
@@ -159,6 +174,7 @@
         cursor: pointer;
     }
 
+
 }
 
 @media screen and (min-width: $breakpoint-small) {
@@ -166,5 +182,4 @@
     .apexcharts-zoom-icon {
         width: 55px
     }
-
 }
