@@ -474,12 +474,12 @@ class CarbonaraCalculator extends Component {
                             <div className="uk-container uk-container-small" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <p>The <strong>Carbonara Coinpensator</strong> (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
                                 <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
-                                <div className="uk-margin-medium-top uk-text-small">
+                                <div className="uk-margin-medium-top uk-text-small uk-margin-large-bottom">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast">
                                         <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                                             <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
                                                     <img src={unibright} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
@@ -491,7 +491,7 @@ class CarbonaraCalculator extends Component {
                                         </div>
                                         <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
                                             <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
                                                     <img src={zuehlke} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
@@ -503,7 +503,7 @@ class CarbonaraCalculator extends Component {
                                         </div>
                                         <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
                                             <a href="https://eth.events/" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
                                                     <img src={ethevents} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
