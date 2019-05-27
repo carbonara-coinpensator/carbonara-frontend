@@ -24,6 +24,9 @@
     bottom: 0 !important
 }
 
+.carbonara-sponsors {
+    max-width: 90px;
+}
 
 .carbonara-tooltip {
     z-index: $tooltip-z-index;
@@ -174,6 +177,9 @@
         cursor: pointer;
     }
 
+    .carbonara-sponsors {
+        max-width: 76px;
+    }
 
 }
 
