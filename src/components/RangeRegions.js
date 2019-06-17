@@ -50,7 +50,9 @@ class RangeRegions extends Component {
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
-                        flexWrap: 'wrap'
+                        flexWrap: 'wrap',
+                        paddingLeft:'30px',
+                        paddingRight:'30px'
                     }}
                 >
                     <Range
@@ -114,21 +116,21 @@ class RangeRegions extends Component {
                             </div>
                         )}
                     />
-                    <div uk-grid="" className="uk-flex-center uk-margin">
+                    <div uk-grid="" className="uk-flex-center uk-margin-small-top">
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>CA: {consumptionsPercent[0].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[0] }}>California: {consumptionsPercent[0].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>CN: {consumptionsPercent[1].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[1] }}>China: {consumptionsPercent[1].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>EU: {consumptionsPercent[2].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[2] }}>Europe: {consumptionsPercent[2].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>JP: {consumptionsPercent[3].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[3] }}>Japan: {consumptionsPercent[3].toFixed(0)}%</span>
                         </div>
                         <div>
-                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>SG: {consumptionsPercent[4].toFixed(0)}%</span>
+                            <span className="uk-label" style={{ backgroundColor: colors[4] }}>Singapore: {consumptionsPercent[4].toFixed(0)}%</span>
                         </div>
                         <div>
                             <span className="uk-label" style={{ backgroundColor: colors[5] }}>US: {consumptionsPercent[5].toFixed(0)}%</span>

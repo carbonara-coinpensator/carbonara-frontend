@@ -127,12 +127,12 @@ class WhatIf extends Component {
 
         return (
             <div>
-                <div uk-grid="" className="">
-                    <div className="uk-width-5-6">
+                <div uk-grid="" className="uk-margin-large-bottom">
+                    <div className="uk-width-1-1">
                         <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
                         <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
                     </div>
-                    <div className="uk-width-1-6">
+                    <div className="uk-width-1-1 uk-margin-remove-vertical">
                         <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
                     </div>
                 </div>

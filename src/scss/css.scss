@@ -14,11 +14,84 @@
 // 4. Import UIkit.
 @import "uikit/src/scss/uikit-theme.scss";
 
+#row-top {
+    position: fixed !important;
+    top: 0 !important
+}
+
+#row-bottom {
+    position: fixed !important;
+    bottom: 0 !important
+}
+
+.carbonara-sponsors {
+    max-width: 90px;
+}
+
+.carbonara-tooltip {
+    z-index: $tooltip-z-index;
+    max-width: $tooltip-max-width;
+    padding-top: $tooltip-padding-vertical;
+    padding-bottom: $tooltip-padding-vertical;
+    padding-left: $tooltip-padding-horizontal;
+    padding-right: $tooltip-padding-horizontal;
+    border-radius: $tooltip-border-radius;
+    color: $tooltip-color;
+    font-size: $tooltip-font-size;
+    margin: $tooltip-margin;
+    background: $tooltip-background
+}
+
+.uk-button {
+    padding: 15px 30px
+}
+
 .uk-text-huge {
     font-size: 6rem;
 }
 
+.uk-width-1-1 {
+    min-width: 131px !important;
+}
+
 .b { @include b; }
+
+.calculation-result {
+    background: rgba($global-secondary-color, .9);
+}
+.gamification-result {
+    background: rgba($global-primary-color, .9);
+}
+
+
+.clear-button {
+    border: none;
+    background-color: transparent;
+    position: absolute;
+    align-self: flex-end;
+    color: $lightbox-button-hover-color;
+    font-weight: 400;
+    font-size: 28px;
+    padding-right: 15px;
+}
+
+.clear-button:hover{
+    cursor: pointer;
+}
+
+.clear-button:focus {
+    outline: none
+}
+
+.uk-text-small span {
+    font-family: monospace;
+    background-color: rgba(255,255,255,0.1);
+    word-break: break-all
+}
+
+.uk-text-small span:hover {
+    cursor: pointer;
+}
 
 .calculation-result-active {
 
@@ -30,7 +103,6 @@
     }
 
     .calcgrid {
-
         transform: scale(.5);
         margin: 0;
         padding: 0;
@@ -83,9 +155,37 @@
 }
 
 .background-landscape {
-    background: url(../static/media/landscape.jpg);
+    background-image: url(../static/media/landscape.jpg);
     .uk-section-default { background-color: rgba(255,255,255,.9); }
     .uk-section-muted { background-color: rgba($global-muted-color,.9); }
     .uk-section-secondary {background-color: rgba($global-secondary-color,.9); }
     .uk-section-primary {background-color: rgba($global-primary-color,.9); }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+
+    .input-container input {
+        padding-right: 42px !important;
+    }
+
+    .clear-button {
+        padding-right: 12px;
+        font-size: 24px;
+    }
+
+    .uk-text-small span:hover {
+        cursor: pointer;
+    }
+
+    .carbonara-sponsors {
+        max-width: 76px;
+    }
+
+}
+
+@media screen and (min-width: $breakpoint-small) {
+    .apexcharts-reset-zoom-icon,
+    .apexcharts-zoom-icon {
+        width: 55px
+    }
 }

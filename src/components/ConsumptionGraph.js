@@ -8,7 +8,7 @@ class ConsumptionGraph extends Component {
         super(...props)
         this.state = {
             options: {
-                colors: ['#14121D', '#336600'],
+                colors: ['#14121D', '#ff5500'],
                 chart: {
                     id: 'priceandconsumption',
                     fontFamily: '"Encode Sans", Helvetica, Arial, sans-serif',
@@ -44,7 +44,7 @@ class ConsumptionGraph extends Component {
                             zoomin: false,
                             zoomout: false,
                             pan: false,
-                            reset: true | '<img src="/static/icons/reset.png" width="20">',
+                            reset: true,
                             customIcons: []
                         },
                         autoSelected: 'zoom'
@@ -70,7 +70,7 @@ class ConsumptionGraph extends Component {
                     {
                         opposite: true,
                         title: {
-                            text: 'Energy Comsumption [kWh]'
+                            text: 'Energy Consumption [kWh]'
                         },
                         labels: {
                             formatter: (value) => { return value.toLocaleString(navigator.language, {minimumFractionDigits: 0}) }
@@ -88,8 +88,10 @@ class ConsumptionGraph extends Component {
                 },
                 legend: {
                     show: true,
+                    horizontalAlign: 'center',
+                    position: 'bottom',
                     itemMargin: {
-                        horizontal: 20,
+                        horizontal: 5,
                         vertical: 10
                     }
                 },
@@ -101,7 +103,7 @@ class ConsumptionGraph extends Component {
                     data: this.transformValues(this.props.prices, 4, 1)
                 },
                 {
-                    name: 'Energy Comsumption [kWh]',
+                    name: 'Energy Consumption [kWh]',
                     data: this.transformValues(this.props.consumptions, 1, 10)
                 }
             ]
