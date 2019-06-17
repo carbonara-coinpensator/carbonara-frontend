@@ -159,6 +159,8 @@ class WhatIf extends Component {
         // set percentages in app state
         this.setState({ consumptionsPercent })
 
+        this.props.onPercentagesChange(consumptionsPercent)
+
     }
 
     handleYearsChange(selectedYearValue) {
@@ -199,17 +201,11 @@ class WhatIf extends Component {
         const years = this.props.years.sort()
 
         return (
-            <div>
-                <div uk-grid="" className="uk-margin-large-bottom">
-                    <div className="uk-width-1-1">
-                        <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
-                        <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
-                        <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
-                    </div>
-                    <div className="uk-width-1-1 uk-margin-remove-vertical">
-                        <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
-                    </div>
-                </div>
+            <div className="uk-margin-large-bottom uk-section uk-section-small uk-section-muted">
+                <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
+                {/*<RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />*/}
+                <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
+                <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
             </div>
         )
     }

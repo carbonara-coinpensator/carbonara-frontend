@@ -31,19 +31,25 @@ class RangeYears extends Component {
 
         return (
 
-            <div uk-grid="" className="uk-grid-collapse uk-margin-remove-vertical">
+            <div uk-grid="" className="uk-margin-top">
 
-                <div className="uk-text-center uk-text-small uk-width-1-1@s uk-margin-small-top">
-                    Mining Hardware Production Standard
+                <div className="uk-width-1-1">
+                    <span className="uk-text-small uk-text-muted">
+                        Mining Hardware Production Standard
+                    </span>
+                    <br />
+                    <span className="uk-label uk-label-primary">
+                        Year: { selectedYearValues[0] }
+                    </span>
                 </div>
 
-                <div className="uk-width-1-1@s"
+                <div className="uk-width-expand"
                     style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        flexWrap: "wrap",
-                        paddingLeft:'30px',
-                        paddingRight:'30px'
+                        // display: "flex",
+                        // justifyContent: "center",
+                        // flexWrap: "wrap",
+                        // paddingLeft:'30px',
+                        // paddingRight:'30px'
                     }}
                 >
                     <Range
@@ -67,14 +73,14 @@ class RangeYears extends Component {
                                 ref={props.ref}
                                 style={{
                                     width: '100%',
-                                    height: '5px',
-                                    borderRadius: '4px',
+                                    height: '3px',
+                                    borderRadius: '0',
                                     background: getTrackBackground({
                                         values: selectedYearValues,
                                         colors: ['rgb(51,102,0)', '#ccc'],
                                         min: MIN,
                                         max: MAX,
-                                        direction: Direction.Right
+                                        // direction: Direction.Right
                                     }),
                                     alignSelf: 'center'
                                 }}
@@ -85,33 +91,27 @@ class RangeYears extends Component {
                     )}
                     renderThumb={({ props, isDragged }) => (
                         <div
-                            {...props}
-                            style={{
-                                ...props.style,
-                                height: '32px',
-                                width: '32px',
-                                borderRadius: '50%',
-                                backgroundColor: '#fff',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                boxShadow: '0px 0px 4px #999'
-                            }}
-                            >
+                        {...props}
+                        style={{
+                            ...props.style,
+                            height: '32px',
+                            width: '32px',
+                            borderRadius: '50%',
+                            backgroundColor: '#fff',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            boxShadow: '0px 0px 4px #999'
+                        }}>
                             <div
-                                style={{
-                                    width: '16px',
-                                    height: '3px',
-                                    backgroundColor: isDragged ? 'rgb(51,102,0)' : '#CCC'
-                                }}
-                            />
+                            style={{
+                                width: '3px',
+                                height: '16px',
+                                backgroundColor: isDragged ? 'rgb(51,102,0)' : '#CCC'
+                            }}/>
                         </div>
                     )}
                     />
-                </div>
-
-                <div className="uk-margin-medium-bottom uk-text-center uk-width-1-1@s">
-                    <span className="uk-label uk-label-primary">Year: { selectedYearValues[0] }</span>
                 </div>
 
             </div>

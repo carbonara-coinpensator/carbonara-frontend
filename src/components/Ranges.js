@@ -44,35 +44,27 @@ class Ranges extends Component {
 
     render() {
 
-        const consumption = this.props.consumptionsPercent[0]
         const colors = this.state.colors
 
         const renderTrack = ({ props, children }) => (
             <div
-                onMouseDown={props.onMouseDown}
-                onTouchStart={props.onTouchStart}
-                style={{
-                    ...props.style,
-                    height: '32px',
-                    display: 'flex',
-                    width: '100%'
-                }}
-            >
+            onMouseDown={props.onMouseDown}
+            onTouchStart={props.onTouchStart}
+            style={{
+                ...props.style,
+                height: '32px',
+                display: 'flex',
+                width: '100%'
+            }}>
                 <div
-                    ref={props.ref}
-                    style={{
-                        height: '3px',
-                        width: '100%',
-                        borderRadius: '4px',
-                        background: getTrackBackground({
-                            values: [consumption],
-                            colors: colors,
-                            min: MIN,
-                            max: MAX
-                        }),
-                        alignSelf: 'center'
-                    }}
-                >
+                ref={props.ref}
+                style={{
+                    height: '3px',
+                    width: '100%',
+                    borderRadius: '0',
+                    background: '#ddd',
+                    alignSelf: 'center'
+                }}>
                     {children}
                 </div>
             </div>
@@ -80,26 +72,25 @@ class Ranges extends Component {
 
         const renderThumb = ({ props, isDragged, index }) => (
             <div
-                {...props}
+            {...props}
+            style={{
+            ...props.style,
+            height: '32px',
+            width: '32px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255,255,255.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0px 0px 4px #999'
+            }}>
+                <div
                 style={{
-                    ...props.style,
-                    height: '32px',
-                    width: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(255,255,255.5)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    boxShadow: '0px 0px 4px #999'
+                height: '12px',
+                width: '3px',
+                backgroundColor: isDragged ? colors[index] : '#CCC'
                 }}
-            >
-            <div
-                style={{
-                    height: '12px',
-                    width: '3px',
-                    backgroundColor: isDragged ? colors[index] : '#CCC'
-                }}
-            />
+                />
             </div>
         )
 
@@ -112,11 +103,11 @@ class Ranges extends Component {
                 key={k}
                 uk-grid=""
                 className="uk-margin-small-top">
-                    <div className="uk-width-1-5@md uk-width-1-3">
+                    <div className="uk-width-1-1">
                         <span
                         className="uk-label"
                         style={{ backgroundColor: colors[k] }}>
-                            {RegionInfos[k].name}: {v.toFixed(0)}%
+                            {RegionInfos[k].fullname}: {v.toFixed(0)}%
                         </span>
                     </div>
                     <div className="uk-width-expand">
@@ -137,9 +128,7 @@ class Ranges extends Component {
         return (
 
             <div>
-
-                    {ranges}
-
+                {ranges}
             </div>
 
         )

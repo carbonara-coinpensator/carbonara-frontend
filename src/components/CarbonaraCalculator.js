@@ -40,6 +40,7 @@ class CarbonaraCalculator extends Component {
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
+        this.handlePercentagesChange = this.handlePercentagesChange.bind(this)
         this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
         this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
 
@@ -343,6 +344,30 @@ class CarbonaraCalculator extends Component {
         this.calculateGamificationForRegions()
     }
 
+    calculateGamificationChange() {
+
+        // calculate sum of energy consumption of all countries in current year
+        let totalEnergyConsumptionInCurrentYear = this.calculateTotalEnergyConsumptionForYear(this.state.transactionYearEstimated)
+
+        // calculate new values from new percentages
+        let newEnergyConsumptionsPerCountry = []
+        this.state.consumptionPerRegion.forEach(function(v){
+            newEnergyConsumptionsPerCountry.push(v * totalEnergyConsumptionInCurrentYear / 100)
+        })
+
+        // calculate full emission with formula (averageCo2EmissionPerCountryInKg.Co2Emission / 1000) * energyConsumptionPerCountryInKWh.EnergyConsumption
+        let gamificationResult = 0
+        this.state.mainCalculationResult.averageCo2EmissionPerCountryInKg.forEach(function(v,k){
+            gamificationResult += v.co2Emission / 1000 * newEnergyConsumptionsPerCountry[k]
+        })
+
+        // set state
+        this.setState({
+            gamificationResult: gamificationResult
+        })
+
+    }
+
     calculateGamificationForRegions() {
 
         // let regionsPercentagePositions = this.calculateRegionPercentagePositionsFromConsumptionValues()
@@ -425,12 +450,21 @@ class CarbonaraCalculator extends Component {
         this.calculateGamificationForRegions()
     }
 
+    handlePercentagesChange(consumptionPerRegion) {
+        this.setState({
+            showGamificationResults: true,
+            consumptionPerRegion: consumptionPerRegion
+        })
+        this.calculateGamificationChange()
+    }
+
     handleYearsChange(year) {
         this.setState({
             showGamificationResults: true,
             transactionYearEstimated: year[0]
         })
-        this.calculateGamificationForYear()
+        this.calculateGamificationChange()
+        // this.calculateGamificationForYear()
     }
 
     handleInputFocus() {
@@ -721,6 +755,7 @@ class CarbonaraCalculator extends Component {
                                     consumptions={this.state.consumptionPerRegion}
                                     onYearsChange={this.handleYearsChange}
                                     onRegionsChange={this.handleRegionsChange}
+                                    onPercentagesChange={this.handlePercentagesChange}
                                 />
 
                             </div>
