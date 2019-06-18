@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import WorldMap from './WorldMap'
 import RangeYears from './RangeYears'
 import RangeRegions from './RangeRegions'
+import Ranges from './Ranges'
 
 class WhatIf extends Component {
 
@@ -14,6 +15,7 @@ class WhatIf extends Component {
         this.calculateConsumptionsPercentFromRegionButtons = this.calculateConsumptionsPercentFromRegionButtons.bind(this)
         this.calculateRegionButtons = this.calculateRegionButtons.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
+        this.handleRegionsPercentChange = this.handleRegionsPercentChange.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
 
         this.state = {
@@ -22,7 +24,8 @@ class WhatIf extends Component {
             consumptionsPercent: this.calculateConsumptionsPercentFromProps(),
             regionButtons: this.calculateRegionButtons(),
             regionCodes: this.props.regions,
-            selectedYearValue: this.props.transactionYear
+            selectedYearValue: this.props.transactionYear,
+            biggest: 100
         }
 
     }
@@ -88,6 +91,109 @@ class WhatIf extends Component {
         this.props.onRegionsChange(regionButtons)
     }
 
+    handleRegionsPercentChange(changedValue, changedIndex) {
+
+        // all percentage values available in state
+        var consumptionsPercent = this.state.consumptionsPercent
+
+        // new value obtained from slider input
+        var changedValue = changedValue
+
+        // index of consumptionsPercent value that is being changed
+        var changedIndex = changedIndex
+
+        // difference of new and original value
+        var difference = changedValue - consumptionsPercent[changedIndex]
+
+        ////////////////////////
+        // calculate subtraction params: round 1
+        ////
+
+        // all other percentage values will be changed by a proportion
+        var singleSubtractionValue = difference / (consumptionsPercent.length - 1)
+
+        // store keys of percentage values which can be changed
+        var subtractionids = []
+
+        // loop through state values
+        consumptionsPercent.forEach(function(v,k){
+            // exclude input value
+            if (k !== changedIndex) {
+                // if new value will get bigger than 0% and smaller than 100%, add id to subtraction list
+                if ((v - singleSubtractionValue > 0) && (v - singleSubtractionValue < 100)) {
+                    subtractionids.push(k)
+                }
+            }
+        })
+
+        ////////////////////////
+
+        ////////////////////////
+        // calculate subtraction params: round 2
+        // sinces subtraction portion could have been changed in round 1
+        ////
+
+        // define percentage proportion again
+        var singleSubtractionValue = difference / subtractionids.length
+
+        // make a new list
+        var newsubtractionids = []
+
+        // full list with valid proportion values
+        subtractionids.forEach(function(v){
+            // if value gets bigger than 0% and smaller than 100%, add id to new subtraction list
+            if ((consumptionsPercent[v] - singleSubtractionValue > 0) && (consumptionsPercent[v] - singleSubtractionValue < 100)) {
+                newsubtractionids.push(v)
+            }
+        })
+
+        ////////////////////////
+
+        // start adding to 100%
+        let addToHundredPercent = changedValue
+
+        // do subtraction to other valid percentage values
+        newsubtractionids.forEach(function(v){
+            // new percentage value
+            let newVal = consumptionsPercent[v] - singleSubtractionValue
+            // will the addition of this value
+            // to the sum of all other values so far
+            // exceed 100%?
+            if (addToHundredPercent + newVal > 100) {
+                // set this value as difference from sum to 100
+                consumptionsPercent[v] = 100 - addToHundredPercent
+                addToHundredPercent = 100
+            } else {
+                // set this value
+                consumptionsPercent[v] = newVal
+                // update values sum
+                addToHundredPercent = Math.round(addToHundredPercent + newVal)
+            }
+        })
+
+        // sum is not 100%?
+        // fix sum due to rounding errors
+        if (addToHundredPercent < 100) {
+            // calculate diff
+            let diff = 100 - addToHundredPercent
+            // set sum to 100
+            addToHundredPercent = 100
+            // add diff to last val
+            newsubtractionids[newsubtractionids.length - 1] += diff
+        }
+
+        // set new value
+        consumptionsPercent[changedIndex] = changedValue
+
+        // set percentages in app state
+        this.setState({
+            consumptionsPercent
+        })
+
+        this.props.onPercentagesChange(consumptionsPercent)
+
+    }
+
     handleYearsChange(selectedYearValue) {
         this.setState({ selectedYearValue })
         this.props.onYearsChange(selectedYearValue)
@@ -126,16 +232,11 @@ class WhatIf extends Component {
         const years = this.props.years.sort()
 
         return (
-            <div>
-                <div uk-grid="" className="uk-margin-large-bottom">
-                    <div className="uk-width-1-1">
-                        <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
-                        <RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
-                    </div>
-                    <div className="uk-width-1-1 uk-margin-remove-vertical">
-                        <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
-                    </div>
-                </div>
+            <div className="uk-margin-large-bottom">
+                <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
+                {/*<RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />*/}
+                <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
+                <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
             </div>
         )
     }
