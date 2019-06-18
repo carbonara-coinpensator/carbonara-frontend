@@ -103,14 +103,14 @@ class Ranges extends Component {
                 key={k}
                 uk-grid=""
                 className="uk-margin-small-top">
-                    <div className="uk-width-1-1">
+                    <div className="uk-width-1-3 uk-width-1-4@s uk-with-1-5@m uk-width-1-6@l uk-text-right">
                         <span
                         className="uk-label"
                         style={{ backgroundColor: colors[k] }}>
                             {RegionInfos[k].fullname}: {v.toFixed(0)}%
                         </span>
                     </div>
-                    <div className="uk-width-expand">
+                    <div className="uk-width-2-3 uk-width-3-4@s uk-with-4-5@m uk-width-5-6@l">
                         <Range
                         values={[v]}
                         step={STEP}
@@ -127,7 +127,7 @@ class Ranges extends Component {
 
         return (
 
-            <div>
+            <div className="uk-margin-large-right">
                 {ranges}
             </div>
 

@@ -31,87 +31,83 @@ class RangeYears extends Component {
 
         return (
 
-            <div uk-grid="" className="uk-margin-top">
+            <div className="uk-margin-large-right">
 
-                <div className="uk-width-1-1">
-                    <span className="uk-text-small uk-text-muted">
-                        Mining Hardware Production Standard
-                    </span>
-                    <br />
-                    <span className="uk-label uk-label-primary">
-                        Year: { selectedYearValues[0] }
-                    </span>
-                </div>
+                <div uk-grid="" className="uk-margin-top">
 
-                <div className="uk-width-expand"
-                    style={{
-                        // display: "flex",
-                        // justifyContent: "center",
-                        // flexWrap: "wrap",
-                        // paddingLeft:'30px',
-                        // paddingRight:'30px'
-                    }}
-                >
-                    <Range
-                        values={selectedYearValues}
-                        step={STEP}
-                        min={MIN}
-                        max={MAX}
-                        onChange={selectedYearValues => this.onChange( selectedYearValues )}
-                        renderTrack={({ props, children }) => (
-                            <div
-                                onMouseDown={props.onMouseDown}
-                                onTouchStart={props.onTouchStart}
-                                style={{
-                                    ...props.style,
-                                    width: '100%',
-                                    display: 'flex',
-                                    height: '36px'
-                                }}
-                            >
-                            <div
-                                ref={props.ref}
-                                style={{
-                                    width: '100%',
-                                    height: '3px',
-                                    borderRadius: '0',
-                                    background: getTrackBackground({
-                                        values: selectedYearValues,
-                                        colors: ['rgb(51,102,0)', '#ccc'],
-                                        min: MIN,
-                                        max: MAX,
-                                        // direction: Direction.Right
-                                    }),
-                                    alignSelf: 'center'
-                                }}
-                            >
-                                {children}
+                    <div className="uk-width-1-3 uk-width-1-4@s uk-with-1-5@m uk-width-1-6@l uk-text-right uk-margin-large-bottom">
+                        <span className="uk-text-small uk-text-muted">
+                            Mining Hardware Production Standard
+                        </span>
+                        <br />
+                        <span className="uk-label uk-label-primary">
+                            Year: { selectedYearValues[0] }
+                        </span>
+                    </div>
+
+                    <div className="uk-width-2-3 uk-width-3-4@s uk-with-4-5@m uk-width-5-6@l">
+                        <Range
+                            values={selectedYearValues}
+                            step={STEP}
+                            min={MIN}
+                            max={MAX}
+                            onChange={selectedYearValues => this.onChange( selectedYearValues )}
+                            renderTrack={({ props, children }) => (
+                                <div
+                                    onMouseDown={props.onMouseDown}
+                                    onTouchStart={props.onTouchStart}
+                                    style={{
+                                        ...props.style,
+                                        width: '100%',
+                                        display: 'flex',
+                                        height: '36px'
+                                    }}
+                                >
+                                <div
+                                    ref={props.ref}
+                                    style={{
+                                        width: '100%',
+                                        height: '3px',
+                                        borderRadius: '0',
+                                        background: getTrackBackground({
+                                            values: selectedYearValues,
+                                            colors: ['rgb(51,102,0)', '#ccc'],
+                                            min: MIN,
+                                            max: MAX,
+                                            // direction: Direction.Right
+                                        }),
+                                        alignSelf: 'center'
+                                    }}
+                                >
+                                    {children}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                    renderThumb={({ props, isDragged }) => (
-                        <div
-                        {...props}
-                        style={{
-                            ...props.style,
-                            height: '32px',
-                            width: '32px',
-                            borderRadius: '50%',
-                            backgroundColor: '#fff',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            boxShadow: '0px 0px 4px #999'
-                        }}>
+                        )}
+                        renderThumb={({ props, isDragged }) => (
                             <div
+                            {...props}
                             style={{
-                                width: '3px',
-                                height: '16px',
-                                backgroundColor: isDragged ? 'rgb(51,102,0)' : '#CCC'
-                            }}/>
-                        </div>
-                    )}
-                    />
+                                ...props.style,
+                                height: '32px',
+                                width: '32px',
+                                borderRadius: '50%',
+                                backgroundColor: '#fff',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                boxShadow: '0px 0px 4px #999'
+                            }}>
+                                <div
+                                style={{
+                                    width: '3px',
+                                    height: '16px',
+                                    backgroundColor: isDragged ? 'rgb(51,102,0)' : '#CCC'
+                                }}/>
+                            </div>
+                        )}
+                        />
+                    </div>
+
                 </div>
 
             </div>

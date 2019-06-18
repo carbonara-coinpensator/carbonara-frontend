@@ -25,6 +25,7 @@ class WhatIf extends Component {
             regionButtons: this.calculateRegionButtons(),
             regionCodes: this.props.regions,
             selectedYearValue: this.props.transactionYear,
+            biggest: 100
         }
 
     }
@@ -140,7 +141,7 @@ class WhatIf extends Component {
 
         // full list with valid proportion values
         subtractionids.forEach(function(v){
-            // if new value will get bigger than 0% and smaller than 100%, add id to new subtraction list
+            // if value gets bigger than 0% and smaller than 100%, add id to new subtraction list
             if ((consumptionsPercent[v] - singleSubtractionValue > 0) && (consumptionsPercent[v] - singleSubtractionValue < 100)) {
                 newsubtractionids.push(v)
             }
@@ -148,16 +149,46 @@ class WhatIf extends Component {
 
         ////////////////////////
 
-        // do subtraction to other percentage values
+        // start adding to 100%
+        let addToHundredPercent = changedValue
+
+        // do subtraction to other valid percentage values
         newsubtractionids.forEach(function(v){
-            consumptionsPercent[v] = consumptionsPercent[v] - singleSubtractionValue
+            // new percentage value
+            let newVal = consumptionsPercent[v] - singleSubtractionValue
+            // will the addition of this value
+            // to the sum of all other values so far
+            // exceed 100%?
+            if (addToHundredPercent + newVal > 100) {
+                // set this value as difference from sum to 100
+                consumptionsPercent[v] = 100 - addToHundredPercent
+                addToHundredPercent = 100
+            } else {
+                // set this value
+                consumptionsPercent[v] = newVal
+                // update values sum
+                addToHundredPercent = Math.round(addToHundredPercent + newVal)
+            }
         })
+
+        // sum is not 100%?
+        // fix sum due to rounding errors
+        if (addToHundredPercent < 100) {
+            // calculate diff
+            let diff = 100 - addToHundredPercent
+            // set sum to 100
+            addToHundredPercent = 100
+            // add diff to last val
+            newsubtractionids[newsubtractionids.length - 1] += diff
+        }
 
         // set new value
         consumptionsPercent[changedIndex] = changedValue
 
         // set percentages in app state
-        this.setState({ consumptionsPercent })
+        this.setState({
+            consumptionsPercent
+        })
 
         this.props.onPercentagesChange(consumptionsPercent)
 
@@ -201,7 +232,7 @@ class WhatIf extends Component {
         const years = this.props.years.sort()
 
         return (
-            <div className="uk-margin-large-bottom uk-section uk-section-small uk-section-muted">
+            <div className="uk-margin-large-bottom">
                 <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
                 {/*<RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />*/}
                 <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />

@@ -1,7 +1,7 @@
 const RegionRatio = [
     {
         'name': 'CA',
-        'fullname': 'Canada',
+        'fullname': 'California',
         'coordinates': [-118.6919, 34.0207],
         'color': '#336600'
     },
