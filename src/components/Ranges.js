@@ -62,7 +62,13 @@ class Ranges extends Component {
                     height: '3px',
                     width: '100%',
                     borderRadius: '0',
-                    background: '#ddd',
+                    background: getTrackBackground({
+                        values: [this.props.consumptionsPercent[0].toFixed()],
+                        colors: ['#ccc', '#ccc'],
+                        min: MIN,
+                        max: MAX,
+                        // direction: Direction.Right
+                    }),
                     alignSelf: 'center'
                 }}>
                     {children}
@@ -103,14 +109,14 @@ class Ranges extends Component {
                 key={k}
                 uk-grid=""
                 className="uk-margin-small-top">
-                    <div className="uk-width-1-3 uk-width-1-4@s uk-with-1-5@m uk-width-1-6@l uk-text-right">
+                    <div className="uk-width-1-2 uk-width-1-4@s uk-with-1-5@m uk-width-1-6@l uk-text-right">
                         <span
                         className="uk-label"
                         style={{ backgroundColor: colors[k] }}>
                             {RegionInfos[k].fullname}: {v.toFixed(0)}%
                         </span>
                     </div>
-                    <div className="uk-width-2-3 uk-width-3-4@s uk-with-4-5@m uk-width-5-6@l">
+                    <div className="uk-width-1-2 uk-width-3-4@s uk-with-4-5@m uk-width-5-6@l">
                         <Range
                         values={[v]}
                         step={STEP}

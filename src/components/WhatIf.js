@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import WorldMap from './WorldMap'
 import RangeYears from './RangeYears'
-import RangeRegions from './RangeRegions'
+// import RangeRegions from './RangeRegions'
 import Ranges from './Ranges'
 
 class WhatIf extends Component {
@@ -25,7 +25,6 @@ class WhatIf extends Component {
             regionButtons: this.calculateRegionButtons(),
             regionCodes: this.props.regions,
             selectedYearValue: this.props.transactionYear,
-            biggest: 100
         }
 
     }
@@ -96,12 +95,6 @@ class WhatIf extends Component {
         // all percentage values available in state
         var consumptionsPercent = this.state.consumptionsPercent
 
-        // new value obtained from slider input
-        var changedValue = changedValue
-
-        // index of consumptionsPercent value that is being changed
-        var changedIndex = changedIndex
-
         // difference of new and original value
         var difference = changedValue - consumptionsPercent[changedIndex]
 
@@ -134,7 +127,7 @@ class WhatIf extends Component {
         ////
 
         // define percentage proportion again
-        var singleSubtractionValue = difference / subtractionids.length
+        singleSubtractionValue = difference / subtractionids.length
 
         // make a new list
         var newsubtractionids = []
@@ -232,11 +225,11 @@ class WhatIf extends Component {
         const years = this.props.years.sort()
 
         return (
-            <div className="uk-margin-large-bottom">
+            <div>
                 <WorldMap consumptionsPercent={this.state.consumptionsPercent} />
                 {/*<RangeRegions onRegionsChange={this.handleRegionsChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />*/}
-                <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
                 <RangeYears onYearsChange={this.handleYearsChange} years={years} selectedYearValues={[this.state.selectedYearValue]} />
+                <Ranges onRegionsPercentChange={this.handleRegionsPercentChange} regionButtons={this.state.regionButtons} regionCodes={this.state.regionCodes} consumptionsPercent={this.state.consumptionsPercent} />
             </div>
         )
     }
