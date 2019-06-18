@@ -7,7 +7,7 @@ This application makes requests to the [carbonara backend](https://github.com/ca
 ## Local development
 
 - Clone the repository
-- Install Node Packages with `npm install`
+- Install Node Packages with `yarn install`
 - Run app with `npm run start`
 - App is running on <http://localhost:3000>
 

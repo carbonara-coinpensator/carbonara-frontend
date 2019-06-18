@@ -14,18 +14,20 @@
 // 4. Import UIkit.
 @import "uikit/src/scss/uikit-theme.scss";
 
-#row-top {
-    position: fixed !important;
-    top: 0 !important
-}
+// #row-top {
+//     position: fixed !important;
+//     top: 0 !important
+// }
 
-#row-bottom {
-    position: fixed !important;
-    bottom: 0 !important
-}
+// #row-bottom {
+//     position: fixed !important;
+//     bottom: 0 !important
+// }
 
-.carbonara-sponsors {
-    max-width: 90px;
+.stickybottom {
+    bottom: 0;
+    top: auto !important;
+    // pointer-events: none;
 }
 
 .carbonara-tooltip {
@@ -43,11 +45,12 @@
 }
 
 .uk-button {
-    padding: 15px 30px
+    padding: $button-padding-horizontal/2 $button-padding-horizontal;
+    &.uk-button-large { font-size: $global-medium-font-size; }
 }
 
 .uk-text-huge {
-    font-size: 6rem;
+    font-size: 4rem;
 }
 
 .uk-width-1-1 {
@@ -56,44 +59,15 @@
 
 .b { @include b; }
 
-.calculation-result {
-    background: rgba($global-secondary-color, .9);
-}
-.gamification-result {
-    background: rgba($global-primary-color, .9);
-}
-
-
-.clear-button {
-    border: none;
-    background-color: transparent;
-    position: absolute;
-    align-self: flex-end;
-    color: $lightbox-button-hover-color;
-    font-weight: 400;
-    font-size: 28px;
-    padding-right: 15px;
+code.clickable {
+    white-space: normal;
+    word-break: break-all;
+    &:hover {
+        cursor: pointer;
+    }
 }
 
-.clear-button:hover{
-    cursor: pointer;
-}
-
-.clear-button:focus {
-    outline: none
-}
-
-.uk-text-small span {
-    font-family: monospace;
-    background-color: rgba(255,255,255,0.1);
-    word-break: break-all
-}
-
-.uk-text-small span:hover {
-    cursor: pointer;
-}
-
-.calculation-result-active {
+/*.calculation-result-active {
 
     pointer-events: none;
 
@@ -113,13 +87,14 @@
         &.calcgrid-primary { background: rgba($global-primary-color, .9); }
         &.calcgrid-secondary { background: rgba($global-secondary-color, .9); }
 
-        .uk-width-1-4 { width: 25%; }
-        .uk-width-3-4 { width: 75%; }
+        // .uk-width-1-4 { width: 25%; }
+        // .uk-width-3-4 { width: 75%; }
 
         .uk-text-huge {
             font-size: 3rem;
             text-align: center;
         }
+
         .uk-card {
             .uk-card-media-top {
                 width: 3rem;
@@ -145,7 +120,7 @@
     }
 
     .grid-label { display: none; margin: 0; }
-}
+}*/
 
 .uk-section-gradient {
     background: $global-primary-color;
@@ -160,27 +135,6 @@
     .uk-section-muted { background-color: rgba($global-muted-color,.9); }
     .uk-section-secondary {background-color: rgba($global-secondary-color,.9); }
     .uk-section-primary {background-color: rgba($global-primary-color,.9); }
-}
-
-@media screen and (max-width: $breakpoint-small) {
-
-    .input-container input {
-        padding-right: 42px !important;
-    }
-
-    .clear-button {
-        padding-right: 12px;
-        font-size: 24px;
-    }
-
-    .uk-text-small span:hover {
-        cursor: pointer;
-    }
-
-    .carbonara-sponsors {
-        max-width: 76px;
-    }
-
 }
 
 @media screen and (min-width: $breakpoint-small) {

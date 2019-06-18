@@ -40,6 +40,7 @@ class CarbonaraCalculator extends Component {
         this.getChartData = this.getChartData.bind(this)
         this.handleYearsChange = this.handleYearsChange.bind(this)
         this.handleRegionsChange = this.handleRegionsChange.bind(this)
+        this.handlePercentagesChange = this.handlePercentagesChange.bind(this)
         this.calculateGamificationForYear = this.calculateGamificationForYear.bind(this)
         this.calculateGamificationForRegions = this.calculateGamificationForRegions.bind(this)
 
@@ -343,6 +344,30 @@ class CarbonaraCalculator extends Component {
         this.calculateGamificationForRegions()
     }
 
+    calculateGamificationChange() {
+
+        // calculate sum of energy consumption of all countries in current year
+        let totalEnergyConsumptionInCurrentYear = this.calculateTotalEnergyConsumptionForYear(this.state.transactionYearEstimated)
+
+        // calculate new values from new percentages
+        let newEnergyConsumptionsPerCountry = []
+        this.state.consumptionPerRegion.forEach(function(v){
+            newEnergyConsumptionsPerCountry.push(v * totalEnergyConsumptionInCurrentYear / 100)
+        })
+
+        // calculate full emission with formula (averageCo2EmissionPerCountryInKg.Co2Emission / 1000) * energyConsumptionPerCountryInKWh.EnergyConsumption
+        let gamificationResult = 0
+        this.state.mainCalculationResult.averageCo2EmissionPerCountryInKg.forEach(function(v,k){
+            gamificationResult += v.co2Emission / 1000 * newEnergyConsumptionsPerCountry[k]
+        })
+
+        // set state
+        this.setState({
+            gamificationResult: gamificationResult
+        })
+
+    }
+
     calculateGamificationForRegions() {
 
         // let regionsPercentagePositions = this.calculateRegionPercentagePositionsFromConsumptionValues()
@@ -425,12 +450,21 @@ class CarbonaraCalculator extends Component {
         this.calculateGamificationForRegions()
     }
 
+    handlePercentagesChange(consumptionPerRegion) {
+        this.setState({
+            showGamificationResults: true,
+            consumptionPerRegion: consumptionPerRegion
+        })
+        this.calculateGamificationChange()
+    }
+
     handleYearsChange(year) {
         this.setState({
             showGamificationResults: true,
             transactionYearEstimated: year[0]
         })
-        this.calculateGamificationForYear()
+        this.calculateGamificationChange()
+        // this.calculateGamificationForYear()
     }
 
     handleInputFocus() {
@@ -460,26 +494,22 @@ class CarbonaraCalculator extends Component {
         let showResults = this.state.emissionsResult > 0
         let showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.consumptionPerRegion.length > 0
         let showGamificationResults = this.state.showGamificationResults
-        let gamificationKilometersDrivenByCar = Math.round(this.state.gamificationResult * 6)
-        let gamificationYearsOfCo2Sequestration = Math.round(this.state.gamificationResult * 30 / 365)
-        let emissionResultKilometersDrivenByCar = Math.round(this.state.emissionsResult * 6)
-        let emissionResultYearsOfCo2Sequestration = Math.round(this.state.emissionsResult  * 30 / 365)
 
         return (
             <div className="uk-text-center">
                 <div className="background-landscape">
-                    <section id="welcome" className="uk-section uk-section-default uk-padding-remove-vertical uk-text-center uk-flex uk-flex-column uk-position-relative uk-height-viewport">
+                    <section id="welcome" className="uk-section uk-section-default uk-padding-remove-vertical uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
                         <Navigation />
-                        <div className="uk-width-1-1">
+                        <div className="uk-width-1-1 uk-margin-bottom uk-margin-large-top">
                             <div className="uk-container uk-container-small" uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                 <p>The <strong>Carbonara Coinpensator</strong> (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
                                 <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
                                 <div className="uk-margin-medium-top uk-text-small uk-margin-large-bottom">
                                     <p>Powered by</p>
-                                    <div uk-grid="" className="uk-flex-center uk-animation-fast">
+                                    <div uk-grid="" className="uk-flex-center uk-animation-fast uk-grid-small uk-child-width-1-4 uk-child-width-1-5@s uk-child-width-1-6@m">
                                         <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                                             <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={unibright} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
@@ -491,7 +521,7 @@ class CarbonaraCalculator extends Component {
                                         </div>
                                         <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
                                             <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={zuehlke} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
@@ -503,7 +533,7 @@ class CarbonaraCalculator extends Component {
                                         </div>
                                         <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
                                             <a href="https://eth.events/" target="zuehlke" className="uk-animation-toggle">
-                                                <div className="uk-inline-clip uk-transition-toggle uk-dark carbonara-sponsors" tabIndex="0">
+                                                <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={ethevents} alt="" />
                                                     <div className="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default uk-flex uk-flex-center uk-flex-middle">
                                                         <div className="uk-position-center">
@@ -516,7 +546,7 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom uk-margin-small-top">
                                         <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
@@ -536,7 +566,7 @@ class CarbonaraCalculator extends Component {
                                 <h2 className="uk-text-center">Bitcoin (BTC) Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.energyConsumptionChart} />
                             </div>
-                            <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-primary" to="calculate" spy={true} smooth={true} duration={500}>
@@ -549,7 +579,12 @@ class CarbonaraCalculator extends Component {
                     </section>
                 }
 
-                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary uk-padding-remove-bottom">
+                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
+
+                    { showGamificationResults &&
+                        <ResultGrid result={this.state.gamificationResult} showSticky={true} type="primary" position="bottom" />
+                    }
+
                     <div className="uk-width-1-1">
                             <div className="uk-container uk-margin-small-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
 
@@ -557,27 +592,43 @@ class CarbonaraCalculator extends Component {
 
                                 <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                    <div className="uk-text-small uk-text-center uk-child-width-1-2 uk-margin-medium uk-flex uk-flex-column uk-flex-wrap uk-flex-middle " uk-grid="">
-                                        <p>Example Wallet Address: <br /><span onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</span></p>
-                                        <p>Example Transaction ID: <br /><span onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</span></p>
+                                    <div className="uk-text-small uk-text-center uk-margin-medium uk-flex-center" uk-grid="">
+
+                                        <div className="uk-width-3-4 uk-width-1-4@l">
+                                            <p className="uk-text-small uk-text-muted">
+                                                <i uk-icon="info"></i> You can click on the example data to play around with the calculations.
+                                            </p>
+                                        </div>
+                                        <div className="uk-width-2-3 uk-width-3-4@l uk-text-center uk-text-left@m">
+                                            <div className="uk-grid-small" uk-grid="">
+                                                <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Wallet Address</div>
+                                                <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></div>
+                                            </div>
+                                            <div className="uk-grid-small" uk-grid="">
+                                                <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Transaction ID</div>
+                                                <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></div>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <small>You can click on the example data to play around with the calculations.</small>
 
                                     <div className="uk-margin">
                                         <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
                                         <div className="uk-form-controls">
                                             <div className="input-container uk-flex uk-flex-column uk-flex-center">
-                                                <input className="uk-input uk-form-large uk-text-center"
-                                                    id="address"
-                                                    type="text"
-                                                    name="address"
-                                                    placeholder="Wallet Address or Transaction ID"
-                                                    value={this.state.address}
-                                                    onChange={(event) => this.handleChange(event)}
-                                                />
-                                                {this.state.address ? <button className={'clear-button'} onClick={this.resetForm}>&#10006;</button> : null}
+                                                <div className="uk-inline">
+                                                    {this.state.address ? <a className="uk-form-icon uk-form-icon-flip uk-icon-link" href="#" onClick={this.resetForm} uk-icon="icon: close; ratio: 2"></a> : null}
+                                                    <input className="uk-input uk-form-large uk-text-center"
+                                                        id="address"
+                                                        type="text"
+                                                        name="address"
+                                                        placeholder="Wallet Address or Transaction ID"
+                                                        value={this.state.address}
+                                                        onChange={(event) => this.handleChange(event)}
+                                                    />
+                                                </div>
                                             </div>
-                                            <button type="submit" className={'uk-margin-top uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
+                                            <button type="submit" className={'uk-margin-top uk-margin-large-bottom uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
                                                 { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
                                             </button>
                                         </div>
@@ -650,14 +701,14 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
-                                    <div className="uk-margin-large-bottom">
-                                        <Link className="uk-button uk-button-default uk-width-1-1" to="graph" spy={true} smooth={true} duration={500}>
+                                <div className="uk-button-group uk-margin-large-bottom">
+                                        <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </Link>
                                         { showResults &&
-                                            <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </Link>
                                         }
@@ -673,47 +724,35 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-margin-large-top">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
-                            </div>
-                            <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
-                                <div className="uk-container uk-margin-small-bottom">
-                                    <Link className="uk-button uk-button-default uk-width-1-1" to="calculate" spy={true} smooth={true} duration={500}>
-                                        <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
-                                    </Link>
-                                    <Link className="uk-button uk-button-primary uk-margin-small-top uk-width-1-1" to="gamification" spy={true} smooth={true} duration={500}>
-                                        What if &hellip; <span uk-icon="arrow-down"></span>
-                                    </Link>
+                                <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                                    <div className="uk-button-group uk-margin-large-bottom">
+                                        <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
+                                            <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
+                                        </Link>
+                                        <Link className="uk-button uk-button-primary" to="gamification" spy={true} smooth={true} duration={500}>
+                                            What if &hellip; <span uk-icon="arrow-down"></span>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
                     </section>
                 }
 
                 { showGamification &&
-                    <section id="gamification" className="uk-position-relativ uk-height-viewport uk-section uk-section-large uk-section-default uk-inline uk-padding-remove">
-                        <div className="uk-width-1-1 uk-inline">
 
-                            <div className="uk-container uk-margin-small-top">
+                    <section id="gamification" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-padding-remove-top uk-section-default">
+
+                        <ResultGrid result={this.state.emissionsResult} showSticky={true} type="secondary" position="top" />
+
+                        <div className="uk-width-1-1 uk-margin-large-top">
+
+                            <div className="uk-container">
 
                                 <h2>What if &hellip;</h2>
-                                <p>Check out the geographical distribution of mining pools. See how changing the share of each pool and with it the respective energy mix and mining hardware production standards throughout the years are affecting the CO2 emissions of transactions.</p>
-                                <div className="uk-width-1-1 uk-inline">
-                                    <div uk-grid="" className="calculation-result uk-grid-collapse uk-light uk-position-top-center" id="row-top">
-                                            <div className="uk-width-1-1@s">
-                                                <strong>{Math.round(this.state.emissionsResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
-                                            </div>
-                                            <div className="uk-width-1-1@s">
-                                                <strong>{emissionResultKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
-                                            </div>
-                                            <div className="uk-width-1-1@s">
-                                                <strong>{emissionResultYearsOfCo2Sequestration}&nbsp;years</strong> of&nbsp;CO<sub>2</sub> sequestration
-                                            </div>
-                                            <span uk-icon="question" className="uk-text-center uk-padding-small uk-position-center-right"></span>
-                                            <div uk-drop="" className="carbonara-tooltip">
-                                                <div className="">Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered.</div>
-                                            </div>
-                                        </div>
-                                </div>
+                                <p className="uk-text-small">Check out the geographical distribution of mining pools. See how changing the share of each pool and with it the respective energy mix and mining hardware production standards throughout the years are affecting the CO2 emissions of transactions.</p>
+
                                 <WhatIf
                                     years={this.state.years}
                                     transactionYear={this.state.transactionYearEstimated}
@@ -721,28 +760,11 @@ class CarbonaraCalculator extends Component {
                                     consumptions={this.state.consumptionPerRegion}
                                     onYearsChange={this.handleYearsChange}
                                     onRegionsChange={this.handleRegionsChange}
-                                />
+                                    onPercentagesChange={this.handlePercentagesChange}
+                                    />
 
                             </div>
-                            { showGamificationResults &&
-                                <div className="uk-width-1-1 uk-inline">
-                                    <div uk-grid="" className="gamification-result uk-grid-collapse uk-light uk-position-bottom-center" id="row-bottom">
-                                        <div className="uk-width-1-1@s">
-                                            <strong>{Math.round(this.state.gamificationResult)} kg</strong> CO<sub>2</sub> emissions correspond to:
-                                        </div>
-                                        <div className="uk-width-1-1@s">
-                                            <strong>{gamificationKilometersDrivenByCar}&nbsp;km</strong>&nbsp;driven by&nbsp;car
-                                        </div>
-                                        <div className="uk-width-1-1@s">
-                                            <strong>{gamificationYearsOfCo2Sequestration}&nbsp;years</strong>&nbsp;of CO<sub>2</sub> sequestration
-                                        </div>
-                                        <span uk-icon="question" className="uk-text-center uk-padding-small uk-position-center-right"></span>
-                                        <div uk-drop="" className="carbonara-tooltip">
-                                                <div className="">Calculations are based on several assumptions, therefore the underlying data and calculation results are only approximations, and could change as more information is gathered.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
+
                         </div>
                     </section>
                 }
