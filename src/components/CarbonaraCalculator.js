@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
 import 'react-dates/initialize'
 import { Link, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+
 import MaterialTable from 'material-table'
+
 import moment from 'moment'
 import API from '../api'
+
 import ResultGrid from './ResultGrid'
 import ResultSection from './ResultSection'
 import Navigation from './Navigation'
 import ConsumptionGraph from './ConsumptionGraph'
 import WhatIf from './WhatIf'
+
 import zuehlke from '../static/media/zuehlke.png'
 import unibright from '../static/media/unibright.png'
 import ethevents from '../static/media/ethevents.png'
+
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import '../scss/css.scss'
@@ -33,7 +38,7 @@ class CarbonaraCalculator extends Component {
         this.getEmissions = this.getEmissions.bind(this)
         this.getYears = this.getYears.bind(this)
         this.getConsumptionPerRegion = this.getConsumptionPerRegion.bind(this)
-        this.fillInTransactionIdAndEmptyTransactionsList = this.fillInTransactionIdAndEmptyTransactionsList.bind(this)
+        this.fillInTransactionsAndEmptyTransactionsList = this.fillInTransactionsAndEmptyTransactionsList.bind(this)
         this.copyWalletAddress = this.copyWalletAddress.bind(this)
         this.copyTransactionId = this.copyTransactionId.bind(this)
         this.resetForm = this.resetForm.bind(this)
@@ -129,17 +134,31 @@ class CarbonaraCalculator extends Component {
         this.setState({ formValidity: { transaction: transactionFormValid } })
     }
 
-    fillInTransactionIdAndEmptyTransactionsList(e, transaction) {
+    fillInTransactionsAndEmptyTransactionsList(e, transactions) {
         e.preventDefault();
         this.handleChange(e);
+
+        transactions.sort(function(a,b){
+            if ( a.time < b.time ){
+                return -1
+            }
+            if ( a.time > b.time ){
+                return 1
+            }
+            return 0
+        })
+
+        let txcommalist = transactions.map(function(el){ return el.txid }).join(',')
+        let txtime = transactions[0].time
+
         this.setState({
             addressValidity: {
                 wallet: false,
                 transaction: true,
                 some: true
             },
-            address: transaction.txid,
-            transactionTime: transaction.time,
+            address: txcommalist,
+            transactionTime: txtime,
             transactions: []
          })
     }
@@ -216,11 +235,23 @@ class CarbonaraCalculator extends Component {
     getTransactions(e) {
         UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
         API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
+
             res.data.forEach(function(v,k){
                 v.time = moment.unix(v.time).format()
             })
+
             this.setState({ transactions: res.data })
+
+        }).catch(function (error) {
+            console.log(error);
+        })
+        .then(function () {
             UIkit.notification.closeAll()
+            scroller.scrollTo('transactionslist', {
+                spy: true,
+                smooth: true,
+                duration: 500
+            })
         })
     }
 
@@ -229,8 +260,12 @@ class CarbonaraCalculator extends Component {
         this.resetCalculations()
         this.setTransactionYearEstimated()
 
+        let transactionslist = this.state.address.split(',')
+        let querystring = transactionslist.join('&txHashes[]=');
+
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
-        API.get('api/Carbonara/Calculation?TxHash=' + this.state.address).then(res => {
+
+        API.get('api/Carbonara/Calculation?txHashes[]=' + querystring).then(res => {
 
             // set main result
             this.setState({ mainCalculationResult: res.data })
@@ -253,7 +288,6 @@ class CarbonaraCalculator extends Component {
         })
         .then(function () {
             UIkit.notification.closeAll()
-            // UIkit.scroll('#results').scrollTo('#results')
             scroller.scrollTo('results', {
                 spy: true,
                 smooth: true,
@@ -613,7 +647,15 @@ class CarbonaraCalculator extends Component {
                                     </div>
 
                                     <div className="uk-margin">
-                                        <label className="uk-form-label" htmlFor="address">Wallet Address or Transaction ID</label>
+                                        <div className="uk-text-small">
+                                            <a href="" uk-icon="icon:question"></a>
+                                            <div uk-drop={'pos:top-center'}>
+                                                <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>In case you want to perform a calculation with multiple transactions, please input a comma separated list of transaction ids</div>
+                                            </div>
+                                        </div>
+                                        <label className="uk-form-label" htmlFor="address">
+                                            Wallet Address or Transaction ID(s)
+                                        </label>
                                         <div className="uk-form-controls">
                                             <div className="input-container uk-flex uk-flex-column uk-flex-center">
                                                 <div className="uk-inline">
@@ -663,35 +705,41 @@ class CarbonaraCalculator extends Component {
                                         <div className="uk-width-1-1">
 
                                             { showTransactions &&
-                                                <div uk-scrollspy="cls: uk-animation-fade; repeat: true">
-                                                    <label className="uk-form-label">Please select a transaction</label>
-                                                    <br />
+                                                <div uk-scrollspy="cls: uk-animation-fade; repeat: true" id="transactionslist">
+                                                    <div className="uk-width-1-2@m uk-align-center">
+                                                        <ol className="uk-list uk-list-divider">
+                                                            <li>1) Please select one or multiple transactions</li>
+                                                            <li>2) Then click on the icon at the top right of the table, in order to transmit the selected transaction ids to the input field above</li>
+                                                        </ol>
+                                                    </div>
                                                     <MaterialTable
+                                                        title="Transactions for given Wallet Address"
                                                         columns={[
-                                                            { title: 'time', field: 'time', defaultSort: 'desc' },
-                                                            { title: 'txid', field: 'txid' },
-                                                            { title: 'value', field: 'value', type: 'numeric' },
+                                                            { title: 'ID', field: 'txid' },
+                                                            { title: 'Value', field: 'value', type: 'numeric' },
+                                                            { title: 'Time', field: 'time', defaultSort: 'desc' },
                                                         ]}
                                                         data={this.state.transactions}
-                                                        options={{ pageSize: 5 }}
-                                                        title="Transactions"
+                                                        options={{
+                                                            pageSize: 5,
+                                                            selection: true,
+                                                            search: false,
+                                                            actionsCellStyle: {
+                                                                color: 'red'
+                                                            },
+                                                            showSelectAllCheckbox: false,
+                                                        }}
                                                         actions={[
                                                             {
-                                                                icon: 'file_copy',
-                                                                tooltip: 'select this transaction',
+                                                                icon: 'publish',
+                                                                tooltip: 'Fill in selected transactions',
                                                                 onClick: (event, rowData) => {
-                                                                    this.fillInTransactionIdAndEmptyTransactionsList(event, rowData)
+                                                                    this.fillInTransactionsAndEmptyTransactionsList(event, rowData)
                                                                 },
                                                             }
                                                         ]}
+                                                        onSelectionChange={(rows) => console.log('You selected ' + rows.length + ' rows')}
                                                     />
-                                                    {/*<Table className="uk-table uk-table-small uk-table-divider uk-table-hover" caption='Transactions' head={['time', 'txid', 'value']} body={this.state.transactions}/>*/}
-                                                    {/*<ul className="uk-list uk-list-striped uk-resize-vertical uk-height-small">
-                                                        { this.state.transactions.map((transaction,index) => <li key={index}>
-                                                            <a href="#" className="uk-icon-link" uk-icon="search" onClick={(event) => this.fillInTransactionIdAndEmptyTransactionsList(event, transaction)}></a>
-                                                            time: {transaction.time}<br />txid: {transaction.txid}<br />value: {transaction.value}</li>)
-                                                        }
-                                                    </ul>*/}
                                                 </div>
                                             }
 
