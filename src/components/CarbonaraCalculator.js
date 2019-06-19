@@ -706,10 +706,14 @@ class CarbonaraCalculator extends Component {
 
                                             { showTransactions &&
                                                 <div uk-scrollspy="cls: uk-animation-fade; repeat: true" id="transactionslist">
-                                                    <label className="uk-form-label">Please select one or multiple transactions</label>
-                                                    <br />
+                                                    <div className="uk-width-1-2@m uk-align-center">
+                                                        <ol className="uk-list uk-list-divider">
+                                                            <li>1) Please select one or multiple transactions</li>
+                                                            <li>2) Then click on the icon at the top right of the table, in order to transmit the selected transaction ids to the input field above</li>
+                                                        </ol>
+                                                    </div>
                                                     <MaterialTable
-                                                        title='Transactions'
+                                                        title="Transactions for given Wallet Address"
                                                         columns={[
                                                             { title: 'ID', field: 'txid' },
                                                             { title: 'Value', field: 'value', type: 'numeric' },
@@ -719,7 +723,11 @@ class CarbonaraCalculator extends Component {
                                                         options={{
                                                             pageSize: 5,
                                                             selection: true,
-                                                            search: false
+                                                            search: false,
+                                                            actionsCellStyle: {
+                                                                color: 'red'
+                                                            },
+                                                            showSelectAllCheckbox: false,
                                                         }}
                                                         actions={[
                                                             {
@@ -729,9 +737,7 @@ class CarbonaraCalculator extends Component {
                                                                     this.fillInTransactionsAndEmptyTransactionsList(event, rowData)
                                                                 },
                                                             }
-                                                        ]
-                                                        }
-                                                        // onRowClick={((evt, selectedRow) => console.log(selectedRow))}
+                                                        ]}
                                                         onSelectionChange={(rows) => console.log('You selected ' + rows.length + ' rows')}
                                                     />
                                                 </div>

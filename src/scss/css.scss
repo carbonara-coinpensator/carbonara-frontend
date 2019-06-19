@@ -24,6 +24,10 @@
 //     bottom: 0 !important
 // }
 
+#transactionslist h6 {
+    color: $base-heading-color;
+}
+
 .stickybottom {
     bottom: 0;
     top: auto !important;
