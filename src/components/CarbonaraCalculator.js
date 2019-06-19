@@ -261,11 +261,11 @@ class CarbonaraCalculator extends Component {
         this.setTransactionYearEstimated()
 
         let transactionslist = this.state.address.split(',')
-        let querystring = transactionslist.join('&txHashes[]=');
+        let querystring = transactionslist.join('&txHashes=');
 
         UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
 
-        API.get('api/Carbonara/Calculation?txHashes[]=' + querystring).then(res => {
+        API.get('api/Carbonara/Calculation?txHashes=' + querystring).then(res => {
 
             // set main result
             this.setState({ mainCalculationResult: res.data })
