@@ -28,6 +28,10 @@
     color: $base-heading-color;
 }
 
+tbody > tr > td > span {
+    width: 40px;
+}
+
 .stickybottom {
     bottom: 0;
     top: auto !important;
