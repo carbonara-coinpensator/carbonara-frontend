@@ -136,12 +136,12 @@ class CarbonaraCalculator extends Component {
 
     fillInTransactionsAndEmptyTransactionsList(e, transactions) {
 
-        // console.log(transactions)
-
         // e.preventDefault();
+
         // this.handleChange(e);
 
-        /*transactions.sort(function(a,b){
+        // sort transactions by date
+        transactions.sort(function(a,b){
             if ( a.time < b.time ){
                 return -1
             }
@@ -149,13 +149,16 @@ class CarbonaraCalculator extends Component {
                 return 1
             }
             return 0
-        })*/
+        })
 
-        // console.log(transactions)
-
+        // make string of selected transactions separated by commas
         let txcommalist = transactions.map(function(el){ return el.txid }).join(',')
-        let txtime = transactions[0].time
 
+        // get time of first transaction,
+        // which will be used as default value in gamification
+        let txtime = moment.unix(transactions[0].time).format()
+
+        // update app states
         this.setState({
             addressValidity: {
                 wallet: false,
@@ -166,10 +169,17 @@ class CarbonaraCalculator extends Component {
             transactionTime: txtime,
             transactions: []
          })
+
+         scroller.scrollTo('calculate', {
+            spy: true,
+            smooth: true,
+            duration: 500
+        })
+
     }
 
     copyWalletAddress(e) {
-        e.preventDefault();
+        // e.preventDefault();
         this.handleChange(e);
         this.setState({
             addressValidity: {
@@ -182,7 +192,7 @@ class CarbonaraCalculator extends Component {
     }
 
     copyTransactionId(e) {
-        e.preventDefault();
+        // e.preventDefault();
         this.handleChange(e);
         this.setState({
             addressValidity: {
@@ -230,45 +240,52 @@ class CarbonaraCalculator extends Component {
      */
 
     getChartData() {
+        UIkit.notification.closeAll()
         UIkit.notification('<div uk-spinner=""></div> Getting chart data …', {status: 'primary'})
         API.get('api/Carbonara/Charts').then(res => {
             this.setState({ chart: res.data });
+        }).then(function () {
             UIkit.notification.closeAll()
-        });
+        }).catch(function (error) {
+            UIkit.notification.closeAll()
+            UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
+        })
     }
 
-    getTransactions(e) {
+    getTransactions() {
+        UIkit.notification.closeAll()
         UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
         API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
 
-            res.data.forEach(function(v,k){
+            /*res.data.forEach(function(v,k){
                 v.time = moment.unix(v.time).format()
-            })
+            })*/
 
             this.setState({ transactions: res.data })
 
-        }).catch(function (error) {
-            console.log(error);
-        })
-        .then(function () {
+        }).then(function () {
             UIkit.notification.closeAll()
             scroller.scrollTo('transactionslist', {
                 spy: true,
                 smooth: true,
                 duration: 500
             })
+        }).catch(function (error) {
+            UIkit.notification.closeAll()
+            UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
         })
     }
 
     getEmissions() {
+
+        UIkit.notification.closeAll()
+        UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
 
         this.resetCalculations()
         this.setTransactionYearEstimated()
 
         let transactionslist = this.state.address.split(',')
         let querystring = transactionslist.join('&txHashes=');
-
-        UIkit.notification('<div uk-spinner=""></div> Calculating emissions …', {status: 'primary'})
 
         API.get('api/Carbonara/Calculation?txHashes=' + querystring).then(res => {
 
@@ -288,16 +305,16 @@ class CarbonaraCalculator extends Component {
                 emissionsResult: this.state.mainCalculationResult.calculationPerYear[this.state.transactionYearEstimated].fullCo2EmissionInKg
             })
 
-        }).catch(function (error) {
-            console.log(error);
-        })
-        .then(function () {
+        }).then(function () {
             UIkit.notification.closeAll()
             scroller.scrollTo('results', {
                 spy: true,
                 smooth: true,
                 duration: 500
             })
+        }).catch(function (error) {
+            UIkit.notification.closeAll()
+            UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
         })
     }
 
@@ -462,7 +479,8 @@ class CarbonaraCalculator extends Component {
             emissionsResult: 0,
             showGamificationResults: false,
             gamificationResult: 0,
-            mainCalculationResult: {}
+            mainCalculationResult: {},
+            transactions: []
         })
     }
 
@@ -473,12 +491,14 @@ class CarbonaraCalculator extends Component {
      */
 
     handleChange(event) {
-        const name = event.target.name
-        const value = event.target.value
-        this.setState(
-            {[name]: value},
-            () => {this.validateField(name, value)}
-        )
+        if (event.target.name !== null) {
+            let name = event.target.name
+            let value = event.target.value
+            this.setState(
+                {[name]: value},
+                () => {this.validateField(name, value)}
+            )
+        }
     }
 
     handleRegionsChange(regions) {
@@ -710,7 +730,10 @@ class CarbonaraCalculator extends Component {
                                         <div className="uk-width-1-1">
 
                                             { showTransactions &&
-                                                <div uk-scrollspy="cls: uk-animation-fade; repeat: true" id="transactionslist">
+                                                <div
+                                                    uk-scrollspy="cls: uk-animation-fade; repeat: true"
+                                                    id="transactionslist"
+                                                    className="uk-margin-large-bottom">
                                                     <div className="uk-width-1-2@m uk-align-center">
                                                         <ol className="uk-list uk-list-divider">
                                                             <li>1) Please select one or multiple transactions</li>
@@ -743,7 +766,7 @@ class CarbonaraCalculator extends Component {
                                                                 },
                                                             }
                                                         ]}
-                                                        onSelectionChange={(rows) => console.log('You selected ' + rows.length + ' rows')}
+                                                        onSelectionChange={(rows) => null}
                                                     />
                                                 </div>
                                             }
