@@ -38,7 +38,7 @@ class CarbonaraCalculator extends Component {
         this.getEmissions = this.getEmissions.bind(this)
         this.getYears = this.getYears.bind(this)
         this.getConsumptionPerRegion = this.getConsumptionPerRegion.bind(this)
-        this.fillInTransactionsAndEmptyTransactionsList = this.fillInTransactionsAndEmptyTransactionsList.bind(this)
+        this.fillInTransactions = this.fillInTransactions.bind(this)
         this.copyWalletAddress = this.copyWalletAddress.bind(this)
         this.copyTransactionId = this.copyTransactionId.bind(this)
         this.resetForm = this.resetForm.bind(this)
@@ -134,47 +134,49 @@ class CarbonaraCalculator extends Component {
         this.setState({ formValidity: { transaction: transactionFormValid } })
     }
 
-    fillInTransactionsAndEmptyTransactionsList(e, transactions) {
+    fillInTransactions(transactions) {
 
-        // e.preventDefault();
+        if (transactions.length > 0) {
 
-        // this.handleChange(e);
+            // sort transactions by date
+            transactions.sort(function(a,b){
+                if ( a.time < b.time ){
+                    return -1
+                }
+                if ( a.time > b.time ){
+                    return 1
+                }
+                return 0
+            })
 
-        // sort transactions by date
-        transactions.sort(function(a,b){
-            if ( a.time < b.time ){
-                return -1
-            }
-            if ( a.time > b.time ){
-                return 1
-            }
-            return 0
-        })
+            // make string of selected transactions separated by commas
+            let txcommalist = transactions.map(function(el){ return el.txid }).join(',')
 
-        // make string of selected transactions separated by commas
-        let txcommalist = transactions.map(function(el){ return el.txid }).join(',')
+            // get time of first transaction,
+            // which will be used as default value in gamification
+            let txtime = moment.unix(transactions[0].time).format()
 
-        // get time of first transaction,
-        // which will be used as default value in gamification
-        let txtime = moment.unix(transactions[0].time).format()
+            // update app states
+            this.setState({
+                addressValidity: {
+                    wallet: false,
+                    transaction: true,
+                    some: true
+                },
+                address: txcommalist,
+                transactionTime: txtime,
+            })
 
-        // update app states
-        this.setState({
-            addressValidity: {
-                wallet: false,
-                transaction: true,
-                some: true
-            },
-            address: txcommalist,
-            transactionTime: txtime,
-            transactions: []
-         })
-
-         scroller.scrollTo('calculate', {
-            spy: true,
-            smooth: true,
-            duration: 500
-        })
+        } else {
+            this.setState({
+                addressValidity: {
+                    wallet: false,
+                    transaction: false,
+                    some: false
+                },
+                address: ''
+            })
+        }
 
     }
 
@@ -297,7 +299,8 @@ class CarbonaraCalculator extends Component {
                 consumptionPerRegion: this.getConsumptionPerRegion(),
                 regionRanges: this.getConsumptionPerRegion(),
                 regions: this.getRegions(),
-                years: this.getYears()
+                years: this.getYears(),
+                transactions: []
             })
 
             // main emission result
@@ -491,6 +494,7 @@ class CarbonaraCalculator extends Component {
      */
 
     handleChange(event) {
+        this.resetCalculations()
         if (event.target.name !== null) {
             let name = event.target.name
             let value = event.target.value
@@ -549,10 +553,14 @@ class CarbonaraCalculator extends Component {
 
     render() {
 
-        let showTransactions = this.state.transactions.length > 0 && this.state.formValidity.wallet
+        let showTransactions = this.state.transactions.length > 0
         let showResults = this.state.emissionsResult > 0
         let showGamification = this.state.years.length > 0 && this.state.regions.length > 0 && this.state.consumptionPerRegion.length > 0
         let showGamificationResults = this.state.showGamificationResults
+        let buttonProps = {
+            enabled: this.state.addressValidity.transaction || (this.state.transactions.length < 1 && this.state.addressValidity.wallet),
+            label: this.state.addressValidity.transaction ? 'Calculate' : this.state.addressValidity.wallet ? 'Get transactions' : 'Calculate'
+        }
 
         return (
             <div className="uk-text-center">
@@ -695,14 +703,59 @@ class CarbonaraCalculator extends Component {
                                                     />
                                                 </div>
                                             </div>
-                                            <button type="submit" className={'uk-margin-top uk-margin-large-bottom uk-button uk-button-large' + (!this.state.addressValidity.some ? ' uk-button-default uk-invisible' : ' uk-button-primary')} disabled={!this.state.addressValidity.some}>
-                                                { this.state.addressValidity.wallet ? 'Get transactions' : this.state.addressValidity.transaction ? 'Calculate' : '' }
+
+                                            { showTransactions &&
+                                                <div className="uk-width-1-1" id="transactionslist">
+                                                    <div
+                                                        uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true"
+                                                        className="uk-margin-bottom uk-margin-large-top">
+                                                        <div className="uk-width-1-2@m uk-align-center">
+                                                            <ol className="uk-list uk-list-divider">
+                                                                <li>1) Please select one or multiple transactions</li>
+                                                                <li>2) Then click on the icon at the top right of the table, in order to transmit the selected transaction ids to the input field above</li>
+                                                            </ol>
+                                                        </div>
+                                                        <MaterialTable
+                                                            title="Transactions for given Wallet Address"
+                                                            columns={[
+                                                                { title: 'ID', field: 'txid' },
+                                                                { title: 'Value', field: 'value', type: 'numeric' },
+                                                                { title: 'Time', field: 'time', defaultSort: 'desc' },
+                                                            ]}
+                                                            data={this.state.transactions}
+                                                            options={{
+                                                                pageSize: 5,
+                                                                selection: true,
+                                                                search: false,
+                                                                actionsCellStyle: {
+                                                                    color: 'red'
+                                                                },
+                                                                showSelectAllCheckbox: false,
+                                                            }}
+                                                            /*actions={[
+                                                                {
+                                                                    icon: 'publish',
+                                                                    tooltip: 'Fill in selected transactions',
+                                                                    onClick: (event, rowData) => {
+                                                                        this.fillInTransactions(rowData)
+                                                                    },
+                                                                }
+                                                            ]}*/
+                                                            onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <button type="submit" className={'uk-margin-top uk-margin-large-bottom uk-button uk-button-large' + (!buttonProps.enabled ? ' uk-button-text' : ' uk-button-primary')} disabled={!buttonProps.enabled}>
+                                                { buttonProps.label }
                                             </button>
+
                                         </div>
                                     </div>
-                                    <div uk-grid="">
+                                    {/*<div uk-grid="">
 
-                                        {/*<div className="uk-width-1-3">
+                                        <div className="uk-width-1-3">
                                             { this.state.transactionIdValid &&
                                                 <div>
                                                     <label className="uk-form-label">Please pick a date range</label>
@@ -725,54 +778,9 @@ class CarbonaraCalculator extends Component {
                                                     />
                                                 </div>
                                             }
-                                        </div>*/}
-
-                                        <div className="uk-width-1-1">
-
-                                            { showTransactions &&
-                                                <div
-                                                    uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true"
-                                                    id="transactionslist"
-                                                    className="uk-margin-large-bottom">
-                                                    <div className="uk-width-1-2@m uk-align-center">
-                                                        <ol className="uk-list uk-list-divider">
-                                                            <li>1) Please select one or multiple transactions</li>
-                                                            <li>2) Then click on the icon at the top right of the table, in order to transmit the selected transaction ids to the input field above</li>
-                                                        </ol>
-                                                    </div>
-                                                    <MaterialTable
-                                                        title="Transactions for given Wallet Address"
-                                                        columns={[
-                                                            { title: 'ID', field: 'txid' },
-                                                            { title: 'Value', field: 'value', type: 'numeric' },
-                                                            { title: 'Time', field: 'time', defaultSort: 'desc' },
-                                                        ]}
-                                                        data={this.state.transactions}
-                                                        options={{
-                                                            pageSize: 5,
-                                                            selection: true,
-                                                            search: false,
-                                                            actionsCellStyle: {
-                                                                color: 'red'
-                                                            },
-                                                            showSelectAllCheckbox: false,
-                                                        }}
-                                                        actions={[
-                                                            {
-                                                                icon: 'publish',
-                                                                tooltip: 'Fill in selected transactions',
-                                                                onClick: (event, rowData) => {
-                                                                    this.fillInTransactionsAndEmptyTransactionsList(event, rowData)
-                                                                },
-                                                            }
-                                                        ]}
-                                                        onSelectionChange={(rows) => null}
-                                                    />
-                                                </div>
-                                            }
-
                                         </div>
-                                    </div>
+
+                                        </div>*/}
                                 </form>
 
                             </div>
