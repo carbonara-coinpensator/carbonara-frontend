@@ -242,7 +242,7 @@ class CarbonaraCalculator extends Component {
     getChartData() {
         UIkit.notification.closeAll()
         UIkit.notification('<div uk-spinner=""></div> Getting chart data …', {status: 'primary'})
-        API.get('api/Carbonara/Charts').then(res => {
+        API.get('Charts').then(res => {
             this.setState({ chart: res.data });
         }).then(function () {
             UIkit.notification.closeAll()
@@ -255,7 +255,7 @@ class CarbonaraCalculator extends Component {
     getTransactions() {
         UIkit.notification.closeAll()
         UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
-        API.get('api/Carbonara/TransactionList?BitcoinAddress=' + this.state.address).then(res => {
+        API.get('TransactionList?BitcoinAddress=' + this.state.address).then(res => {
 
             /*res.data.forEach(function(v,k){
                 v.time = moment.unix(v.time).format()
@@ -287,7 +287,7 @@ class CarbonaraCalculator extends Component {
         let transactionslist = this.state.address.split(',')
         let querystring = transactionslist.join('&txHashes=');
 
-        API.get('api/Carbonara/Calculation?txHashes=' + querystring).then(res => {
+        API.get('Calculation?txHashes=' + querystring).then(res => {
 
             // set main result
             this.setState({ mainCalculationResult: res.data })
@@ -527,7 +527,7 @@ class CarbonaraCalculator extends Component {
     }
 
     handleInputFocus() {
-        UIkit.scrollspy('#address', { repeat: true })
+        // UIkit.scrollspy('#address', { repeat: true })
         UIkit.util.on('#address', 'inview', function () {
             this.focus()
         })
@@ -560,13 +560,13 @@ class CarbonaraCalculator extends Component {
                     <section id="welcome" className="uk-section uk-section-default uk-padding-remove-vertical uk-text-center uk-flex uk-flex-middle uk-position-relative uk-height-viewport">
                         <Navigation />
                         <div className="uk-width-1-1 uk-margin-bottom uk-margin-large-top">
-                            <div className="uk-container uk-container-small" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                            <div className="uk-container uk-container-small" uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
                                 <p>The <strong>Carbonara Coinpensator</strong> (#Carbonara) is a blockchain related open-source project, established by Unibright and Zühlke Engineering. The main goal of the project is to raise awareness of energy consumption of public blockchains.</p>
                                 <p>To motivate the personal examination of the topic, #Carbonara enables the calculation of consumed energy of personal blockchain transactions. Depending on different factors like given hashrate by the time of transaction, mining time and contributing energy sources, #Carbonara proposes an approximated carbon dioxide amount to be compensated in green energy projects.</p>
                                 <div className="uk-margin-medium-top uk-text-small uk-margin-large-bottom">
                                     <p>Powered by</p>
                                     <div uk-grid="" className="uk-flex-center uk-animation-fast uk-grid-small uk-child-width-1-4 uk-child-width-1-5@s uk-child-width-1-6@m">
-                                        <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
+                                        <div uk-scrollspy-disabled="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                                             <a href="https://unibright.io" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={unibright} alt="" />
@@ -578,7 +578,7 @@ class CarbonaraCalculator extends Component {
                                                 </div>
                                             </a>
                                         </div>
-                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
+                                        <div uk-scrollspy-disabled="cls: uk-animation-slide-left-small; repeat: true; delay: 450">
                                             <a href="https://www.zuehlke.com" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={zuehlke} alt="" />
@@ -590,7 +590,7 @@ class CarbonaraCalculator extends Component {
                                                 </div>
                                             </a>
                                         </div>
-                                        <div uk-scrollspy="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
+                                        <div uk-scrollspy-disabled="cls: uk-animation-slide-left-small; repeat: true; delay: 550">
                                             <a href="https://eth.events/" target="zuehlke" className="uk-animation-toggle">
                                                 <div className="uk-inline-clip uk-transition-toggle uk-dark" tabIndex="0">
                                                     <img src={ethevents} alt="" />
@@ -605,7 +605,7 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom uk-margin-small-top">
                                         <Link className="uk-button uk-button-primary" to="graph" spy={true} smooth={true} duration={500}>
@@ -621,11 +621,11 @@ class CarbonaraCalculator extends Component {
                 { 'priceChart' in this.state.chart && 'energyConsumptionChart' in this.state.chart &&
                     <section id="graph" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-default">
                         <div className="uk-width-1-1">
-                            <div className="uk-container" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                            <div className="uk-container" uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
                                 <h2 className="uk-text-center">Bitcoin (BTC) Price and Energy Consumption</h2>
                                 <ConsumptionGraph className="uk-margin-top"  prices={this.state.chart.priceChart} consumptions={this.state.chart.energyConsumptionChart} />
                             </div>
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-primary" to="calculate" spy={true} smooth={true} duration={500}>
@@ -645,7 +645,7 @@ class CarbonaraCalculator extends Component {
                     }
 
                     <div className="uk-width-1-1">
-                            <div className="uk-container uk-margin-small-bottom" uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                            <div className="uk-container uk-margin-small-bottom" uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
 
                                 <h2>How <strong>green</strong> is my BTC Wallet?</h2>
 
@@ -731,7 +731,7 @@ class CarbonaraCalculator extends Component {
 
                                             { showTransactions &&
                                                 <div
-                                                    uk-scrollspy="cls: uk-animation-fade; repeat: true"
+                                                    uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true"
                                                     id="transactionslist"
                                                     className="uk-margin-large-bottom">
                                                     <div className="uk-width-1-2@m uk-align-center">
@@ -777,14 +777,14 @@ class CarbonaraCalculator extends Component {
 
                             </div>
 
-                            <div className="uk-position-bottom" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
                                 <div className="uk-container">
                                 <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
                                         </Link>
                                         { showResults &&
-                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
                                                 Calculation Result <span uk-icon="arrow-down"></span>
                                             </Link>
                                         }
@@ -800,7 +800,7 @@ class CarbonaraCalculator extends Component {
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-margin-large-top">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
-                                <div className="uk-margin-top" uk-scrollspy="cls: uk-animation-slide-bottom-small; repeat: true">
+                                <div className="uk-margin-top" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
