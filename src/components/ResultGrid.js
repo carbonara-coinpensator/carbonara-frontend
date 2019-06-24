@@ -23,7 +23,7 @@ class ResultGrid extends Component {
             <div>
 
                 { !this.props.showSticky &&
-                    <div uk-grid="" className={'uk-margin-auto calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
+                    <div uk-grid="" className={'calcgrid calcgrid-' + this.props.type + ' calcgrid-' + this.props.position + ' uk-flex uk-flex-middle'} uk-scrollspy="cls: uk-animation-fade; repeat: true">
                         <div className="uk-width-1-1 uk-width-1-2@m uk-text-center">
                             <h2 className="uk-text-huge uk-margin-remove">{ Math.round(this.props.result) } <small>kg</small></h2>
                             <p className="uk-text-muted">CO<sub>2</sub> emissions correspond to:</p>
