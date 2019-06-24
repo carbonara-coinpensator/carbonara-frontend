@@ -816,10 +816,10 @@ class CarbonaraCalculator extends Component {
                 </section>
 
                 { showResults &&
-                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
+                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-gradient uk-light">
 
                         <div className="uk-width-1-1">
-                            <div className="uk-container uk-margin-large-top">
+                            <div className="uk-container">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
                             </div>
 

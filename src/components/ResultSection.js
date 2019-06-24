@@ -24,7 +24,7 @@ class ResultSection extends Component {
 
                 <div className="" uk-height-match=".uk-tile">
                     <p className="">Here are some compensation options for you:</p>
-                    <div uk-grid="" className="uk-flex-center uk-animation-fast uk-grid-small uk-child-width-1-2 uk-child-width-1-4@m">
+                    <div uk-grid="" className="uk-flex-center uk-animation-fast uk-grid-small uk-child-width-1-3 uk-child-width-1-4@m">
                         <div uk-scrollspy="cls: uk-animation-slide-right-small; repeat: true; delay: 350">
                             <a className="uk-animation-toggle" target="naturefund" rel="noopener noreferrer" href={`https://www.naturefund.de/en/projects/compensation/?kgco2=${Math.round(this.props.result)}`}>
                                 <div className="uk-inline-clip uk-transition-toggle uk-tile uk-tile-default uk-padding-remove " tabIndex="0">
