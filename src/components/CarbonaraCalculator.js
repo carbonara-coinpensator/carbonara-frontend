@@ -135,10 +135,13 @@ class CarbonaraCalculator extends Component {
     }
 
     fillInTransactionsAndEmptyTransactionsList(e, transactions) {
-        e.preventDefault();
-        this.handleChange(e);
 
-        transactions.sort(function(a,b){
+        // console.log(transactions)
+
+        // e.preventDefault();
+        // this.handleChange(e);
+
+        /*transactions.sort(function(a,b){
             if ( a.time < b.time ){
                 return -1
             }
@@ -146,7 +149,9 @@ class CarbonaraCalculator extends Component {
                 return 1
             }
             return 0
-        })
+        })*/
+
+        // console.log(transactions)
 
         let txcommalist = transactions.map(function(el){ return el.txid }).join(',')
         let txtime = transactions[0].time
