@@ -154,7 +154,7 @@ class CarbonaraCalculator extends Component {
 
             // get time of first transaction,
             // which will be used as default value in gamification
-            let txtime = moment.unix(transactions[0].time).format()
+            let txtime = transactions[0].time
 
             // update app states
             this.setState({
@@ -259,9 +259,9 @@ class CarbonaraCalculator extends Component {
         UIkit.notification('<div uk-spinner=""></div> Getting transactions …', {status: 'primary'})
         API.get('TransactionList?BitcoinAddress=' + this.state.address).then(res => {
 
-            /*res.data.forEach(function(v,k){
+            res.data.forEach(function(v,k){
                 v.time = moment.unix(v.time).format()
-            })*/
+            })
 
             this.setState({ transactions: res.data })
 
@@ -653,162 +653,178 @@ class CarbonaraCalculator extends Component {
                     }
 
                     <div className="uk-width-1-1">
-                            <div className="uk-container uk-margin-small-bottom" uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
 
-                                <h2>How <strong>green</strong> is my BTC Wallet?</h2>
+                        <div className="uk-container uk-margin-small-bottom" uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
 
-                                <form onSubmit={this.submitForm} className="uk-margin-large-top">
+                            <h2>How <strong>green</strong> is my BTC Wallet?</h2>
 
-                                    <div className="uk-text-small uk-text-center uk-margin-medium uk-flex-center" uk-grid="">
+                            <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                        <div className="uk-width-3-4 uk-width-1-4@l">
-                                            <p className="uk-text-small uk-text-muted">
-                                                <i uk-icon="info"></i> You can click on the example data to play around with the calculations.
-                                            </p>
+                                <div className="uk-text-small uk-text-center uk-margin-medium uk-flex-center" uk-grid="">
+
+                                    <div className="uk-width-3-4 uk-width-1-4@l">
+                                        <p className="uk-text-small uk-text-muted">
+                                            <i uk-icon="info"></i> You can click on the example data to play around with the calculations.
+                                        </p>
+                                    </div>
+                                    <div className="uk-width-2-3 uk-width-3-4@l uk-text-center uk-text-left@m">
+                                        <div className="uk-grid-small" uk-grid="">
+                                            <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Wallet Address</div>
+                                            <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></div>
                                         </div>
-                                        <div className="uk-width-2-3 uk-width-3-4@l uk-text-center uk-text-left@m">
-                                            <div className="uk-grid-small" uk-grid="">
-                                                <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Wallet Address</div>
-                                                <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></div>
-                                            </div>
-                                            <div className="uk-grid-small" uk-grid="">
-                                                <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Transaction ID</div>
-                                                <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></div>
-                                            </div>
+                                        <div className="uk-grid-small" uk-grid="">
+                                            <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Transaction ID</div>
+                                            <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></div>
                                         </div>
-
                                     </div>
 
-                                    <div className="uk-margin">
-                                        <div className="uk-text-small">
-                                            <a href="" uk-icon="icon:question"></a>
-                                            <div uk-drop={'pos:top-center'}>
-                                                <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>In case you want to perform a calculation with multiple transactions, please input a comma separated list of transaction ids</div>
+                                </div>
+
+                                <div className="uk-margin">
+                                    <div className="uk-text-small">
+                                        <a href="" uk-icon="icon:question"></a>
+                                        <div uk-drop={'pos:top-center'}>
+                                            <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>In case you want to perform a calculation with multiple transactions, please input a comma separated list of transaction ids</div>
+                                        </div>
+                                    </div>
+                                    <label className="uk-form-label" htmlFor="address">
+                                        Wallet Address or Transaction ID(s)
+                                    </label>
+                                    <div className="uk-form-controls">
+                                        <div className="input-container uk-flex uk-flex-column uk-flex-center">
+                                            <div className="uk-inline">
+                                                {this.state.address ? <a className="uk-form-icon uk-form-icon-flip uk-icon-link" href="#" onClick={this.resetForm} uk-icon="icon: close; ratio: 2"></a> : null}
+                                                <input className="uk-input uk-form-large uk-text-center"
+                                                    id="address"
+                                                    type="text"
+                                                    name="address"
+                                                    placeholder="Wallet Address or Transaction ID"
+                                                    value={this.state.address}
+                                                    onChange={(event) => this.handleChange(event)}
+                                                />
                                             </div>
                                         </div>
-                                        <label className="uk-form-label" htmlFor="address">
-                                            Wallet Address or Transaction ID(s)
-                                        </label>
-                                        <div className="uk-form-controls">
-                                            <div className="input-container uk-flex uk-flex-column uk-flex-center">
-                                                <div className="uk-inline">
-                                                    {this.state.address ? <a className="uk-form-icon uk-form-icon-flip uk-icon-link" href="#" onClick={this.resetForm} uk-icon="icon: close; ratio: 2"></a> : null}
-                                                    <input className="uk-input uk-form-large uk-text-center"
-                                                        id="address"
-                                                        type="text"
-                                                        name="address"
-                                                        placeholder="Wallet Address or Transaction ID"
-                                                        value={this.state.address}
-                                                        onChange={(event) => this.handleChange(event)}
-                                                    />
-                                                </div>
-                                            </div>
 
-                                            { showTransactions &&
-                                                <div className="uk-width-1-1" id="transactionslist">
-                                                    <div
-                                                        uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true"
-                                                        className="uk-margin-bottom uk-margin-large-top">
-                                                        <div className="uk-width-1-2@m uk-align-center">
-                                                            <ol className="uk-list uk-list-divider">
-                                                                <li>1) Please select one or multiple transactions</li>
-                                                                <li>2) Then click on the icon at the top right of the table, in order to transmit the selected transaction ids to the input field above</li>
-                                                            </ol>
-                                                        </div>
-                                                        <MaterialTable
-                                                            title="Transactions for given Wallet Address"
-                                                            columns={[
-                                                                { title: 'ID', field: 'txid' },
-                                                                { title: 'Value', field: 'value', type: 'numeric' },
-                                                                { title: 'Time', field: 'time', defaultSort: 'desc' },
-                                                            ]}
-                                                            data={this.state.transactions}
-                                                            options={{
-                                                                pageSize: 5,
-                                                                selection: true,
-                                                                search: false,
-                                                                actionsCellStyle: {
-                                                                    color: 'red'
-                                                                },
-                                                                showSelectAllCheckbox: false,
-                                                            }}
-                                                            /*actions={[
-                                                                {
-                                                                    icon: 'publish',
-                                                                    tooltip: 'Fill in selected transactions',
-                                                                    onClick: (event, rowData) => {
-                                                                        this.fillInTransactions(rowData)
-                                                                    },
-                                                                }
-                                                            ]}*/
-                                                            onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
-                                                        />
+                                        { showTransactions &&
+                                            <div className="uk-width-1-1" id="transactionslist">
+                                                <div
+                                                    uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true"
+                                                    className="uk-margin-bottom uk-margin-large-top">
+                                                    <div className="uk-width-1-2@m uk-align-center">
+                                                        <p>
+                                                            Please select one or multiple checkboxes in order to calculate based on the corresponding transactions
+                                                        </p>
                                                     </div>
-                                                </div>
-                                            }
+                                                    <MaterialTable
+                                                        title="Transactions for given Wallet Address"
+                                                        columns={[
+                                                            { title: 'ID', field: 'txid' },
+                                                            { title: 'Value', field: 'value', type: 'numeric' },
+                                                            { title: 'Time', field: 'time', defaultSort: 'desc' },
+                                                        ]}
+                                                        data={this.state.transactions}
+                                                        options={{
+                                                            pageSize: 5,
+                                                            selection: true,
+                                                            search: false,
+                                                            actionsCellStyle: {
+                                                                color: 'green'
+                                                            },
+                                                            rowStyle: {
+                                                                padding: 0
+                                                            },
+                                                            showSelectAllCheckbox: false,
+                                                            showTextRowsSelected: false,
+                                                            selectionProps: {},
+                                                            toolbar: false,
+                                                            showTitle: false,
 
-                                            <button type="submit" className={'uk-margin-top uk-margin-large-bottom uk-button uk-button-large' + (!buttonProps.enabled ? ' uk-button-text' : ' uk-button-primary')} disabled={!buttonProps.enabled}>
-                                                { buttonProps.label }
-                                            </button>
-
-                                        </div>
-                                    </div>
-                                    {/*<div uk-grid="">
-
-                                        <div className="uk-width-1-3">
-                                            { this.state.transactionIdValid &&
-                                                <div>
-                                                    <label className="uk-form-label">Please pick a date range</label>
-                                                    <br />
-                                                    <DateRangePicker
-                                                        startDateId="startDate"
-                                                        endDateId="endDate"
-                                                        startDate={this.state.startDate}
-                                                        endDate={this.state.endDate}
-                                                        onDatesChange={({ startDate, endDate }) => { this.onChangeDateRange( startDate, endDate )}}
-                                                        focusedInput={this.state.focusedInput}
-                                                        onFocusChange={(focusedInput) => { this.setState({ focusedInput })}}
-                                                        showClearDates={true}
-                                                        showDefaultInputIcon={true}
-                                                        verticalSpacing={0}
-                                                        firstDayOfWeek={1}
-                                                        hideKeyboardShortcutsPanel={true}
-                                                        transitionDuration={100}
-                                                        displayFormat="YYYY-MM-DD"
+                                                            // rowStyle: rowData => ({
+                                                            //     backgroundColor: (this.state.selectedRow && this.state.selectedRow.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
+                                                            // })
+                                                        }}
+                                                        // onRowClick={((evt, selectedRow) => this.setState({ selectedRow }))}
+                                                        /*actions={[
+                                                            {
+                                                                icon: 'publish',
+                                                                tooltip: 'Fill in selected transactions',
+                                                                onClick: (event, rowData) => {
+                                                                    this.fillInTransactions(rowData)
+                                                                },
+                                                            }
+                                                        ]}*/
+                                                        onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
                                                     />
                                                 </div>
-                                            }
-                                        </div>
-
-                                        </div>*/}
-                                </form>
-
-                            </div>
-
-                            <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
-                                <div className="uk-container">
-                                <div className="uk-button-group uk-margin-large-bottom">
-                                        <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
-                                            <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
-                                        </Link>
-                                        { showResults &&
-                                            <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
-                                                Calculation Result <span uk-icon="arrow-down"></span>
-                                            </Link>
+                                            </div>
                                         }
+
+                                        <button type="submit" className={'uk-margin-top uk-margin-large-bottom uk-button uk-button-large' + (!buttonProps.enabled ? ' uk-button-text' : ' uk-button-primary')} disabled={!buttonProps.enabled}>
+                                            { buttonProps.label }
+                                        </button>
+
                                     </div>
                                 </div>
+                                {/*<div uk-grid="">
+
+                                    <div className="uk-width-1-3">
+                                        { this.state.transactionIdValid &&
+                                            <div>
+                                                <label className="uk-form-label">Please pick a date range</label>
+                                                <br />
+                                                <DateRangePicker
+                                                    startDateId="startDate"
+                                                    endDateId="endDate"
+                                                    startDate={this.state.startDate}
+                                                    endDate={this.state.endDate}
+                                                    onDatesChange={({ startDate, endDate }) => { this.onChangeDateRange( startDate, endDate )}}
+                                                    focusedInput={this.state.focusedInput}
+                                                    onFocusChange={(focusedInput) => { this.setState({ focusedInput })}}
+                                                    showClearDates={true}
+                                                    showDefaultInputIcon={true}
+                                                    verticalSpacing={0}
+                                                    firstDayOfWeek={1}
+                                                    hideKeyboardShortcutsPanel={true}
+                                                    transitionDuration={100}
+                                                    displayFormat="YYYY-MM-DD"
+                                                />
+                                            </div>
+                                        }
+                                    </div>
+
+                                    </div>*/}
+                            </form>
+
+                        </div>
+
+                        <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
+                            <div className="uk-container">
+                                <div className="uk-button-group uk-margin-large-bottom">
+                                    <Link className="uk-button uk-button-default" to="graph" spy={true} smooth={true} duration={500}>
+                                        <span uk-icon="arrow-up"></span> BTC Price and Energy Consumption
+                                    </Link>
+                                    { showResults &&
+                                        <Link className="uk-button uk-button-primary" to="results" spy={true} smooth={true} duration={500} uk-scrollspy-disabled="cls: uk-animation-fade; repeat: true">
+                                            Calculation Result <span uk-icon="arrow-down"></span>
+                                        </Link>
+                                    }
+                                </div>
                             </div>
+                        </div>
 
                     </div>
                 </section>
 
                 { showResults &&
-                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light" uk-grid="">
+                    <section id="results" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-gradient uk-light">
+
                         <div className="uk-width-1-1">
                             <div className="uk-container uk-margin-large-top">
                                 <ResultSection label="Result" color="secondary" result={this.state.emissionsResult} />
-                                <div className="uk-margin-top" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
+                            </div>
+
+                            <div className="uk-position-bottom" uk-scrollspy-disabled="cls: uk-animation-slide-bottom-small; repeat: true">
+                                <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
                                             <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
@@ -819,6 +835,7 @@ class CarbonaraCalculator extends Component {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </section>
