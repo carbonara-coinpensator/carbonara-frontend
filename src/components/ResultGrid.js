@@ -16,7 +16,7 @@ class ResultGrid extends Component {
     render() {
 
         let kilometersDrivenByCar = Math.round(this.props.result * 6)
-        let yearsOfCo2Sequestration = Math.round(this.props.result * 30 / 365)
+        let yearsOfCo2Sequestration = (this.props.result * 30 / 365.25).toFixed(1)
         let antiposition = this.props.position === 'top' ? 'bottom' : 'top'
 
         return (
