@@ -267,7 +267,7 @@ class CarbonaraCalculator extends Component {
 
         }).then(function () {
             UIkit.notification.closeAll()
-            scroller.scrollTo('transactionslist', {
+            scroller.scrollTo('inputform', {
                 spy: true,
                 smooth: true,
                 duration: 500
@@ -646,7 +646,7 @@ class CarbonaraCalculator extends Component {
                     </section>
                 }
 
-                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-large uk-section-primary">
+                <section id="calculate" className="uk-position-relative uk-height-viewport uk-section uk-section-primary">
 
                     { showGamificationResults &&
                         <ResultGrid result={this.state.gamificationResult} showSticky={true} type="primary" position="bottom" />
@@ -660,35 +660,36 @@ class CarbonaraCalculator extends Component {
 
                             <form onSubmit={this.submitForm} className="uk-margin-large-top">
 
-                                <div className="uk-text-small uk-text-center uk-margin-medium uk-flex-center" uk-grid="">
+                                <div className="uk-text-small uk-text-center uk-text-left@m uk-margin-medium uk-flex-center">
 
-                                    <div className="uk-width-3-4 uk-width-1-4@l">
-                                        <p className="uk-text-small uk-text-muted">
-                                            <i uk-icon="info"></i> You can click on the example data to play around with the calculations.
-                                        </p>
+                                    <div className="uk-grid-small" uk-grid="">
+                                        <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">
+                                            <span className="uk-text-small">
+                                                <a href="" uk-icon="icon:question;ratio:.7"></a>
+                                                <div uk-drop="">
+                                                    <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>You can click on the example data to play around with the calculations.</div>
+                                                </div>
+                                            </span>&nbsp;Example Wallet Address
+                                        </div>
+                                        <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></div>
                                     </div>
-                                    <div className="uk-width-2-3 uk-width-3-4@l uk-text-center uk-text-left@m">
-                                        <div className="uk-grid-small" uk-grid="">
-                                            <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Wallet Address</div>
-                                            <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyWalletAddress}>1Ma2DrB78K7jmAwaomqZNRMCvgQrNjE2QC</code></div>
+                                    <div className="uk-grid-small" uk-grid="">
+                                        <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">
+                                            <span className="uk-text-small">
+                                                <a href="" uk-icon="icon:question;ratio:.7"></a>
+                                                <div uk-drop="">
+                                                    <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>You can click on the example data to play around with the calculations.</div>
+                                                </div>
+                                            </span>&nbsp;Example Transaction ID
                                         </div>
-                                        <div className="uk-grid-small" uk-grid="">
-                                            <div className="uk-width-auto uk-align-center uk-margin-remove-bottom uk-width-expand@m" uk-leader="">Example Transaction ID</div>
-                                            <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></div>
-                                        </div>
+                                        <div className="uk-width-1-1 uk-width-auto@m"><code className="clickable" onClick={this.copyTransactionId}>e87f138c9ebf5986151667719825c28458a28cc66f69fed4f1032a93b399fdf8</code></div>
                                     </div>
 
                                 </div>
 
                                 <div className="uk-margin">
-                                    <div className="uk-text-small">
-                                        <a href="" uk-icon="icon:question"></a>
-                                        <div uk-drop={'pos:top-center'}>
-                                            <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>In case you want to perform a calculation with multiple transactions, please input a comma separated list of transaction ids</div>
-                                        </div>
-                                    </div>
-                                    <label className="uk-form-label" htmlFor="address">
-                                        Wallet Address or Transaction ID(s)
+                                    <label className="uk-form-label" htmlFor="address" id="inputform">
+                                        Wallet Address or Transaction ID
                                     </label>
                                     <div className="uk-form-controls">
                                         <div className="input-container uk-flex uk-flex-column uk-flex-center">
@@ -712,7 +713,7 @@ class CarbonaraCalculator extends Component {
                                                     className="uk-margin-bottom uk-margin-large-top">
                                                     <div className="uk-width-1-2@m uk-align-center">
                                                         <p>
-                                                            Please select one or multiple checkboxes in order to calculate based on the corresponding transactions
+                                                            Please select one transaction in order to calculate the corresponding emissions
                                                         </p>
                                                     </div>
                                                     <MaterialTable
@@ -725,11 +726,8 @@ class CarbonaraCalculator extends Component {
                                                         data={this.state.transactions}
                                                         options={{
                                                             pageSize: 5,
-                                                            selection: true,
+                                                            // selection: true,
                                                             search: false,
-                                                            actionsCellStyle: {
-                                                                color: 'green'
-                                                            },
                                                             rowStyle: {
                                                                 padding: 0
                                                             },
@@ -737,23 +735,27 @@ class CarbonaraCalculator extends Component {
                                                             showTextRowsSelected: false,
                                                             selectionProps: {},
                                                             toolbar: false,
-                                                            showTitle: false,
+                                                            showTitle: false
 
-                                                            // rowStyle: rowData => ({
-                                                            //     backgroundColor: (this.state.selectedRow && this.state.selectedRow.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
-                                                            // })
                                                         }}
-                                                        // onRowClick={((evt, selectedRow) => this.setState({ selectedRow }))}
-                                                        /*actions={[
+
+                                                        onRowClick={((evt, selectedRow) => {
+                                                            this.setState({ selectedRow })
+                                                            this.fillInTransactions([selectedRow])
+                                                        })}
+
+                                                        actions={[
                                                             {
                                                                 icon: 'publish',
                                                                 tooltip: 'Fill in selected transactions',
                                                                 onClick: (event, rowData) => {
-                                                                    this.fillInTransactions(rowData)
+                                                                    this.fillInTransactions([rowData])
                                                                 },
                                                             }
-                                                        ]}*/
-                                                        onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
+                                                        ]}
+
+                                                        // onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
+
                                                     />
                                                 </div>
                                             </div>
@@ -827,7 +829,7 @@ class CarbonaraCalculator extends Component {
                                 <div className="uk-container">
                                     <div className="uk-button-group uk-margin-large-bottom">
                                         <Link className="uk-button uk-button-default" to="calculate" spy={true} smooth={true} duration={500}>
-                                            <span uk-icon="arrow-up"></span> How green is my BTC Wallet?
+                                            <span uk-icon="arrow-up"></span> Perform a new calculation
                                         </Link>
                                         <Link className="uk-button uk-button-primary" to="gamification" spy={true} smooth={true} duration={500}>
                                             What if &hellip; <span uk-icon="arrow-down"></span>
