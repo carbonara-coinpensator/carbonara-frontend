@@ -688,6 +688,12 @@ class CarbonaraCalculator extends Component {
                                 </div>
 
                                 <div className="uk-margin">
+                                    <div className="uk-text-small">
+                                        <a href="" uk-icon="icon:question"></a>
+                                        <div uk-drop={'pos:top-center'}>
+                                            <div className={'uk-card uk-card-small uk-card-body uk-card-default'}>In case you want to perform a calculation with multiple transactions, you can enter a comma separated list of transaction ids. Alternatively, you can select multiple transactions by a given wallet address.</div>
+                                        </div>
+                                    </div>
                                     <label className="uk-form-label" htmlFor="address" id="inputform">
                                         Wallet Address or Transaction ID
                                     </label>
@@ -713,7 +719,7 @@ class CarbonaraCalculator extends Component {
                                                     className="uk-margin-bottom uk-margin-large-top">
                                                     <div className="uk-width-1-2@m uk-align-center">
                                                         <p>
-                                                            Please select one transaction in order to calculate the corresponding emissions
+                                                            Please select one or multiple transactions in order to calculate the corresponding emissions
                                                         </p>
                                                     </div>
                                                     <MaterialTable
@@ -726,7 +732,7 @@ class CarbonaraCalculator extends Component {
                                                         data={this.state.transactions}
                                                         options={{
                                                             pageSize: 5,
-                                                            // selection: true,
+                                                            selection: true,
                                                             search: false,
                                                             rowStyle: {
                                                                 padding: 0
@@ -739,12 +745,12 @@ class CarbonaraCalculator extends Component {
 
                                                         }}
 
-                                                        onRowClick={((evt, selectedRow) => {
+                                                        /*onRowClick={((evt, selectedRow) => {
                                                             this.setState({ selectedRow })
                                                             this.fillInTransactions([selectedRow])
-                                                        })}
+                                                        })}*/
 
-                                                        actions={[
+                                                        /*actions={[
                                                             {
                                                                 icon: 'publish',
                                                                 tooltip: 'Fill in selected transactions',
@@ -752,9 +758,9 @@ class CarbonaraCalculator extends Component {
                                                                     this.fillInTransactions([rowData])
                                                                 },
                                                             }
-                                                        ]}
+                                                        ]}*/
 
-                                                        // onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
+                                                        onSelectionChange={(rowData) => this.fillInTransactions(rowData)}
 
                                                     />
                                                 </div>
