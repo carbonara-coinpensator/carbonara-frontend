@@ -20,13 +20,14 @@ const Navigation = () => (
                     </a>
                 </div>
                 <div className="uk-navbar-right">
-                    <ul className="uk-navbar-nav">
-                        <li>
-                            <a target="github" href="https://github.com/carbonara-coinpensator" uk-tooltip="pos: bottom; title: Visit the project on GitHub">
-                                <span className="uk-icon uk-margin-small-right" uk-icon="icon: github"></span>
-                            </a>
-                        </li>
-                    </ul>
+                    <div className="uk-navbar-item">
+                        <a className="uk-text-small uk-margin-small-right uk-text-primary" href="https://unibright.io/imprint.html">
+                            Imprint
+                        </a>
+                        <a className="uk-text-primary" target="github" href="https://github.com/carbonara-coinpensator" uk-tooltip="pos: bottom; title: Visit the project on GitHub">
+                            <span className="uk-icon uk-margin-small-right" uk-icon="icon: github"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
