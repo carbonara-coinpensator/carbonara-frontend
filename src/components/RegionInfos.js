@@ -6,10 +6,10 @@ const RegionRatio = [
         'color': '#336600'
     },
     {
-        'name': 'US',
-        'fullname': 'United States',
-        'coordinates': [-77.0846, 38.8937],
-        'color': '#48616B'
+        'name': 'CN',
+        'fullname': 'China',
+        'coordinates': [116.2350, 39.5426],
+        'color': '#2E8C78'
     },
     {
         'name': 'EU',
@@ -18,10 +18,10 @@ const RegionRatio = [
         'color': '#894E27'
     },
     {
-        'name': 'CN',
-        'fullname': 'China',
-        'coordinates': [116.2350, 39.5426],
-        'color': '#2E8C78'
+        'name': 'JP',
+        'fullname': 'Japan',
+        'coordinates': [139.6012, 35.6675],
+        'color': '#6A6254'
     },
     {
         'name': 'SG',
@@ -30,10 +30,10 @@ const RegionRatio = [
         'color': '#14121D'
     },
     {
-        'name': 'JP',
-        'fullname': 'Japan',
-        'coordinates': [139.6012, 35.6675],
-        'color': '#6A6254'
+        'name': 'US',
+        'fullname': 'United States',
+        'coordinates': [-77.0846, 38.8937],
+        'color': '#48616B'
     }
 ]
 
