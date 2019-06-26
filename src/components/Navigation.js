@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../static/media/carbonara-logo.png'
+import greenpaper from '../static/media/carbonara_greenpaper_june2019.pdf'
 
 const Navigation = () => (
     <nav className="uk-navbar-container uk-width-1-1 uk-position-absolute uk-position-top">
@@ -8,7 +9,7 @@ const Navigation = () => (
                 <div className="uk-navbar-left">
                     <ul className="uk-navbar-nav">
                         <li>
-                            <a target="greenpaper" href="https://github.com/carbonara-coinpensator/carbonara-backend/blob/master/greenpaper/GreenPaper.pdf" uk-tooltip="pos: bottom; title: Download Greenpaper PDF from carbonara-backend repository in GitHub">
+                            <a target="greenpaper" href={greenpaper} uk-tooltip="pos: bottom; title: Download Greenpaper PDF">
                                 Greenpaper
                             </a>
                         </li>
