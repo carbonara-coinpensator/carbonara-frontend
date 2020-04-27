@@ -248,7 +248,7 @@ class CarbonaraCalculator extends Component {
             this.setState({ chart: res.data });
         }).then(function () {
             UIkit.notification.closeAll()
-            UIkit.notification('<i uk-icon="warning"></i> The Carbonara calculator is currently in maintenance mode, please check back soon', {status: 'danger'})
+            // UIkit.notification('<i uk-icon="warning"></i> The Carbonara calculator is currently in maintenance mode, please check back soon', {status: 'danger'})
         }).catch(function (error) {
             UIkit.notification.closeAll()
             UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
@@ -275,7 +275,7 @@ class CarbonaraCalculator extends Component {
             })
         }).catch(function (error) {
             UIkit.notification.closeAll()
-            UIkit.notification('<i uk-icon="warning"></i> The Carbonara calculator is currently in maintenance mode, please check back soon', {status: 'danger'})
+            UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
         })
     }
 
@@ -318,7 +318,7 @@ class CarbonaraCalculator extends Component {
             })
         }).catch(function (error) {
             UIkit.notification.closeAll()
-            UIkit.notification('<i uk-icon="warning"></i> The Carbonara calculator is currently in maintenance mode, please check back soon', {status: 'danger'})
+            UIkit.notification('<i uk-icon="warning"></i> ' + error, {status: 'danger'})
         })
     }
 
